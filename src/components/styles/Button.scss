@@ -1,0 +1,55 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+$primary-color: #105652;
+$secondary-color: #F9C041;
+
+
+*{
+    margin: 0 auto;
+}
+
+.button-container{
+    width: 85%;
+    padding: 2em 1em;
+    text-align: center;
+    background-color: $secondary-color;
+    margin: 1em;
+    border-radius: 1em;
+    border: 0.2em solid black;
+
+
+    &:hover{
+        cursor: pointer;
+        background-color: $primary-color;
+        border: 0.2em solid white;
+
+        a{
+            color: white;
+        }
+    }
+
+    a{
+        padding: 1em 20%;
+        color: black;
+        font-size: 1.3em;
+        font-family: Bebas Neue, cursive;
+        text-decoration: none;
+    }
+}
+
+
+$breakpoint-tablet: 768px;
+@media (min-width: $breakpoint-tablet) {
+    .button-container{
+        a{
+            padding: 1em 24%;
+            font-size: 2em;
+        }
+    }
+    
+}
+
+$breakpoint-laptop: 1024px;
+@media (min-width: $breakpoint-laptop) {
+
+}

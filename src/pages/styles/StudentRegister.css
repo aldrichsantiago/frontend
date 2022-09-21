@@ -1,0 +1,147 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+* {
+  margin: 0 auto;
+}
+
+.register-container {
+  padding: 2.5em 0em;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-image: url("../../assets/campus.png");
+  background-size: cover;
+}
+.register-container h1 {
+  font-family: Bebas Neue, cursive;
+  color: #105652;
+}
+
+.register-form-con {
+  width: 60%;
+  margin: 3em 1em;
+  padding: 2em;
+  background-color: #105652;
+  border: 3px solid black;
+  border-radius: 10px;
+}
+.register-form-con form {
+  display: flex;
+  flex-direction: column;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+.register-form-con form h2 {
+  color: #F9C041;
+}
+.register-form-con form label {
+  color: rgb(156, 156, 156);
+}
+.register-form-con form input[type=text], .register-form-con form input[type=number], .register-form-con form input[type=password], .register-form-con form select {
+  border: 2px solid #F9C041;
+  border-radius: 3px;
+}
+.register-form-con form .personal-info {
+  width: 100%;
+  margin-top: 5em;
+}
+.register-form-con form .personal-info h2 {
+  margin: 0;
+}
+.register-form-con form .personal-info div input[type=text], .register-form-con form .personal-info input[type=number] {
+  width: 100%;
+  height: 2em;
+}
+.register-form-con form .personal-info select {
+  width: 70%;
+  height: 2.45em;
+}
+.register-form-con form .login-info {
+  width: 100%;
+}
+.register-form-con form .login-info div input[type=text], .register-form-con form .login-info input[type=password] {
+  width: 100%;
+  height: 2em;
+}
+.register-form-con form input[type=button] {
+  background-color: #F9C041;
+  color: white;
+  border: none;
+  padding: 1em 3em;
+  border-radius: 0.3em;
+  cursor: pointer;
+  margin-top: 2em;
+}
+.register-form-con form input[type=button]:hover {
+  background-color: #daa636;
+}
+
+@media (min-width: 768px) {
+  .personal-info {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 1fr;
+  }
+  .personal-info h2 {
+    grid-column: 1/span 2;
+  }
+  .personal-info div {
+    width: 90%;
+  }
+  .login-info {
+    width: 100%;
+  }
+  .login-info div {
+    width: 100%;
+  }
+}
+@media (min-width: 1024px) {
+  form .personal-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1em 4em;
+  }
+  form .personal-info h2 {
+    grid-column: 1/span 4;
+  }
+  form .personal-info div {
+    width: 120%;
+    margin: 1em;
+  }
+  form .personal-info div:nth-child(4) {
+    width: 90%;
+    grid-column: 3/span 2;
+  }
+  form .personal-info div:nth-child(5) {
+    grid-column: 1/span 1;
+  }
+  form .personal-info div:nth-child(7) {
+    width: 135%;
+  }
+  form .personal-info div:nth-child(7) select {
+    width: 90%;
+  }
+  form .personal-info div:nth-child(8) {
+    width: 90%;
+  }
+  form .personal-info div:nth-child(8) select {
+    width: 90%;
+  }
+  form .login-info {
+    padding: 1em 4em 0em 2em;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1em 1em;
+  }
+  form .login-info h2 {
+    grid-column: 1/span 3;
+    margin: 0;
+  }
+  form .login-info div {
+    width: 80%;
+    margin: 1em;
+  }
+  form input[type=button] {
+    margin-top: 3em;
+  }
+}/*# sourceMappingURL=StudentRegister.css.map */

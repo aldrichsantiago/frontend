@@ -1,0 +1,109 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+$primary-color: #105652;
+$secondary-color: #F9C041;
+
+
+*{
+    margin: 0 auto;
+}
+
+nav{
+    width: 100%;
+    background-color: $primary-color;
+    display: flex;
+    flex-wrap: wrap;
+    font-family: 'Bebas Neue', cursive;
+    letter-spacing: 2px;
+    gap: 0.5em 20em;
+
+    &::after{
+        background-color: $secondary-color;
+        width: 100%;
+        height: 20px;
+        position: relative;
+        content: '';
+        bottom: 0;
+    }
+}
+
+.left-nav{
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 5px;
+    h1{
+        font-size: 3em;
+        color: #F9C041;
+        display: block;
+    }
+    h2{
+        font-size: 4em;
+        color: #F9C041;
+    }
+    h3{
+        font-size: 2em;
+        color: white;
+    }
+}
+
+
+.right-nav{
+    display: flex;
+    align-items: center;
+    margin: 5px auto;
+    gap: 1em;
+    h1{
+        color: white;
+        font-size: 2rem;
+        display: none;
+        content: "";
+    }
+    
+}
+
+$breakpoint-tablet: 768px;
+@media (min-width: $breakpoint-tablet) {
+
+    nav {
+        padding: 10px 0px;
+        justify-content: space-between;
+
+        &:after{
+            position: relative;
+            bottom: -10px;
+        }
+    }
+
+    .left-nav{
+        display: flex;
+        h1{
+            font-size: 5em;
+        }
+    }
+
+    .right-nav{
+        text-align: right;
+        h1{
+            display: block;
+        }
+    }
+}
+
+$breakpoint-laptop: 1024px;
+@media (min-width: $breakpoint-laptop) {
+
+    nav {
+        padding: 10px 0px;
+        flex-direction: row;
+
+        
+    }
+
+    .right-nav{
+    
+        h1{
+            display: block;
+        }
+    }
+}

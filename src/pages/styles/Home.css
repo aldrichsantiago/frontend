@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap");
+* {
+  margin: 0 auto;
+}
+
+body {
+  background-color: #105652;
+}
+
+.home-container {
+  background-image: url("../../assets/campus.png");
+  background-size: cover;
+  padding: 5em 3em 0em 2em;
+}
+
+.left-home {
+  margin-bottom: 3em;
+}
+.left-home h1 {
+  font-size: 3em;
+  font-family: "Bebas Neue", cursive;
+}
+.left-home h1 strong {
+  font-weight: 900;
+}
+
+.right-home {
+  font-family: "Bebas Neue", cursive;
+  padding-bottom: 6em;
+}
+.right-home p {
+  max-width: 100ch;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+}
+
+@media (min-width: 1024px) {
+  .home-container {
+    padding: 5em 4em 0em 4em;
+    display: flex;
+    gap: 5em;
+  }
+  .left-home {
+    flex: 1;
+  }
+  .left-home h1 {
+    text-align: center;
+    font-size: 7em;
+    font-weight: 500;
+  }
+  .left-home h1 strong {
+    font-weight: 600;
+  }
+  .left-home .contact-info {
+    margin-top: 3em;
+  }
+  .right-home {
+    flex: 1;
+  }
+  .right-home h2 {
+    color: #105652;
+    font-size: 3em;
+  }
+}/*# sourceMappingURL=Home.css.map */

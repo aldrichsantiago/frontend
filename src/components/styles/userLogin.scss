@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+
+$Roboto: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+$BebasFont : Bebas Neue, cursive;
+$primary-color: #105652;
+$secondary-color: #F9C041;
+
+*{
+    margin: 0 auto;
+
+}
+
+.login-container{
+    padding: 2.5em 0em;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 75vh;
+    background-image: url("../../assets/campus.png");
+    background-size: cover;
+
+    h1{
+        font-family: $BebasFont;
+        color: $primary-color;
+    }
+}
+
+.login-form-con{
+    margin: 3em 1em;
+    padding: 2em;
+    background-color: #105652;
+    border: 3px solid black;
+    border-radius: 10px;
+
+    form{
+        display: flex;
+        flex-direction: column;
+        gap: 1em;
+        margin-bottom: 2em;
+        input[type=text], input[type=password]{
+            width: 100%;
+            height: 2em;
+            border: 2px solid $secondary-color;
+            border-radius: 3px;
+        }
+        input[type=submit]{
+            background-color: #F9C041;
+            border: none;
+            color: white;
+            padding: 0.5em 2em;
+            border-radius: 2px;
+            cursor: pointer;
+
+            &:hover{
+                background-color: #bd9848;
+                color: rgb(224, 224, 224);
+            }
+        }
+    }
+    a{
+        font-family: $Roboto;
+        font-size: 0.7rem;
+        text-decoration: none;
+        color: $secondary-color;
+
+        &:hover{
+            color: #bd9848;
+        }
+    }
+}
+
+$breakpoint-tablet: 768px;
+@media (min-width: $breakpoint-tablet) {
+    .login-form-con{
+        width: 20%;
+        padding: 2em 3em;
+
+        input[type=text]{
+            width: 10%;
+        }
+
+        a{
+            font-size: 0.9rem;
+        }
+    }
+}
+
+$breakpoint-laptop: 1024px;
+@media (min-width: $breakpoint-laptop) {
+
+}

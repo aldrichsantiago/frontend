@@ -1,0 +1,189 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+
+$Roboto: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+$BebasFont : Bebas Neue, cursive;
+$primary-color: #105652;
+$secondary-color: #F9C041;
+
+*{
+    margin: 0 auto;
+
+}
+
+.register-container{
+    padding: 2.5em 0em;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-image: url("../../assets/campus.png");
+    background-size: cover;
+
+    h1{
+        font-family: $BebasFont;
+        color: $primary-color;
+    }
+}
+
+.register-form-con{
+    width: 60%;
+    margin: 3em 1em;
+    padding: 2em;
+    background-color: #105652;
+    border: 3px solid black;
+    border-radius: 10px;
+
+    form{
+        display: flex;
+        flex-direction: column;
+        font-family: $Roboto;
+
+        h2{
+            color: #F9C041;
+        }
+
+        label{
+            color: rgb(156, 156, 156);
+        }
+
+        input[type=text], input[type=number], input[type=password], select{
+            border: 2px solid $secondary-color;
+            border-radius: 3px;
+        }
+        .personal-info{
+            width: 100%;
+            margin-top: 5em;
+            h2{
+                margin: 0;
+            }
+
+            div input[type=text], input[type=number]{
+                width: 100%;
+                height: 2em;
+                
+            }
+            select{
+                width: 70%;
+                height: 2.45em;
+            }
+           
+        }
+        .login-info{
+            width: 100%;
+            div input[type=text], input[type=password]{
+                width: 100%;
+                height: 2em;
+            }
+        }
+        
+
+        input[type=button]{
+            background-color: #F9C041;
+            color: white;
+            border: none;
+            padding: 1em 3em;
+            border-radius: 0.3em;
+            cursor: pointer;
+            margin-top: 2em;
+
+            &:hover{
+                background-color: #daa636;
+            }
+        }
+        
+    }
+
+}
+
+$breakpoint-tablet: 768px;
+@media (min-width: $breakpoint-tablet) {
+    .personal-info{
+        display: grid;
+        width: 100%;
+        grid-template-columns: 1fr 1fr;
+        h2{
+            grid-column: 1 / span 2;
+        }
+        div{
+            width: 90%;
+        }
+        
+    }
+    .login-info{
+        width: 100%;
+        div{
+            width: 100%;
+        }
+    }
+    
+    
+}
+
+$breakpoint-laptop: 1024px;
+@media (min-width: $breakpoint-laptop) {
+
+    form{
+        .personal-info{
+
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 1em 4em;
+            
+            h2{
+                grid-column: 1 / span 4;
+            }
+            div{
+                width: 120%;
+                margin: 1em;
+            }
+            
+            div:nth-child(4){
+                width: 90%;
+                grid-column: 3 / span 2;
+            }
+
+            div:nth-child(5){
+                grid-column: 1 / span 1;
+            }
+
+            div:nth-child(7){
+                width: 135%;
+                select{
+                    width: 90%;
+                }
+            }
+            div:nth-child(8){
+                width: 90%;
+                select{
+                    width: 90%;
+                }
+
+            }
+        }
+
+        .login-info{
+            padding: 1em 4em 0em 2em;
+            width: 100%;
+            display: grid;
+            grid-template-columns:repeat(3, 1fr);
+            gap: 1em 1em;
+
+            h2{
+                grid-column: 1 / span 3;
+                margin: 0;
+            }
+            div{
+                width: 80%;
+                margin: 1em;
+                
+            }
+            
+        }
+
+        input[type=button]{
+            margin-top: 3em;
+        }
+    }
+}
+    
