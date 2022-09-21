@@ -19,6 +19,7 @@ function Layout({children}) {
       document.querySelector('.burger-links').style.display = "none";
     }
   };
+  console.log('Component Re-rendered')
 
   return (
     <>

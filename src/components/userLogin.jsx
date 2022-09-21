@@ -18,8 +18,8 @@ function userLogin(props) {
                 <input type="submit" value="LOG IN" />
             </form>
             <div>
-                <a href="#">Forgot my password</a><br />
-                <a href={props.reg_path}>Create an account</a>
+                <a href="#" style={{'display': props.forgot_passwd}}>Forgot my password</a><br />
+                <a href={props.reg_path} style={{'display': props.new_acc}}>Create an account</a>
             </div>
         </div>
         

@@ -7,8 +7,8 @@ function AdminLogin() {
   
   return (
     <div>
-        <Navbar lg={"WUPSCHOLARSHIP"}></Navbar>
-        <UserLogin id_place="Admin ID" passwd_place="Passsword"></UserLogin>
+        <Navbar lg={"WUPSCHOLARSHIP"}/>
+        <UserLogin id_place="Admin ID" forgot_passwd='none' new_acc='none'/>
     </div>
   )
 }
