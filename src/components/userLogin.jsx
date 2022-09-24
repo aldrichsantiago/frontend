@@ -10,7 +10,7 @@ function userLogin(props) {
     <div className='login-container'>
         <h1>LOG IN</h1>
         <div className="login-form-con">
-            <form>
+            <form onSubmit={props.onSubmit}>
             <img src={Logo} alt="LOGO" width="100px"/>
 
                 <input type="text" placeholder={props.id_place} value={id} onChange={(e) => setId(e.target.value)}/>
@@ -25,6 +25,7 @@ function userLogin(props) {
         
     </div>
   )
+
 }
 
 export default userLogin

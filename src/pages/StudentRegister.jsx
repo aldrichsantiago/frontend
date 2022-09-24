@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import axios from "axios";
+import { useNavigate } from 'react-router-dom'
 
 import Navbar from '../components/Navbar'
 
@@ -18,6 +20,7 @@ function StudentRegister() {
     const [studId, setStudId] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const navigate = useNavigate();
 
     const departments = ["Choose dept","CECT", "CONAMS", "CBA", "CHTM"];
     const courses = ["Choose course","BSIT", "BSECE", "BSCpE", "BSCS"];
@@ -39,10 +42,34 @@ function StudentRegister() {
         department,
         course,
         year,
-        block,
         studId, 
         password,
         confirmPassword
+    }
+
+    const Register = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post('http://localhost:5000/register/student', {
+                last_name: lastName,
+                first_name: firstName, 
+                middle_name: middleName,
+                contact_no: contactNo, 
+                email: email,
+                department: department,
+                course: course,
+                year: year,
+                student_id: studId, 
+                password: password,
+                confPassword: confirmPassword
+            });
+            console.log(jsonObject);
+            navigate("/");
+        } catch (error) {
+            if (error.response) {
+                setMsg(error.response.data.msg);
+            }
+        }
     }
   
     return (
@@ -51,7 +78,7 @@ function StudentRegister() {
         <div className='register-container'>
             <h1>REGISTER</h1>
             <div className="register-form-con">
-                <form>
+                <form onSubmit={Register}>
                     <img src={Logo} alt="Logo goes here" width={120}/>
                     <div className="personal-info">
                         <h2>Personal Info</h2>
@@ -77,24 +104,21 @@ function StudentRegister() {
                         </div>
                         <div>
                             <label htmlFor="depts">Department:</label><br />
-                            <select name="depts" id="dept" defaultValue={department} value={department} onChange={(e)=> setDepartment(e.target.value)}>
+                            <select name="depts" id="dept" value={department} onChange={(e)=> setDepartment(e.target.value)}>
                                 {dept_options}
                             </select>
                         </div>
                         <div>
                             <label htmlFor="course">Course:</label><br />
-                            <select name="course" id="course" defaultValue={course} value={course} onChange={(e)=> setCourse(e.target.value)}>
+                            <select name="course" id="course" value={course} onChange={(e)=> setCourse(e.target.value)}>
                                 {course_options}
                             </select>
                         </div>
                         <div>
                             <label htmlFor="year">Year: </label><br />
-                            <input type="number" name="year" placeholder='Year' defaultValue={year} value={year} onChange={(e)=> setYear(e.target.value)}/>
+                            <input type="number" name="year" placeholder='Year' value={year} onChange={(e)=> setYear(e.target.value)}/>
                         </div>
-                        <div>
-                            <label htmlFor="block">Block: </label><br />
-                            <input type="number" name="block" placeholder='Block' defaultValue={block} value={block} onChange={(e)=> setBlock(e.target.value)}/>
-                        </div>
+                        
                         
                     </div><br />
                     <div className="login-info">
@@ -114,7 +138,7 @@ function StudentRegister() {
                         
                     </div>
                     <br />
-                    <input type="button" value="REGISTER" onClick={()=>console.log(jsonObject)}/>
+                    <input type="button" value="REGISTER" onClick={Register}/>
                 </form>
             </div>
         </div>
