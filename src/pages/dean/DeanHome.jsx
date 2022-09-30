@@ -1,12 +1,16 @@
 import React from 'react'
-import DeanLayout from './DeanLayout'
+import UserHomeLayout from '../UserHomeLayout'
 
 
 function DeanHome() {
   return (
-    <DeanLayout>
-        <h1>DeanHome</h1>
-    </DeanLayout>
+    <UserHomeLayout 
+    user="COLLEGE DEAN" 
+    toGreen="/dean/applications" 
+    greenName="VIEW SCHOLARSHIP APPLICATIONS"
+    display='none'>
+        
+    </UserHomeLayout>
   )
 }
 

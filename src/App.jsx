@@ -8,16 +8,16 @@ import StudentRegister from './pages/StudentRegister'
 import DeanRegister from './pages/DeanRegister'
 import PageNotFound from './pages/PageNotFound'
 
-import Layout from './pages/student/Layout'
+import StudentHome from './pages/student/StudentHome'
 import AccountDetails from './pages/student/AccountDetails'
 import ViewScholarship from './pages/student/ViewScholarship'
 import ApplicationStatus from './pages/student/ApplicationStatus'
 
-import DeanLayout from './pages/dean/DeanLayout'
+import DeanHome from './pages/dean/DeanHome'
 import DeanViewApplications from './pages/dean/ViewApplications'
 import DeanAccountDetails from './pages/dean/DeanAccountDetails'
 
-import AdminLayout from './pages/admin/AdminLayout'
+import AdminHome from './pages/admin/AdminHome'
 import AdminViewApplications from './pages/admin/ViewApplications'
 import AdminEditAppStatus from './pages/admin/EditApplicationStatus'
 import AdminManageUsers from './pages/admin/ManageUserAccounts'
@@ -37,17 +37,17 @@ function App() {
         <Route path='/register/student' element={<StudentRegister/>}/>
         <Route path='/register/dean' element={<DeanRegister/>}/>
 
-        <Route path='/student/home' element={<Layout/>}/>
+        <Route path='/student/home' element={<StudentHome/>}/>
         <Route path="/student/account" element={<AccountDetails/>}/>
         <Route path="/student/scholar" element={<ViewScholarship/>}/>
         <Route path="/student/status" element={<ApplicationStatus/>}/>
         <Route path="/student/details" element={<AccountDetails/>}/>
 
-        <Route path='/dean/home' element={<DeanLayout/>}/>
+        <Route path='/dean/home' element={<DeanHome/>}/>
         <Route path="/dean/applications" element={<DeanViewApplications/>}/>
         <Route path="/dean/details" element={<DeanAccountDetails/>}/>
 
-        <Route path='/admin/home' element={<AdminLayout/>}/>
+        <Route path='/admin/home' element={<AdminHome/>}/>
         <Route path="/admin/applications" element={<AdminViewApplications/>}/>
         <Route path="/admin/status" element={<AdminEditAppStatus/>}/>
         <Route path='/admin/users' element={<AdminManageUsers/>}/>

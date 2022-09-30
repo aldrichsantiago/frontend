@@ -34,13 +34,36 @@ function StudentRegister() {
         confirmPassword
     }
 
+    const Register = async (e) => {
+        e.preventDefault();
+        try {
+            await axios.post('http://localhost:5000/register/dean', {
+                last_name: lastName,
+                first_name: firstName, 
+                middle_name: middleName,
+                contact_no: contactNo, 
+                email: email,
+                department: department,
+                dean_id: deanId, 
+                password: password,
+                confPassword: confirmPassword
+            });
+            console.log(jsonObject);
+            navigate("/");
+        } catch (error) {
+            if (error.response) {
+                setMsg(error.response.data.msg);
+            }
+        }
+    }
+
     return (
     <>
         <Navbar lg="WUPSCHOLARSHIP"></Navbar>
         <div className='register-container'>
             <h1>REGISTER</h1>
             <div className="register-form-con">
-                <form method='post' action='/hello'>
+                <form onSubmit={Register}>
                     <img src={Logo} alt="Logo goes here" width={120}/>
                     <div className="personal-info">
                         <h2>Personal Info</h2>
@@ -90,7 +113,7 @@ function StudentRegister() {
                         
                     </div>
                     <br />
-                    <input type="button" value="REGISTER" onClick={console.log(jsonObject)}/>
+                    <input type="button" value="REGISTER" onClick={Register}/>
                 </form>
             </div>
         </div>

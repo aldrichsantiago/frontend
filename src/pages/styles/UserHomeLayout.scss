@@ -1,0 +1,150 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap');
+
+$primary-color: #105652;
+$secondary-color: #F9C041;
+$tertiary-color: #B91646;
+
+
+*{
+    margin: 0 auto;
+}
+.user-home-container{
+    font-family: Bebas Neue;
+    width: auto;
+    padding: 2em 1.7em;
+    background-image: url('../../assets/campus.png');
+    background-size: cover;
+    display: flex;
+    flex-direction: column;
+}
+.greetings-container{
+    h1{
+        color: #B91646;
+        font-family: 'Fuggles', cursive;
+        font-size: 3.5em;
+        position: relative;
+
+    }
+}
+.user-container{
+    h1{
+        font-family: Bebas Neue;
+        font-size: 4em;
+    }
+}
+.portal-container{
+    margin-bottom: 3em;
+    h2{
+        font-size: 2em;
+    }
+}
+
+.user-home-butt-container{
+    display: flex;
+    flex-direction: column;
+    gap: 3em;
+    a{
+        padding: 0.2em 1em;
+        text-decoration: none;
+        font-size: 1.6em;
+        border: 3px solid black;
+        border-radius: 0.2em;
+    }
+    .green-button{
+        background-color: #105652;
+        color: white;
+    }
+    .yellow-button{
+        background-color: #F9C041;
+        color: black;
+    }
+
+}
+
+.user-home-footer{
+    width: 100%;
+    padding: 2em 0em;
+    background-color: #F9C041;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1em 3em;
+        &::after{
+            width: 100%;
+            height: 0.3em;
+            content: '';
+            background-color: white;
+            position: absolute;
+            bottom: 16em;
+        }
+
+    .user-logout-container{
+        margin: 1em auto;
+
+        a{
+            background-color: $tertiary-color;
+            text-decoration: none;
+            color: white;
+            padding: 0.5em 2em;
+            font-family: Bebas Neue;
+            letter-spacing: 0.2em;
+            border: 2.5px solid white;
+            border-radius: 0.3em;
+        }
+    }
+}
+
+
+$breakpoint-tablet: 768px;
+@media (min-width: $breakpoint-tablet) {
+    .user-home-footer{
+        
+            &::after{
+                position: relative;
+                bottom: 6.5em;
+            }
+        }
+    .user-home-container{
+        gap: 1em;
+        height: 60vh;
+
+    }
+    .user-home-butt-container{
+        flex-direction: row;
+    }
+}
+
+$breakpoint-laptop: 1024px;
+@media (min-width: $breakpoint-laptop) {
+    
+    .user-home-container{
+        height: 59vh;
+    }
+    .greetings-container{
+        
+        h1{
+            
+            font-size: 6em;
+            top: 0.8em;
+    
+        }
+    }
+    .user-container{
+        h1{
+            font-size: 7em;
+        }
+    }
+    .portal-container{
+        h2{
+            font-size: 4em;
+        }
+    }
+    .user-home-butt-container{
+        a{
+            padding: 0.5em 4em;
+            font-size: 1.8em;   
+        }
+    }
+}

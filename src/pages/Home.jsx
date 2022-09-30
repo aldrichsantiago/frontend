@@ -7,7 +7,7 @@ import './styles/Home.css'
 function Home() {
   return (
     <div>
-        <Navbar></Navbar>
+        <Navbar/>
         <div className='home-container'>
             <div className='left-home'>
                 <h1><strong>WUP</strong>SCHOLARSHIP</h1>
