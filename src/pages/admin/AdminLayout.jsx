@@ -22,7 +22,7 @@ function Layout({children}) {
 
   return (
     <>
-        <Navbar sm="WUPSCHOLARSHIP" user="CECT DEAN" />
+        <Navbar sm="WUPSCHOLARSHIP" user="ADMINISTRATOR" />
         <div className="content-container">
           <div className="sidebar">
               <Link to="/admin/home">HOME</Link><br />

@@ -23,7 +23,7 @@ function Layout({children}) {
 
   return (
     <>
-        <Navbar sm="WUPSCHOLARSHIP" user="Aldrich Santiago" />
+        <Navbar sm="WUPSCHOLARSHIP" user="WUP STUDENT" />
         <div className="content-container">
           <div className="sidebar">
               <Link to="/student/home">HOME</Link><br />
@@ -46,9 +46,9 @@ function Layout({children}) {
         </div>
         <div className="footer">
           <div className="foo-contact-info">
-            <h3>Contact Information</h3>
-            <h3>Contact Information</h3>
-            <h3>Contact Information</h3>
+            <p>Mabini Extension, Cabanutan City,</p>
+            <p>Nueva Ecija, 3100, Philippines</p>
+            <p>+63 (044) 463-2162 / 463-2074</p>
           </div>
           
         </div>

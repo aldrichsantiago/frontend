@@ -76,12 +76,13 @@ main{
     background-image: linear-gradient(180deg, #f5da9f, $secondary-color);
     padding: 4em 0em;
     width: 100%;
+    margin-bottom: 5em;
 }
 
 
 .footer{
     background-color: $secondary-color;
-    position: fixed;
+    position: absolute;
     width: 100%;
     padding: 2.4em 0em;
     bottom: 0;
@@ -105,6 +106,7 @@ $breakpoint-tablet: 768px;
 @media (min-width: $breakpoint-tablet) {
     main{
         width: 100%;
+        margin-bottom: 3em;
     }
 }
 

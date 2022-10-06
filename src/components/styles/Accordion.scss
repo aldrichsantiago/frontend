@@ -1,0 +1,94 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap');
+
+$primary-color: #105652;
+$secondary-color: #F9C041;
+$tertiary-color: #B91646;
+
+
+
+*{
+    margin: 0 auto;
+
+}
+.accordion-item{
+    margin: 1em 0em;
+
+    &:hover{
+        cursor: pointer;
+    }
+}
+.accordion-name{
+    
+    p{
+        text-align: center;
+        background-color: #105652;
+        border: 3px solid black;
+        border-radius: 2px;    
+        color: white;
+        font-family: Bebas Neue;
+        font-size: 1.3em;
+    }
+}
+.accordion-content{
+    text-align: left;
+    font-family: Calibri;
+    background-color: antiquewhite;
+    border: 3px solid black;
+    border-radius: 2px;   
+    &:hover{
+        cursor: default;
+    } 
+
+    .accordion-desc{
+        margin: 1em;
+    }
+    .accordion-req{
+        margin: 0.5em;
+    }
+    .accordion-btn{
+        padding: 1em;
+        a{
+            text-decoration: none;
+            background-color: #F9C041;
+            color: black;
+            border: 3px solid black;
+            border-radius: 2px;
+            padding: 0.2em;
+        }
+    }
+    .form-col-1, .form-col-2{
+        display: flex;
+        
+        .subj-col-1, .subj-col-2{
+            display: flex;
+            flex-direction: column;
+            input[type=text]{
+                width: 90%;
+            }
+        }
+        .units-col-1, .units-col-2{
+            display: flex;
+            flex-direction: column;
+            input[type=number]{
+                width: 50%;
+                
+            }
+        }
+    }
+
+    .scholarship-form-attachments{
+        margin: 1em;
+    }
+}
+
+$breakpoint-tablet: 768px;
+@media (min-width: $breakpoint-tablet) {
+    .scholarship-form-info{
+        display: flex;
+    }
+}
+
+$breakpoint-laptop: 1024px;
+@media (min-width: $breakpoint-laptop) {
+
+}

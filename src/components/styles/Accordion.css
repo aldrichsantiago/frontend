@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap");
+* {
+  margin: 0 auto;
+}
+
+.accordion-item {
+  margin: 1em 0em;
+}
+.accordion-item:hover {
+  cursor: pointer;
+}
+
+.accordion-name p {
+  text-align: center;
+  background-color: #105652;
+  border: 3px solid black;
+  border-radius: 2px;
+  color: white;
+  font-family: Bebas Neue;
+  font-size: 1.3em;
+}
+
+.accordion-content {
+  text-align: left;
+  font-family: Calibri;
+  background-color: antiquewhite;
+  border: 3px solid black;
+  border-radius: 2px;
+}
+.accordion-content:hover {
+  cursor: default;
+}
+.accordion-content .accordion-desc {
+  margin: 1em;
+}
+.accordion-content .accordion-req {
+  margin: 0.5em;
+}
+.accordion-content .accordion-btn {
+  padding: 1em;
+}
+.accordion-content .accordion-btn a {
+  text-decoration: none;
+  background-color: #F9C041;
+  color: black;
+  border: 3px solid black;
+  border-radius: 2px;
+  padding: 0.2em;
+}
+.accordion-content .form-col-1, .accordion-content .form-col-2 {
+  display: flex;
+}
+.accordion-content .form-col-1 .subj-col-1, .accordion-content .form-col-1 .subj-col-2, .accordion-content .form-col-2 .subj-col-1, .accordion-content .form-col-2 .subj-col-2 {
+  display: flex;
+  flex-direction: column;
+}
+.accordion-content .form-col-1 .subj-col-1 input[type=text], .accordion-content .form-col-1 .subj-col-2 input[type=text], .accordion-content .form-col-2 .subj-col-1 input[type=text], .accordion-content .form-col-2 .subj-col-2 input[type=text] {
+  width: 90%;
+}
+.accordion-content .form-col-1 .units-col-1, .accordion-content .form-col-1 .units-col-2, .accordion-content .form-col-2 .units-col-1, .accordion-content .form-col-2 .units-col-2 {
+  display: flex;
+  flex-direction: column;
+}
+.accordion-content .form-col-1 .units-col-1 input[type=number], .accordion-content .form-col-1 .units-col-2 input[type=number], .accordion-content .form-col-2 .units-col-1 input[type=number], .accordion-content .form-col-2 .units-col-2 input[type=number] {
+  width: 50%;
+}
+.accordion-content .scholarship-form-attachments {
+  margin: 1em;
+}
+
+@media (min-width: 768px) {
+  .scholarship-form-info {
+    display: flex;
+  }
+}/*# sourceMappingURL=Accordion.css.map */
