@@ -1,0 +1,69 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap");
+* {
+  margin: 0 auto;
+}
+
+.application-status-container {
+  padding: 1em;
+  font-family: Bebas Neue;
+  margin-bottom: 3em;
+}
+.application-status-container div {
+  margin: 3em 1em;
+}
+.application-status-container div h2 {
+  font-size: 2em;
+}
+.application-status-container .status-timeline {
+  padding: 0em 5em;
+  margin: 1em;
+}
+.application-status-container .application-submitted::before {
+  content: "";
+  position: absolute;
+  width: 3em;
+  height: 3em;
+  background-color: #B91646;
+  border-radius: 50%;
+  left: 2em;
+  display: inline-block;
+}
+.application-status-container .application-review::before {
+  content: "";
+  position: absolute;
+  width: 3em;
+  height: 3em;
+  background-color: #B91646;
+  border-radius: 50%;
+  left: 2em;
+  display: block;
+}
+.application-status-container .application-approved::before {
+  content: "";
+  position: absolute;
+  width: 3em;
+  height: 3em;
+  background-color: #B91646;
+  border-radius: 50%;
+  left: 2em;
+  display: inline-block;
+}
+.application-status-container .status-timeline {
+  padding: 3em;
+}
+
+@media (min-width: 1024px) {
+  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
+    left: 18em;
+  }
+}
+@media (min-width: 1440px) {
+  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
+    left: 24.5em;
+  }
+}
+@media (min-width: 1920px) {
+  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
+    left: 32em;
+  }
+}/*# sourceMappingURL=ApplicationStatus.css.map */

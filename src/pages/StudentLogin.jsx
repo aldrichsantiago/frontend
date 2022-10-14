@@ -14,6 +14,7 @@ function StudentLogin() {
     const Auth = async (e) => {
         e.preventDefault();
         try {
+            axios.defaults.withCredentials = true;
             await axios.post('http://localhost:5000/student', {
                 student_id: id,
                 password: password

@@ -4,6 +4,7 @@
 }
 
 .accordion-item {
+  height: auto;
   margin: 1em 0em;
 }
 .accordion-item:hover {
@@ -17,7 +18,7 @@
   border-radius: 2px;
   color: white;
   font-family: Bebas Neue;
-  font-size: 1.3em;
+  font-size: 2em;
 }
 
 .accordion-content {

@@ -75,8 +75,8 @@ $tertiary-color: #B91646;
             height: 0.5em;
             content: '';
             background-color: white;
-            position: absolute;
-            bottom: 16em;
+            position: relative;
+            bottom: 1.9em;
         }
 
     .user-logout-container{
@@ -98,13 +98,7 @@ $tertiary-color: #B91646;
 
 $breakpoint-tablet: 768px;
 @media (min-width: $breakpoint-tablet) {
-    .user-home-footer{
-        
-            &::before{
-                position: absolute;
-                bottom: -0.3em;
-            }
-    }
+    
     .user-home-container{
         gap: 1em;
         height: 60vh;
@@ -117,13 +111,7 @@ $breakpoint-tablet: 768px;
 
 $breakpoint-laptop: 1024px;
 @media (min-width: $breakpoint-laptop) {
-    .user-home-footer{
-        
-        &::before{
-            position: absolute;
-            bottom: 0em;
-        }
-    }
+    
     
     .user-home-container{
         height: 59vh;
@@ -157,11 +145,5 @@ $breakpoint-laptop: 1024px;
 
 
 @media (min-width: 1440px) {
-    .user-home-footer{
-        
-        &::before{
-            position: relative;
-            top: -2em;
-        }
-    }
+    
 }

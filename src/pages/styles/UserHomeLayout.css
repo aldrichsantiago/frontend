@@ -68,8 +68,8 @@
   height: 0.5em;
   content: "";
   background-color: white;
-  position: absolute;
-  bottom: 16em;
+  position: relative;
+  bottom: 1.9em;
 }
 .user-home-footer .user-logout-container {
   margin: 1em auto;
@@ -86,10 +86,6 @@
 }
 
 @media (min-width: 768px) {
-  .user-home-footer::before {
-    position: absolute;
-    bottom: -0.3em;
-  }
   .user-home-container {
     gap: 1em;
     height: 60vh;
@@ -99,10 +95,6 @@
   }
 }
 @media (min-width: 1024px) {
-  .user-home-footer::before {
-    position: absolute;
-    bottom: 0em;
-  }
   .user-home-container {
     height: 59vh;
   }
@@ -119,11 +111,5 @@
   .user-home-butt-container a {
     padding: 0.5em 4em;
     font-size: 1.8em;
-  }
-}
-@media (min-width: 1440px) {
-  .user-home-footer::before {
-    position: relative;
-    top: -2em;
   }
 }/*# sourceMappingURL=UserHomeLayout.css.map */

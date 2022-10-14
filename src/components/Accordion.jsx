@@ -16,11 +16,10 @@ const Accordion = ({ scholarship_name, description, requirements }) => {
         }
         setIsActive(!isActive);
 
-        setShowForm(showForm = false);
+        setShowForm(false);
 
         
       }}>
-        <span>{isActive ? '-' : '+'}</span>
         <span className='accordion-name'><p>{scholarship_name}</p></span>
       </div>
       {isActive && <div className="accordion-content">

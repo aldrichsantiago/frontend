@@ -38,7 +38,6 @@ function App() {
         <Route path='/register/dean' element={<DeanRegister/>}/>
 
         <Route path='/student/home' element={<StudentHome/>}/>
-        <Route path="/student/account" element={<AccountDetails/>}/>
         <Route path="/student/scholar" element={<ViewScholarship/>}/>
         <Route path="/student/status" element={<ApplicationStatus/>}/>
         <Route path="/student/details" element={<AccountDetails/>}/>

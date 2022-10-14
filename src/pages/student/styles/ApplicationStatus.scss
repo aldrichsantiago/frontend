@@ -1,0 +1,118 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap');
+
+$primary-color: #105652;
+$secondary-color: #F9C041;
+$tertiary-color: #B91646;
+
+
+
+*{
+    margin: 0 auto;
+
+}
+.application-status-container{
+    padding: 1em;
+    font-family: Bebas Neue;
+    margin-bottom: 3em;
+
+    div{
+        margin: 3em 1em;
+        h2{
+            font-size: 2em;
+        }
+          
+    }
+    .status-timeline{
+        padding: 0em 5em;
+        margin: 1em;
+    }
+    .application-submitted{
+         &::before{
+            content: '';
+            position: absolute;
+            width: 3em;
+            height: 3em;
+            background-color: #B91646;
+            border-radius: 50%;
+            left: 2em;
+            display: inline-block;
+         }   
+    }
+
+    .application-review{
+
+         &::before{
+            content: '';
+            position: absolute;
+            width: 3em;
+            height: 3em;
+            background-color: #B91646;
+            border-radius: 50%;
+            left: 2em;
+            display: block;
+        }      
+    }
+
+    .application-approved{
+        &::before{
+            content: '';
+            position: absolute;
+            width: 3em;
+            height: 3em;
+            background-color: #B91646;
+            border-radius: 50%;
+            left: 2em;
+            display: inline-block;
+        }
+    }
+
+    .status-timeline{
+        padding: 3em;
+    }
+}
+
+
+$breakpoint-tablet: 768px;
+@media (min-width: $breakpoint-tablet) {
+
+}
+
+$breakpoint-laptop: 1024px;
+@media (min-width: $breakpoint-laptop) {
+
+    .application-status-container{
+
+        .application-submitted, .application-review, .application-approved{
+            &::before{
+                left: 18em;
+            }      
+    }
+
+    }
+}
+
+@media (min-width: 1440px) {
+
+    .application-status-container{
+
+        .application-submitted, .application-review, .application-approved{
+            &::before{
+                left: 24.5em;
+            }      
+        }
+
+    }
+}
+
+@media (min-width: 1920px) {
+
+    .application-status-container{
+
+        .application-submitted, .application-review, .application-approved{
+            &::before{
+                left: 32em;
+            }      
+        }
+
+    }
+}
