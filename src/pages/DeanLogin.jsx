@@ -19,7 +19,7 @@ function DeanLogin() {
                 dean_id: id,
                 password: password
             });
-            navigate("/student/home");
+            navigate("/dean/home");
         } catch (error) {
             if (error.response) {
                 setMsg(error.response.data.msg);

@@ -138,7 +138,7 @@ function StudentRegister() {
                         
                     </div>
                     <br />
-                    <input type="button" value="REGISTER" onClick={Register}/>
+                    <button type="submit" value="REGISTER" onClick={Register}>REGISTER</button>
                 </form>
             </div>
         </div>

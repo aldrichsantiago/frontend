@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import './styles/Accordion.css'
 
+
 const Accordion = ({ scholarship_name, description, requirements }) => {
   const [isActive, setIsActive] = useState(false);
   const [showForm, setShowForm] = useState(false);
+  const each_requirement = requirements.split(', ');
+  let key_for_attachments='';
+
 
   return (
     <div className="accordion-item">
@@ -85,20 +89,13 @@ const Accordion = ({ scholarship_name, description, requirements }) => {
               </span>
             </div>
             <div className="scholarship-form-attachments">
-              <div>
-                <label htmlFor="cog">Certificate of Grades (COG): </label>
-                <input type="file" name='cog'/>
-              </div>
-              <div>
-                <label htmlFor="receipt_cog">Receipt of COG: </label>
-
-                <input type="file" name='receipt_cog'/>
-              </div>
-              <div>
-                <label htmlFor="receipt_form">Receipt of Scholarship Form: </label>
-                <input type="file" name='receipt_form'/>
-              </div>
               
+                {each_requirement.map((requirement) => (
+                  <div key={requirement.replace(/ /g, "_" )}>
+                    <label htmlFor={requirement.replace(/ /g, "_" )}>{requirement}: </label>
+                    <input type="file" name={requirement.replace(/ /g, "_" )}/>
+                  </div>
+                ))}
               
               
             </div>

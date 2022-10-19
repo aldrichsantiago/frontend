@@ -91,6 +91,32 @@ $breakpoint-laptop: 1024px;
     }
 }
 
+@media (min-width: 1130px) {
+
+    .application-status-container{
+
+        .application-submitted, .application-review, .application-approved{
+            &::before{
+                left: 19.5em;
+            }      
+        }
+
+    }
+}
+
+@media (min-width: 1240px) {
+
+    .application-status-container{
+
+        .application-submitted, .application-review, .application-approved{
+            &::before{
+                left: 21.5em;
+            }      
+        }
+
+    }
+}
+
 @media (min-width: 1440px) {
 
     .application-status-container{

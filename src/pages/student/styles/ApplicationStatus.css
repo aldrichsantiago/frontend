@@ -57,6 +57,16 @@
     left: 18em;
   }
 }
+@media (min-width: 1130px) {
+  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
+    left: 19.5em;
+  }
+}
+@media (min-width: 1240px) {
+  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
+    left: 21.5em;
+  }
+}
 @media (min-width: 1440px) {
   .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
     left: 24.5em;

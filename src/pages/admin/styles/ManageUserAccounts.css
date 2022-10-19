@@ -1,0 +1,57 @@
+.manage-user-header {
+  display: flex;
+  flex-wrap: wrap;
+}
+.manage-user-header a {
+  text-decoration: none;
+  color: #ffffff;
+  font-family: Arial, Helvetica, sans-serif;
+  background-color: green;
+  padding: 0.5em 1em;
+  border-radius: 10px;
+  border: 3px solid #ffffff;
+}
+.manage-user-header a:hover {
+  background-color: rgb(11, 92, 28);
+}
+
+.users-table {
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 1rem;
+}
+
+table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+th,
+td {
+  border: 1px solid #ffffff;
+  text-align: left;
+  padding: 8px;
+  font-size: 32px;
+}
+
+th {
+  font-size: 20px;
+  background-color: rgb(117, 201, 250);
+}
+
+td {
+  font-size: 20px;
+  background-color: rgb(205, 235, 253);
+}
+
+form {
+  display: flex;
+  gap: 5px;
+}
+
+form td:last-child {
+  display: flex;
+  justify-content: space-evenly;
+}/*# sourceMappingURL=ManageUserAccounts.css.map */

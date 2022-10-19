@@ -5,7 +5,7 @@ export const accordionData = [
       laborum cupiditate possimus labore, hic temporibus velit dicta earum
       suscipit commodi eum enim atque at? Et perspiciatis dolore iure
       voluptatem.`,
-      requirements: `Certificate of Grades(COG), Receipts of (Scholarship Form, COG)`
+      requirements: `Assessment Form, Certificate of Grades(COG), Receipt of COG, Receipt of Scholarship Form`
     },
     {
       scholarship_name: 'Alumni Discount',
@@ -15,7 +15,7 @@ export const accordionData = [
       pariatur? Impedit autem esse nostrum quasi, fugiat a aut error cumque
       quidem maiores doloremque est numquam praesentium eos voluptatem amet!
       Repudiandae, mollitia id reprehenderit a ab odit!`,
-      requirements: `Certificate of Grades(COG), Receipts of (Scholarship Form, COG)`
+      requirements: `Assessment Form, Certificate of Grades(COG), Receipt of COG, Receipt of Scholarship Form, ID or TOR of Alumni `
 
     },
     {
@@ -23,7 +23,7 @@ export const accordionData = [
       description: `Sapiente expedita hic obcaecati, laboriosam similique omnis architecto ducimus magnam accusantium corrupti
       quam sint dolore pariatur perspiciatis, necessitatibus rem vel dignissimos
       dolor ut sequi minus iste? Quas?`,
-      requirements: `Certificate of Grades(COG), Receipts of (Scholarship Form, COG)`
+      requirements: `Assessment Form, Certificate of Grades(COG), Receipt of COG, Receipt of Scholarship Form`
 
     },
     {
@@ -31,7 +31,7 @@ export const accordionData = [
       description: `Sapiente expedita hic obcaecati, laboriosam similique omnis architecto ducimus magnam accusantium corrupti
       quam sint dolore pariatur perspiciatis, necessitatibus rem vel dignissimos
       dolor ut sequi minus iste? Quas?`,
-      requirements: `Certificate of Grades(COG), Receipts of (Scholarship Form, COG)`
+      requirements: `Assessment Form, Certificate of Grades(COG), Receipt of COG, Receipt of Scholarship Form`
 
     },
     {
@@ -39,7 +39,7 @@ export const accordionData = [
       description: `Sapiente expedita hic obcaecati, laboriosam similique omnis architecto ducimus magnam accusantium corrupti
       quam sint dolore pariatur perspiciatis, necessitatibus rem vel dignissimos
       dolor ut sequi minus iste? Quas?`,
-      requirements: `Certificate of Grades(COG), Receipts of (Scholarship Form, COG)`
+      requirements: `Assessment Form, Certificate of Grades(COG), Receipt of COG, Receipt of Scholarship Form`
 
     },
     {
@@ -47,7 +47,7 @@ export const accordionData = [
       description: `Sapiente expedita hic obcaecati, laboriosam similique omnis architecto ducimus magnam accusantium corrupti
       quam sint dolore pariatur perspiciatis, necessitatibus rem vel dignissimos
       dolor ut sequi minus iste? Quas?`,
-      requirements: `Certificate of Grades(COG), Receipts of (Scholarship Form, COG)`
+      requirements: `Assessment Form, Certificate of Grades(COG), Receipt of COG, Receipt of Scholarship Form`
 
     },
     {
@@ -55,7 +55,7 @@ export const accordionData = [
       description: `Sapiente expedita hic obcaecati, laboriosam similique omnis architecto ducimus magnam accusantium corrupti
       quam sint dolore pariatur perspiciatis, necessitatibus rem vel dignissimos
       dolor ut sequi minus iste? Quas?`,
-      requirements: `Certificate of Grades(COG), Receipts of (Scholarship Form, COG)`
+      requirements: `Assessment Form, Certificate of Grades(COG), Receipt of COG, Receipt of Scholarship Form`
 
     }
   ];
