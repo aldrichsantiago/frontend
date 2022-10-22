@@ -4,7 +4,7 @@ import Navbar from '../../components/Navbar'
 import './styles/AdminLayout.css'
 import Menu from '../../assets/menu.png'
 
-function Layout({children}) {
+function AdminLayout({children}) {
 
   const [isChecked, setIsChecked] = useState('none');
 
@@ -58,4 +58,4 @@ function Layout({children}) {
   )
 }
 
-export default Layout
+export default AdminLayout

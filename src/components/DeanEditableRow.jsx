@@ -1,6 +1,6 @@
 import React from "react";
 
-const StudentEditableRow = ({
+const DeanEditableRow = ({
   editFormData,
   handleEditFormChange,
   handleCancelClick,
@@ -12,9 +12,9 @@ const StudentEditableRow = ({
         <input
           type="text"
           required="required"
-          placeholder="Enter a Student ID..."
-          name="student_id"
-          value={editFormData.student_id}
+          placeholder="Enter a Dean ID..."
+          name="dean_id"
+          value={editFormData.dean_id}
           onChange={handleEditFormChange}
         ></input>
       </td>
@@ -79,26 +79,6 @@ const StudentEditableRow = ({
         ></input>
       </td>
       <td>
-        <input
-          type="text"
-          required="required"
-          placeholder="Enter a course..."
-          name="course"
-          value={editFormData.course}
-          onChange={handleEditFormChange}
-        ></input>
-      </td>
-      <td>
-        <input
-          type="text"
-          required="required"
-          placeholder="Enter a year..."
-          name="year"
-          value={editFormData.year}
-          onChange={handleEditFormChange}
-        ></input>
-      </td>
-      <td>
         <button type="submit" onClick={handleEditFormSubmit}>Save</button>
         <button type="button" onClick={handleCancelClick}>
           Cancel
@@ -108,4 +88,4 @@ const StudentEditableRow = ({
   );
 };
 
-export default StudentEditableRow;
+export default DeanEditableRow;

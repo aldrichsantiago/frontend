@@ -11,8 +11,11 @@
         padding: 0.5em 1em;
         border-radius: 10px;
         border: 3px solid #ffffff;
+        cursor: pointer;
+
         &:hover{
             background-color: rgb(11, 92, 28);
+            cursor: pointer;
         }
     }
 }
@@ -20,11 +23,12 @@
 
 
 .users-table {
-    overflow: scroll;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 1rem;
+    margin-bottom: 3em;
   }
   
   table {
@@ -41,14 +45,32 @@
   }
   
   th {
-    font-size: 20px;
+    font-size: 18px;
     background-color: rgb(117, 201, 250);
   }
   
   td {
-    font-size: 20px;
+    font-size: 16px;
 
     background-color: rgb(205, 235, 253);
+
+    button{
+      margin: 3px;
+      padding: 0.5em 1em;
+      cursor: pointer;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+
+      &:nth-child(1){
+        background-color: rgb(63, 206, 58);
+        
+      }
+
+      &:nth-child(2){
+        background-color: rgb(206, 58, 58);
+      }
+    }
   }
   
   form {
