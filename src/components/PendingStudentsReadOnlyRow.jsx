@@ -1,6 +1,6 @@
 import React from "react";
 
-const PendingStudentReadOnlyRow = ({ student, handleAcceptClick, handleRejectClick }) => {
+const PendingStudentReadOnlyRow = ({ student, handleApproveClick, handleRejectClick }) => {
   return (
     <tr>
       <td>{student.student_id}</td>
@@ -15,7 +15,7 @@ const PendingStudentReadOnlyRow = ({ student, handleAcceptClick, handleRejectCli
       <td>
         <button
           type="button"
-          onClick={(event) => handleAcceptClick(event, student)}
+          onClick={() => handleApproveClick(student.id)}
         >
           Accept
         </button>

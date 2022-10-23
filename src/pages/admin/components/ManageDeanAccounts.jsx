@@ -64,18 +64,18 @@ function ManageDeanAccounts() {
     const addDean = async (e) => {
       e.preventDefault();
       try {
-          await axios.post('http://localhost:5000/register/dean', {
-            id: deans.length,
-            last_name: addDeanFormData.last_name,
-            first_name: addDeanFormData.first_name,
-            middle_name: addDeanFormData.middle_name,
-            contact_no: addDeanFormData.contact_no,
-            email: addDeanFormData.email,
-            department: addDeanFormData.department,
-            dean_id: addDeanFormData.dean_id,
-            password: addDeanFormData.password,
-            confPassword: addDeanFormData.confPassword
-          });
+        await axios.post('http://localhost:5000/register/dean', {
+          id: deans.length,
+          last_name: addDeanFormData.last_name,
+          first_name: addDeanFormData.first_name,
+          middle_name: addDeanFormData.middle_name,
+          contact_no: addDeanFormData.contact_no,
+          email: addDeanFormData.email,
+          department: addDeanFormData.department,
+          dean_id: addDeanFormData.dean_id,
+          password: addDeanFormData.password,
+          confPassword: addDeanFormData.confPassword
+        });
           setModalIsOpen(false);
           getDeans();
 
@@ -245,11 +245,12 @@ function ManageDeanAccounts() {
         </form>
         <Modal
         isOpen={modalIsOpen}
-        style={customStyles}>
+        style={customStyles}
+        ariaHideApp={false}>
         <div className="add-user-container">
             <h2>Add a Dean</h2>
             <a onClick={()=>setModalIsOpen(false)}>X</a>
-            <form onSubmit={handleAddFormSubmit} style={{display:'flex', flexDirection:'column'}}>
+            <form onSubmit={addDean} style={{display:'flex', flexDirection:'column'}}>
             <input
                 type="text"
                 required="required"
@@ -272,11 +273,11 @@ function ManageDeanAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
-            type="text"
-            required="required"
-            placeholder="Enter a middle name..."
-            name="middle_name"
-                onChange={handleAddFormChange}
+              type="text"
+              required="required"
+              placeholder="Enter a middle name..."
+              name="middle_name"
+              onChange={handleAddFormChange}
             />
             <input
                 type="text"
@@ -313,7 +314,7 @@ function ManageDeanAccounts() {
                 name="confPassword"
                 onChange={handleAddFormChange}
             />
-            <button type="submit">Add</button>
+            <button type="submit" onClick={addDean}>Add</button>
             </form>
         </div>
         </Modal>

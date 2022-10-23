@@ -23,52 +23,15 @@ $tertiary-color: #B91646;
           
     }
     .status-timeline{
-        padding: 0em 5em;
+        padding: 1em 5em;
         margin: 1em;
-    }
-    .application-submitted{
-         &::before{
-            content: '';
-            position: absolute;
-            width: 3em;
-            height: 3em;
-            background-color: #B91646;
-            border-radius: 50%;
-            left: 2em;
-            display: inline-block;
-         }   
-    }
-
-    .application-review{
-
-         &::before{
-            content: '';
-            position: absolute;
-            width: 3em;
-            height: 3em;
-            background-color: #B91646;
-            border-radius: 50%;
-            left: 2em;
-            display: block;
-        }      
-    }
-
-    .application-approved{
-        &::before{
-            content: '';
-            position: absolute;
-            width: 3em;
-            height: 3em;
-            background-color: #B91646;
-            border-radius: 50%;
-            left: 2em;
-            display: inline-block;
+        width: auto;
+        div{
+            margin: 2em 3px;
+            
         }
     }
 
-    .status-timeline{
-        padding: 3em;
-    }
 }
 
 
@@ -80,65 +43,12 @@ $breakpoint-tablet: 768px;
 $breakpoint-laptop: 1024px;
 @media (min-width: $breakpoint-laptop) {
 
-    .application-status-container{
-
-        .application-submitted, .application-review, .application-approved{
-            &::before{
-                left: 18em;
-            }      
-    }
-
-    }
-}
-
-@media (min-width: 1130px) {
-
-    .application-status-container{
-
-        .application-submitted, .application-review, .application-approved{
-            &::before{
-                left: 19.5em;
-            }      
+    .status-timeline{
+        div{
+            margin: 2em 3px;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr ;
+            
         }
-
-    }
-}
-
-@media (min-width: 1240px) {
-
-    .application-status-container{
-
-        .application-submitted, .application-review, .application-approved{
-            &::before{
-                left: 21.5em;
-            }      
-        }
-
-    }
-}
-
-@media (min-width: 1440px) {
-
-    .application-status-container{
-
-        .application-submitted, .application-review, .application-approved{
-            &::before{
-                left: 24.5em;
-            }      
-        }
-
-    }
-}
-
-@media (min-width: 1920px) {
-
-    .application-status-container{
-
-        .application-submitted, .application-review, .application-approved{
-            &::before{
-                left: 32em;
-            }      
-        }
-
     }
 }

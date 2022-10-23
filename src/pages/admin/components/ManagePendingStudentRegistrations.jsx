@@ -40,29 +40,36 @@ function ManagePendingStudentRegistrations() {
         setStudents(response.data);
     }
 
-    const handleAddFormChange = (event) => {
-        event.preventDefault();
+    const approveStudent = async (StudentId) => {
+      try {
+        const index = students.findIndex((student) => student.id === StudentId);
+        const student = students[index];
 
-        const fieldName = event.target.getAttribute("name");
-        const fieldValue = event.target.value;
+        await axios.post('http://localhost:5000/approve/registration/student', {
+          last_name: student.last_name,
+          first_name: student.first_name,
+          middle_name: student.middle_name,
+          contact_no: student.contact_no,
+          email: student.email,
+          department: student.department,
+          course: student.course,
+          year: student.year,
+          student_id: student.student_id,
+          password: student.password
+        });
 
-        const newFormData = { ...addStudentFormData };
-        newFormData[fieldName] = fieldValue;
+        rejectStudent(StudentId);
 
-        setAddStudentFormData(newFormData);
-    };
 
-    const handleEditFormChange = (event) => {
-        event.preventDefault();
+      } catch (error) {
+        console.log(error);
+      }
+    }
 
-        const fieldName = event.target.getAttribute("name");
-        const fieldValue = event.target.value;
-
-        const newFormData = { ...editStudentFormData };
-        newFormData[fieldName] = fieldValue;
-
-        setEditStudentFormData(newFormData);
-    };
+    const rejectStudent = async (id) => {
+      await axios.delete(`http://localhost:5000/reject/registration/student/${id}`);
+      getStudents();
+    }
 
     const handleAddFormSubmit = (event) => {
         event.preventDefault();
@@ -114,28 +121,6 @@ function ManagePendingStudentRegistrations() {
         setEditStudenttId(null);
     };
 
-    const handleEditClick = (event, student) => {
-        event.preventDefault();
-        setEditStudenttId(student.id);
-
-        const formValues = {
-        last_name: student.last_name,
-        first_name: student.first_name,
-        middle_name: student.middle_name,
-        contact_no: student.contact_no,
-        email: student.email,
-        department: student.department,
-        course: student.course,
-        year: student.year,
-        student_id: student.student_id,
-        };
-
-        setEditStudentFormData(formValues);
-    };
-
-    const handleCancelClick = () => {
-        setEditStudenttId(null);
-    };
 
     const handleDeleteClick = (studenttId) => {
         const newStudents = [...students];
@@ -145,6 +130,7 @@ function ManagePendingStudentRegistrations() {
         newStudents.splice(index, 1);
 
         setStudents(newStudents);
+        rejectStudent(studenttId)
     };
 
   return (
@@ -178,7 +164,7 @@ function ManagePendingStudentRegistrations() {
                     <PendingStudentReadOnlyRow
                       key={student.id}
                       student={student}
-                      handleAcceptClick={handleEditClick}
+                      handleApproveClick={approveStudent}
                       handleRejectClick={handleDeleteClick}
                     />
                   )}

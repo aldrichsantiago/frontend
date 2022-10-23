@@ -1,8 +1,7 @@
 import React, {useState,  useEffect} from 'react'
 import Modal from 'react-modal'
 import axios from 'axios'
-import DeanReadOnlyRow from './../../../components/DeanReadOnlyRow'
-import DeanEditableRow from './../../../components/DeanEditableRow'
+import PendingDeanReadOnlyRow from './../../../components/PendingDeanReadOnlyRow'
 
 function ManagePendingDeanRegistrations() {
     const [deans, setDeans] = useState();
@@ -14,7 +13,8 @@ function ManagePendingDeanRegistrations() {
         middle_name: "",
         contact_no: "",
         email: "",
-        department: ""
+        department: "",
+        password:""
 
     });
 
@@ -25,7 +25,8 @@ function ManagePendingDeanRegistrations() {
         middle_name: "",
         contact_no: "",
         email: "",
-        department: ""
+        department: "",
+        password:""
     });
 
     const [editDeanId, setEditDeanId] = useState(null);
@@ -33,13 +34,40 @@ function ManagePendingDeanRegistrations() {
     useEffect(() => {
         getDeans();
     }, []);
-    console.log(deans);
 
     const getDeans = async () => {
         const response = await axios.get('http://localhost:5000/pendingdeans/get', {
-
         });
         setDeans(response.data);
+    }
+
+    const approveDean = async (DeanId) => {
+      try {
+        const index = deans.findIndex((dean) => dean.id === DeanId);
+        const dean = deans[index];
+
+        await axios.post('http://localhost:5000/approve/registration/dean', {
+          last_name: dean.last_name,
+          first_name: dean.first_name,
+          middle_name: dean.middle_name,
+          contact_no: dean.contact_no,
+          email: dean.email,
+          department: dean.department,
+          dean_id: dean.dean_id,
+          password: dean.password
+        });
+
+        rejectDean(DeanId);
+
+
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+    const rejectDean = async (id) => {
+      await axios.delete(`http://localhost:5000/reject/registration/dean/${id}`);
+      getDeans();
     }
 
     const handleAddFormChange = (event) => {
@@ -48,7 +76,7 @@ function ManagePendingDeanRegistrations() {
         const fieldName = event.target.getAttribute("name");
         const fieldValue = event.target.value;
 
-        const newFormData = { ...addStudentFormData };
+        const newFormData = { ...addDeanFormData };
         newFormData[fieldName] = fieldValue;
 
         setAddDeanFormData(newFormData);
@@ -111,26 +139,9 @@ function ManagePendingDeanRegistrations() {
         setEditDeanId(null);
     };
 
-    const handleEditClick = (event, dean) => {
-        event.preventDefault();
-        setEditDeanId(dean.id);
+    // const handleEditClick = (event, dean) => {
 
-        const formValues = {
-        last_name: dean.last_name,
-        first_name: dean.first_name,
-        middle_name: dean.middle_name,
-        contact_no: dean.contact_no,
-        email: dean.email,
-        department: dean.department,
-        dean_id: dean.dean_id,
-        };
-
-        setEditDeanFormData(formValues);
-    };
-
-    const handleCancelClick = () => {
-        setEditDeanId(null);
-    };
+    // };
 
     const handleDeleteClick = (DeanId) => {
         const newDeans = [...deans];
@@ -139,7 +150,8 @@ function ManagePendingDeanRegistrations() {
 
         newDeans.splice(index, 1);
 
-        setStudents(newDeans);
+        setDeans(newDeans);
+        rejectDean(DeanId);
     };
 
     const customStyles = {
@@ -177,11 +189,11 @@ function ManagePendingDeanRegistrations() {
               {deans?.map((dean) => (
                 <>
                   {(
-                    <DeanReadOnlyRow
+                    <PendingDeanReadOnlyRow
                       key={dean.id}
                       dean={dean}
-                      handleEditClick={handleEditClick}
-                      handleDeleteClick={handleDeleteClick}
+                      handleApproveClick={approveDean}
+                      handleRejectClick={handleDeleteClick}
                     />
                   )}
                 </>

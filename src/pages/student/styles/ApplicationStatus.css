@@ -15,65 +15,18 @@
   font-size: 2em;
 }
 .application-status-container .status-timeline {
-  padding: 0em 5em;
+  padding: 1em 5em;
   margin: 1em;
+  width: auto;
 }
-.application-status-container .application-submitted::before {
-  content: "";
-  position: absolute;
-  width: 3em;
-  height: 3em;
-  background-color: #B91646;
-  border-radius: 50%;
-  left: 2em;
-  display: inline-block;
-}
-.application-status-container .application-review::before {
-  content: "";
-  position: absolute;
-  width: 3em;
-  height: 3em;
-  background-color: #B91646;
-  border-radius: 50%;
-  left: 2em;
-  display: block;
-}
-.application-status-container .application-approved::before {
-  content: "";
-  position: absolute;
-  width: 3em;
-  height: 3em;
-  background-color: #B91646;
-  border-radius: 50%;
-  left: 2em;
-  display: inline-block;
-}
-.application-status-container .status-timeline {
-  padding: 3em;
+.application-status-container .status-timeline div {
+  margin: 2em 3px;
 }
 
 @media (min-width: 1024px) {
-  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
-    left: 18em;
-  }
-}
-@media (min-width: 1130px) {
-  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
-    left: 19.5em;
-  }
-}
-@media (min-width: 1240px) {
-  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
-    left: 21.5em;
-  }
-}
-@media (min-width: 1440px) {
-  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
-    left: 24.5em;
-  }
-}
-@media (min-width: 1920px) {
-  .application-status-container .application-submitted::before, .application-status-container .application-review::before, .application-status-container .application-approved::before {
-    left: 32em;
+  .status-timeline div {
+    margin: 2em 3px;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
   }
 }/*# sourceMappingURL=ApplicationStatus.css.map */

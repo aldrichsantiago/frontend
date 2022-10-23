@@ -59,7 +59,6 @@ function ManageStudentAccounts() {
       });
       getStudents();
       
-      
     }
 
     const deleteStudent = async (id) => {
