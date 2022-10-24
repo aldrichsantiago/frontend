@@ -1,0 +1,17 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap");
+* {
+  margin: 0 auto;
+}
+
+.update-site-content-con .update-header-container {
+  display: flex;
+  align-items: center;
+}
+.update-site-content-con .update-header-container a {
+  text-decoration: none;
+  background-color: #105652;
+  color: #fff;
+  padding: 0.6em 2em;
+  border: 3px solid #fff;
+  border-radius: 5px;
+}/*# sourceMappingURL=UpdateSiteContent.css.map */

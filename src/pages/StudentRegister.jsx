@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Navbar from '../components/Navbar'
 
@@ -8,6 +10,7 @@ import Logo from '../assets/logo.png'
 import './styles/StudentRegister.css'
 
 function StudentRegister() {
+    const [msg, setMsg] = useState('');
     const [lastName, setLastName] = useState('');
     const [firstName, setFirstName] = useState('');
     const [middleName, setMiddleName] = useState('');
@@ -71,7 +74,18 @@ function StudentRegister() {
             }
         }
     }
-  
+    const notify = () => toast.error(msg, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+    console.log(msg);
+
     return (
     <>
         <Navbar lg="WUPSCHOLARSHIP"></Navbar>
@@ -138,10 +152,21 @@ function StudentRegister() {
                         
                     </div>
                     <br />
-                    <button type="submit" value="REGISTER" onClick={Register}>REGISTER</button>
+                    <button type="submit" value="REGISTER" onClick={notify}>REGISTER</button>
                 </form>
             </div>
         </div>
+        <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </>
     
   )

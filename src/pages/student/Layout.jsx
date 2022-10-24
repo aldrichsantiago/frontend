@@ -12,6 +12,8 @@ function Layout({children}) {
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
   const [users, setUsers] = useState([]);
+  const [id, setId] = useState();
+  const [data, setData] = useState([]);
   const [isChecked, setIsChecked] = useState('none');
   const navigate = useNavigate();
 
@@ -30,6 +32,8 @@ function Layout({children}) {
 
   useEffect(() => {
     refreshToken();
+    setData(id)
+  
   }, []);
 
   const refreshToken = async () => {
@@ -39,6 +43,7 @@ function Layout({children}) {
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setName(decoded.first_name + ' ' + decoded.last_name);
+      setId(decoded.studentId);
       setExpire(decoded.exp);
     }
     catch (error) {
@@ -76,6 +81,8 @@ function Layout({children}) {
         }
     }
 
+    // console.log(id);
+
   return (
     <>
         <Navbar sm="WUPSCHOLARSHIP" user={name} />
@@ -84,7 +91,7 @@ function Layout({children}) {
               <Link to="/student/home">HOME</Link><br />
               <Link to="/student/scholar">VIEW SCHOLARSHIP</Link><br />
               <Link to="/student/status">APPLICATION STATUS</Link><br />
-              <Link to="/student/details">ACCOUNT DETAILS</Link><br />
+              <Link to="/student/details" state={{data}}>ACCOUNT DETAILS</Link><br />
               <a onClick={Logout}>LOGOUT</a>
           </div>
             <input type="checkbox" name="burg" id="burg" onChange={handleChange}/>
@@ -94,7 +101,7 @@ function Layout({children}) {
             <Link to="/student/home">HOME</Link><br />
             <Link to="/student/scholar">VIEW SCHOLARSHIP</Link><br />
             <Link to="/student/status">APPLICATION STATUS</Link><br />
-            <Link to="/student/details">ACCOUNT DETAILS</Link><br />
+            <Link to="/student/details" state={data}>ACCOUNT DETAILS</Link><br />
             <a onClick={Logout}>LOGOUT</a>
           </div>
           <main>{children}</main>

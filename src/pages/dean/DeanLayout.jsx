@@ -2,7 +2,6 @@ import React, {useState, useEffect} from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
-
 import Navbar from '../../components/Navbar'
 import './styles/DeanLayout.css'
 import Menu from '../../assets/menu.png'
@@ -29,9 +28,9 @@ function Layout({children}) {
     }
   };
 
-  // useEffect(() => {
-  //   refreshToken();
-  // }, []);
+  useEffect(() => {
+    refreshToken();
+  }, []);
 
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;

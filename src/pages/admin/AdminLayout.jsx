@@ -27,7 +27,6 @@ function AdminLayout({children}) {
           <div className="sidebar">
               <Link to="/admin/home">HOME</Link><br />
               <Link to="/admin/applications">VIEW APPLICATIONS</Link><br />
-              <Link to="/admin/status">EDIT APPLICATION STATUS</Link><br />
               <Link to="/admin/users">MANAGE USER ACCOUNTS</Link><br />
               <Link to="/admin/site">UPDATE SITE CONTENT</Link><br />
               <Link to="/admin/home">LOGOUT</Link>
@@ -38,7 +37,6 @@ function AdminLayout({children}) {
           <div className="burger-links" style={{'display': {isChecked}}}>
             <Link to="/admin/home">HOME</Link><br />
             <Link to="/admin/applications">VIEW APPLICATIONS</Link><br />
-            <Link to="/admin/status">EDIT APPLICATION STATUS</Link><br />
             <Link to="/admin/users">MANAGE USER ACCOUNTS</Link><br />
             <Link to="/admin/site">UPDATE SITE CONTENT</Link><br />
             <Link to="/admin/home">LOGOUT</Link>
