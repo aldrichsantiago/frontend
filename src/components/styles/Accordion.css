@@ -31,6 +31,9 @@
 .accordion-content:hover {
   cursor: default;
 }
+.accordion-content .program-info-container {
+  padding: 0px;
+}
 .accordion-content .accordion-desc {
   margin: 1em;
 }

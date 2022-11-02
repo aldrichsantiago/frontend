@@ -19,7 +19,7 @@ function AdminLogin() {
                 admin_id: id,
                 password: password
             });
-            navigate("/student/home");
+            navigate("/admin/home");
         } catch (error) {
             if (error.response) {
                 setMsg(error.response.data.msg);
@@ -36,7 +36,6 @@ function AdminLogin() {
             <div className="login-form-con">
                 <form onSubmit={Auth}>
                 <img src={Logo} alt="LOGO" width="100px"/>
-
                     <input type="text" placeholder='Admin ID' value={id} onChange={(e) => setId(e.target.value)}/>
                     <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
                     <input type="submit" value="LOG IN" onClick={Auth}/>

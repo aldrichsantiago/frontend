@@ -9,7 +9,7 @@ import './styles/ManageUserAccounts.css'
 
 
 function ManageUserAccounts() {
-  const [whichTable, setWhichTable] = useState('');
+  const [whichTable, setWhichTable] = useState('Students');
 
   let tableToRender;
     if (whichTable == 'Students') {

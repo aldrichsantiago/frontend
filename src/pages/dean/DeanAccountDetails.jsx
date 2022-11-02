@@ -24,11 +24,11 @@ function DeanAccountDetails() {
   });
 
 
-  useEffect(() => {
-    refreshToken();
-    getDean();
+  // useEffect(() => {
+  //   refreshToken();
+  //   getDean();
     
-  },[token]);
+  // },[token]);
 
   const checkForm = () =>{
     if (last_name != undefined){

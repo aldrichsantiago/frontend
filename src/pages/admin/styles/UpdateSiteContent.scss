@@ -15,6 +15,7 @@ $tertiary-color: #B91646;
     .update-header-container{
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
 
         a{
             text-decoration: none;
@@ -24,12 +25,34 @@ $tertiary-color: #B91646;
             border: 3px solid #fff;
             border-radius: 5px;
         }
-
-        
+    }
+    .update-body-container{
+        padding: 1em 4em;
+        .add-announce-container{
+            input{
+                height: 5em;
+            }
+        }
     }
 
 }
+.note{
+    color: rgb(117, 117, 117);
+}
+.scholar-header{
+    margin: 1em;
+}
 
+.add-announce-container{
+    .addTitle{
+        height: 10em;
+    }
+}
+.flex{
+    display: flex;
+    justify-content: space-between;
+    margin: 1em 0em;
+}
 
 
 $breakpoint-tablet: 768px;

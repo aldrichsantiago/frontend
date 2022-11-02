@@ -6,6 +6,7 @@
 .update-site-content-con .update-header-container {
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
 }
 .update-site-content-con .update-header-container a {
   text-decoration: none;
@@ -14,4 +15,28 @@
   padding: 0.6em 2em;
   border: 3px solid #fff;
   border-radius: 5px;
+}
+.update-site-content-con .update-body-container {
+  padding: 1em 4em;
+}
+.update-site-content-con .update-body-container .add-announce-container input {
+  height: 5em;
+}
+
+.note {
+  color: rgb(117, 117, 117);
+}
+
+.scholar-header {
+  margin: 1em;
+}
+
+.add-announce-container .addTitle {
+  height: 10em;
+}
+
+.flex {
+  display: flex;
+  justify-content: space-between;
+  margin: 1em 0em;
 }/*# sourceMappingURL=UpdateSiteContent.css.map */

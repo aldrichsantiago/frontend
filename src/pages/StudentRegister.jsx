@@ -25,8 +25,26 @@ function StudentRegister() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
 
-    const departments = ["Choose dept","CECT", "CONAMS", "CBA", "CHTM"];
-    const courses = ["Choose course","BSIT", "BSECE", "BSCpE", "BSCS"];
+    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd"];
+    let courses = [""];
+
+    if (department == "CECT"){
+        courses = ["","BSIT", "BSEE", "BSCpE"];
+    }else if (department == "CONAMS"){
+        courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
+    }else if (department == "CHTM"){
+        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management major in Travel Operations"];
+    }else if (department == "CBA"){
+        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration with majors in Financial Management, Marketing Management, Operations Management, Human Resource Development Management, Business Economics and Banking."];
+    }else if (department == "CAS"){
+        courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
+    }else if (department == "CoEd"){
+        courses = ["","BSHRM", "BSECE", "BSCpE"];
+    }else if (department == "CCJE"){
+        courses = ["","Bachelor of Science in Criminology"];
+    }else{
+        courses = [""];
+    }
 
     const dept_options = departments.map((dept) =>
         <option key={dept}>{dept}</option>
@@ -66,7 +84,6 @@ function StudentRegister() {
                 password: password,
                 confPassword: confirmPassword
             });
-            console.log(jsonObject);
             navigate("/");
         } catch (error) {
             if (error.response) {

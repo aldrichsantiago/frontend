@@ -28,7 +28,7 @@ function UserHomeLayout(props) {
                 <p>+63 (044) 463-2162 / 463-2074</p>
             </div>
             <div className='user-logout-container'>
-                <a href="#">LOGOUT</a>
+                <a href="#" onClick={props.logout}>LOGOUT</a>
             </div>
         </div>
     </div>

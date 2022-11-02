@@ -1,0 +1,58 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap");
+* {
+  margin: 0 auto;
+}
+
+.scholarship-form-container {
+  padding: 0em 2em;
+}
+.scholarship-form-container .scholarship-form {
+  display: block;
+}
+.scholarship-form-container .scholarship-form .flex {
+  gap: 1em;
+  flex-wrap: wrap;
+}
+.scholarship-form-container .scholarship-form .subject-codes, .scholarship-form-container .scholarship-form .units {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.scholarship-form-container .scholarship-form .subject-codes input[type=text], .scholarship-form-container .scholarship-form .units input[type=text] {
+  width: 100px;
+}
+.scholarship-form-container .scholarship-form .subject-codes input[type=number], .scholarship-form-container .scholarship-form .units input[type=number] {
+  width: 40px;
+}
+.scholarship-form-container .scholarship-form .scholar-attachments {
+  display: block;
+}
+.scholarship-form-container .scholarship-form .scholar-attachments .sig-con {
+  width: 300px;
+  height: 150px;
+  margin-top: 3em;
+}
+
+.sigPad {
+  border: 1px solid black;
+  width: 100%;
+}
+
+.wrapper {
+  position: relative;
+  width: 400px;
+  height: 200px;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.signature-pad {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 400px;
+  height: 200px;
+  background-color: white;
+}/*# sourceMappingURL=ScholarshipForm.css.map */

@@ -11,7 +11,6 @@ function Layout({children}) {
   const [name, setName] = useState('');
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
-  const [users, setUsers] = useState([]);
   const [id, setId] = useState();
   const [data, setData] = useState([]);
   const [isChecked, setIsChecked] = useState('none');
@@ -89,20 +88,20 @@ function Layout({children}) {
         <div className="content-container">
           <div className="sidebar">
               <Link to="/student/home">HOME</Link><br />
-              <Link to="/student/scholar">VIEW SCHOLARSHIP</Link><br />
+              <Link to="/student/scholarships">VIEW SCHOLARSHIP</Link><br />
               <Link to="/student/status">APPLICATION STATUS</Link><br />
               <Link to="/student/details" state={{data}}>ACCOUNT DETAILS</Link><br />
-              <a onClick={Logout}>LOGOUT</a>
+              <a href='#' onClick={Logout}>LOGOUT</a>
           </div>
             <input type="checkbox" name="burg" id="burg" onChange={handleChange}/>
             <label htmlFor="burg"><img src={Menu} alt="menu-icon"/></label>
             
           <div className="burger-links" style={{'display': {isChecked}}}>
             <Link to="/student/home">HOME</Link><br />
-            <Link to="/student/scholar">VIEW SCHOLARSHIP</Link><br />
+            <Link to="/student/scholarships">VIEW SCHOLARSHIP</Link><br />
             <Link to="/student/status">APPLICATION STATUS</Link><br />
             <Link to="/student/details" state={data}>ACCOUNT DETAILS</Link><br />
-            <a onClick={Logout}>LOGOUT</a>
+            <a href='#' onClick={Logout}>LOGOUT</a>
           </div>
           <main>{children}</main>
         </div>
