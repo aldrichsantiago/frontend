@@ -24,7 +24,7 @@
   display: flex;
   flex-direction: column;
 }
-* .user-details-container form div input {
+* .user-details-container form div input, * .user-details-container form div select {
   border: 2px solid #F9C041;
   border-radius: 3px;
   width: 90%;

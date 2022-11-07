@@ -28,9 +28,9 @@ function Layout({children}) {
     }
   };
 
-  // useEffect(() => {
-  //   refreshToken();
-  // }, []);
+  useEffect(() => {
+    refreshToken();
+  }, []);
 
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;

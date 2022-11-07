@@ -26,6 +26,36 @@ function AccountDetails() {
   
   });
 
+  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd"];
+
+  let courses = [""];
+
+    if (department == "CECT"){
+        courses = ["","BSIT", "BSEE", "BSCpE"];
+    }else if (department == "CONAMS"){
+        courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
+    }else if (department == "CHTM"){
+        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management major in Travel Operations"];
+    }else if (department == "CBA"){
+        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration with majors in Financial Management, Marketing Management, Operations Management, Human Resource Development Management, Business Economics and Banking."];
+    }else if (department == "CAS"){
+        courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
+    }else if (department == "CoEd"){
+        courses = ["","BSHRM", "BSECE", "BSCpE"];
+    }else if (department == "CCJE"){
+        courses = ["","Bachelor of Science in Criminology"];
+    }else{
+        courses = [""];
+    }
+
+    const dept_options = departments.map((dept) =>
+        <option key={dept}>{dept}</option>
+    );
+
+    const course_options = courses.map((course) => 
+        <option key={course}>{course}</option>
+        
+    );
 
   useEffect(() => {
     refreshToken();
@@ -150,11 +180,15 @@ function AccountDetails() {
             </div>
             <div>
               <label htmlFor="department">Department: </label>
-              <input defaultValue={student.department} name="department" type="text" placeholder="Enter your department" required onChange={(e)=> setDepartment(e.target.value)}/>
+              <select defaultValue={student.department} name="department" type="text" placeholder="Enter your department" required onChange={(e)=> setDepartment(e.target.value)}>
+                {dept_options}
+              </select>
             </div>
             <div>
               <label htmlFor="course">Course: </label>
-              <input defaultValue={student.course} name="course" type="text" placeholder="Enter your cousre" required onChange={(e)=> setCourse(e.target.value)}/>
+              <select defaultValue={student.course} name="course" type="text" placeholder="Enter your cousre" required onChange={(e)=> setCourse(e.target.value)}>
+                {course_options}
+              </select>
             </div>
             <div>
               <label htmlFor="year">Year: </label>

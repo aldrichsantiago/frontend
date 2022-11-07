@@ -1,0 +1,16 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap");
+* {
+  margin: 0 auto;
+}
+
+.dean-view-applications {
+  padding: 0em 3em;
+}
+.dean-view-applications .dean-view-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.dean-view-applications .dean-view-header #dean-select-course {
+  width: 30ch;
+}/*# sourceMappingURL=ViewApplications.css.map */

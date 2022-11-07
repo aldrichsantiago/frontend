@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap');
+
+$primary-color: #105652;
+$secondary-color: #F9C041;
+$tertiary-color: #B91646;
+
+
+
+*{
+    margin: 0 auto;
+
+}
+.admin-view-applications{
+    padding: 0em 1em;
+}
+
+.admin-view-app-header{
+    margin-top: 1em;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    a{
+        margin: 1em;
+        text-decoration: none;
+        background-color: #105652;
+        color: white;
+        padding: 0.4em 1em;
+        border-radius: 5px;
+        &:hover{
+            background-color: #0d4946;
+        }
+    }
+}
+
+.rejected-applications, .approved-applications{
+    overflow-x: scroll;
+
+    table{
+        a{
+            color: #fff;
+            background-color: #105652;
+            padding: 0.35em 3em;
+            text-decoration: none;
+            margin-right: 1em;
+            border-radius: 5px;
+        }
+        
+    }
+}
+
+
+$breakpoint-tablet: 768px;
+@media (min-width: $breakpoint-tablet) {
+
+}
+
+$breakpoint-laptop: 1024px;
+@media (min-width: $breakpoint-laptop) {
+
+}

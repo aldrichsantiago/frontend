@@ -8,6 +8,7 @@
 }
 .scholarship-form-container .scholarship-form {
   display: block;
+  margin-bottom: 3em;
 }
 .scholarship-form-container .scholarship-form .flex {
   gap: 1em;
@@ -24,6 +25,10 @@
 .scholarship-form-container .scholarship-form .subject-codes input[type=number], .scholarship-form-container .scholarship-form .units input[type=number] {
   width: 40px;
 }
+.scholarship-form-container .scholarship-form .other-info {
+  display: flex;
+  flex-direction: column;
+}
 .scholarship-form-container .scholarship-form .scholar-attachments {
   display: block;
 }
@@ -32,27 +37,18 @@
   height: 150px;
   margin-top: 3em;
 }
+.scholarship-form-container .scholarship-form .scholarFormSubmit {
+  margin: 2em;
+  border-radius: 5px;
+  padding: 1em 3em;
+  background-color: #fff;
+  cursor: pointer;
+}
+.scholarship-form-container .scholarship-form .scholarFormSubmit:hover {
+  background-color: rgb(214, 214, 214);
+}
 
 .sigPad {
   border: 1px solid black;
   width: 100%;
-}
-
-.wrapper {
-  position: relative;
-  width: 400px;
-  height: 200px;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-.signature-pad {
-  position: absolute;
-  left: 0;
-  top: 0;
-  width: 400px;
-  height: 200px;
-  background-color: white;
 }/*# sourceMappingURL=ScholarshipForm.css.map */

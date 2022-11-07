@@ -1,0 +1,38 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap");
+* {
+  margin: 0 auto;
+}
+
+.admin-view-applications {
+  padding: 0em 1em;
+}
+
+.admin-view-app-header {
+  margin-top: 1em;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.admin-view-app-header a {
+  margin: 1em;
+  text-decoration: none;
+  background-color: #105652;
+  color: white;
+  padding: 0.4em 1em;
+  border-radius: 5px;
+}
+.admin-view-app-header a:hover {
+  background-color: #0d4946;
+}
+
+.rejected-applications, .approved-applications {
+  overflow-x: scroll;
+}
+.rejected-applications table a, .approved-applications table a {
+  color: #fff;
+  background-color: #105652;
+  padding: 0.35em 3em;
+  text-decoration: none;
+  margin-right: 1em;
+  border-radius: 5px;
+}/*# sourceMappingURL=ViewApplications.css.map */

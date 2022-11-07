@@ -14,6 +14,7 @@ $tertiary-color: #B91646;
 
     .scholarship-form{
         display: block;
+        margin-bottom: 3em;
         .flex{
             gap: 1em;
             flex-wrap: wrap;
@@ -31,6 +32,10 @@ $tertiary-color: #B91646;
                 width: 40px;
             }
         }
+        .other-info{
+            display: flex;
+            flex-direction: column;
+        }
 
         .scholar-attachments{
             display: block;
@@ -41,6 +46,18 @@ $tertiary-color: #B91646;
                 margin-top: 3em;
             }
         }
+
+        .scholarFormSubmit{
+            margin: 2em;
+            border-radius: 5px;
+            padding: 1em 3em;
+            background-color: #fff;
+            cursor: pointer;
+            &:hover{
+                background-color: rgb(214, 214, 214);
+
+            }
+        }
     }
 }
 
@@ -49,24 +66,6 @@ $tertiary-color: #B91646;
     width: 100%;
 }
 
-.wrapper {
-    position: relative;
-    width: 400px;
-    height: 200px;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-}
-  
-.signature-pad {
-    position: absolute;
-    left: 0;
-    top: 0;
-    width:400px;
-    height:200px;
-    background-color: white;
-    }
 
 
 $breakpoint-tablet: 768px;

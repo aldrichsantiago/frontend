@@ -1,0 +1,43 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap");
+* {
+  margin: 0 auto;
+}
+
+.dean-review-application {
+  font-family: Arial;
+  width: 100%;
+  padding: 2em 1em;
+  background-color: #fff;
+}
+.dean-review-application .dean-review-header {
+  text-align: center;
+}
+.dean-review-application .dean-review-body {
+  margin: 3em auto;
+  width: 50%;
+}
+.dean-review-application .dean-review-body .applicant-data {
+  margin: 3em;
+}
+.dean-review-application .dean-review-body .subj-codes-units-table {
+  margin: 2em 0em 5em;
+}
+.dean-review-application .dean-review-body table thead tr td {
+  border: 1px solid black;
+  background-color: #fff;
+}
+.dean-review-application .dean-review-body table tbody tr td {
+  border: 1px solid black;
+  background-color: #fff;
+}
+.dean-review-application .dean-review-body .signatures {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  margin-bottom: 7em;
+}
+.dean-review-application .dean-review-body .other-reqs {
+  display: flex;
+  flex-direction: column;
+  gap: 3em;
+}/*# sourceMappingURL=DeanApplicationReview.css.map */

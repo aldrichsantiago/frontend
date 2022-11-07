@@ -6,15 +6,14 @@
     a{
         text-decoration: none;
         color: #ffffff;
-        font-family: Arial, Helvetica, sans-serif;
-        background-color: green;
+        background-color: #105652;
         padding: 0.5em 1em;
-        border-radius: 10px;
+        border-radius: 5px;
         border: 3px solid #ffffff;
         cursor: pointer;
 
         &:hover{
-            background-color: rgb(11, 92, 28);
+            background-color: #105652;
             cursor: pointer;
         }
     }
