@@ -24,6 +24,8 @@ import AdminManageUsers from './pages/admin/ManageUserAccounts'
 import AdminUpdateSite from './pages/admin/UpdateSiteContent'
 import ScholarshipForm from './pages/student/ScholarshipForm'
 import DeanApplicationReview from './pages/dean/DeanApplicationReview'
+import AdminApplicationReview from './pages/admin/AdminApplicationReview'
+import AdminApprovedApplications from './pages/admin/AdminApprovedApplications'
 
 
 function App() {
@@ -52,6 +54,8 @@ function App() {
 
         <Route path='/admin/home' element={<AdminHome/>}/>
         <Route path="/admin/applications" element={<AdminViewApplications/>}/>
+        <Route path="/admin/applications/review/:id" element={<AdminApplicationReview/>}/>
+        <Route path="/admin/approved/application/:id" element={<AdminApprovedApplications/>}/>
         <Route path="/admin/status" element={<AdminEditAppStatus/>}/>
         <Route path='/admin/users' element={<AdminManageUsers/>}/>
         <Route path="/admin/site" element={<AdminUpdateSite/>}/>

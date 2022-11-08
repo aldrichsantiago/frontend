@@ -40,4 +40,7 @@
   display: flex;
   flex-direction: column;
   gap: 3em;
+}
+.dean-review-application .dean-review-body .other-reqs img {
+  max-width: 100%;
 }/*# sourceMappingURL=DeanApplicationReview.css.map */

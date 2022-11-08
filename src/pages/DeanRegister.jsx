@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from "axios";
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'
 import Navbar from '../components/Navbar'
 
@@ -16,6 +17,7 @@ function StudentRegister() {
     const [deanId, setDeanId] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [msg, setMsg] = useState('');
     const navigate = useNavigate();
 
 
@@ -59,6 +61,27 @@ function StudentRegister() {
             }
         }
     }
+
+    useEffect(()=>{
+        if(!msg){
+
+        }else{
+        notify();
+
+        }
+    },[msg]);
+
+    const notify = () => toast.error(msg, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
+
 
     return (
     <>
@@ -116,10 +139,21 @@ function StudentRegister() {
                         
                     </div>
                     <br />
-                    <input type="button" value="REGISTER" onClick={Register}/>
+                    <button type="submit" onClick={Register}>REGISTER</button>
                 </form>
             </div>
         </div>
+        <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </>
     
   )

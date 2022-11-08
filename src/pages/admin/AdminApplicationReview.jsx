@@ -3,9 +3,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import Logo from '../../assets/logo.png'
-import './styles/DeanApplicationReview.css'
 
-function DeanApplicationReview() {
+function AdminApplicationReview() {
     let { id } = useParams();
     const [applicantData, setApplicantData] = useState({});
     const [applicantReqs, setApplicantReqs] = useState([]);
@@ -17,7 +16,7 @@ function DeanApplicationReview() {
 
     const getApplicantData = async() => {
         try {
-            const response = await axios.get(`http://localhost:5000/dean/applications/review/${id}`,{
+            const response = await axios.get(`http://localhost:5000/admin/view/application/${id}`,{
             });
             setApplicantData(response.data);
         } catch (error) {
@@ -35,7 +34,7 @@ function DeanApplicationReview() {
             <h5>Philippines 3100</h5>
             <br />
             <h1>OFFICE FOR STUDENT AFFAIRS</h1>
-            <h4>{applicantData.createdAt}</h4>
+            <h5>{applicantData.date_submitted}</h5>
         </div>
         <div className="dean-review-body">
             <div className="applicant-data">
@@ -101,7 +100,7 @@ function DeanApplicationReview() {
 
             <div className="signatures">
                 <div className="student-sign">
-                    <img src={applicantData.student_sign} alt="Student's Signature Here" width={150}/>
+                    <img src={applicantData.student_sign} alt="" width={150}/>
                     <h3>{applicantData.first_name} {applicantData.last_name}</h3>
                     <p>---------------------------------------------</p>
                     <h4>STUDENT'S SIGNATURE</h4>
@@ -137,4 +136,4 @@ function DeanApplicationReview() {
   )
 }
 
-export default DeanApplicationReview
+export default AdminApplicationReview

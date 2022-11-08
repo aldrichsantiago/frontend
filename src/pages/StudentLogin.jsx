@@ -1,5 +1,6 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer, toast } from 'react-toastify';
 import Navbar from '../components/Navbar'
 import '../components/styles/userLogin.css'
 import Logo from '../assets/logo.png'
@@ -26,6 +27,25 @@ function StudentLogin() {
             }
         }
     }
+    useEffect(()=>{
+        if(!msg){
+
+        }else{
+        notify();
+
+        }
+    },[msg]);
+
+    const notify = () => toast.error(msg, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
 
   return (
     <div>
@@ -39,7 +59,7 @@ function StudentLogin() {
 
                     <input type="text" placeholder='Student ID' value={id} onChange={(e) => setId(e.target.value)}/>
                     <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                    <input type="submit" value="LOG IN" onClick={Auth}/>
+                    <input type="submit" value="LOG IN" />
                 </form>
                 <div>
                     <a href="#" >Forgot my password</a><br />
@@ -48,6 +68,17 @@ function StudentLogin() {
             </div>
         
         </div>
+        <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </div>
   )
 }

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from "axios";
 import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify';
@@ -33,9 +33,9 @@ function StudentRegister() {
     }else if (department == "CONAMS"){
         courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
     }else if (department == "CHTM"){
-        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management major in Travel Operations"];
+        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
     }else if (department == "CBA"){
-        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration with majors in Financial Management, Marketing Management, Operations Management, Human Resource Development Management, Business Economics and Banking."];
+        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
     }else if (department == "CAS"){
         courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
     }else if (department == "CoEd"){
@@ -91,6 +91,9 @@ function StudentRegister() {
             }
         }
     }
+
+    useEffect(()=>{notify()},[msg]);
+
     const notify = () => toast.error(msg, {
         position: "bottom-right",
         autoClose: 5000,
@@ -169,7 +172,7 @@ function StudentRegister() {
                         
                     </div>
                     <br />
-                    <button type="submit" value="REGISTER" onClick={notify}>REGISTER</button>
+                    <button type="submit" value="REGISTER">REGISTER</button>
                 </form>
             </div>
         </div>

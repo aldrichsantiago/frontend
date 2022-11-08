@@ -1,6 +1,6 @@
 import React from "react";
 
-const StudentReadOnlyRow = ({ student, handleEditClick, handleDeleteClick }) => {
+const StudentReadOnlyRow = ({ student, handleEditClick, handleDeleteClick, handleChangePassword }) => {
   return (
     <tr>
       <td>{student.student_id}</td>
@@ -13,6 +13,12 @@ const StudentReadOnlyRow = ({ student, handleEditClick, handleDeleteClick }) => 
       <td>{student.course}</td>
       <td>{student.year}</td>
       <td>
+        <button
+          type="button"
+          onClick={() => handleChangePassword(student.student_id)}
+        >
+          Change Password
+        </button>
         <button
           type="button"
           onClick={(event) => handleEditClick(event, student)}

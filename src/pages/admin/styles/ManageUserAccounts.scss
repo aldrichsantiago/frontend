@@ -72,8 +72,7 @@
       border-radius: 5px;
 
       &:nth-child(1){
-        background-color: rgb(63, 206, 58);
-        
+        background-color: #105652;
       }
 
       &:nth-child(2){
@@ -82,6 +81,28 @@
     }
   }
   
+  .students-user-table{
+    button{
+      margin: 3px;
+      padding: 0.5em 1em;
+      cursor: pointer;
+      color: #ffffff;
+      border: none;
+      border-radius: 5px;
+
+      &:nth-child(1){
+        background-color: #105652;
+      }
+
+      &:nth-child(2){
+        background-color: rgb(58, 206, 95);
+      }
+      &:nth-child(3){
+        background-color: rgb(206, 58, 58);
+      }
+    }
+  }
+
   form {
     display: flex;
     gap: 5px;

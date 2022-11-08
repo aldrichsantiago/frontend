@@ -58,6 +58,9 @@ $tertiary-color: #B91646;
             display: flex;
             flex-direction: column;
             gap: 3em;
+            img{
+                max-width: 100%;
+            }
             
         }
     }

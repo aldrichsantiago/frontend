@@ -158,7 +158,6 @@ function ManageScholarshipInfo() {
     };
 
   
-  console.log(scholarships)
   return (
 
     <>

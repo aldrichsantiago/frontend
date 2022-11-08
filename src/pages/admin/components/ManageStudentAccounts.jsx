@@ -8,6 +8,8 @@ function ManageStudentAccounts() {
     const [students, setStudents] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [msg, setMsg] = useState('');
+    const [selectDept, setSelectDept] = useState('');
+    const [selectCourse, setSelectCourse] = useState('');
     const [addStudentFormData, setAddStudentFormData] = useState({
         student_id: "",
         last_name: "",
@@ -33,6 +35,41 @@ function ManageStudentAccounts() {
     });
 
     const [editStudenttId, setEditStudenttId] = useState(null);
+    const [changePassModal, setChangePassModal] = useState(false);
+    const [passwordForm, setPasswordForm] = useState({
+
+    });
+
+
+    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd"];
+    let courses = [""];
+
+    if (selectDept == "CECT"){
+        courses = ["","BSIT", "BSEE", "BSCpE"];
+    }else if (selectDept == "CONAMS"){
+        courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
+    }else if (selectDept == "CHTM"){
+        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management major in Travel Operations"];
+    }else if (selectDept == "CBA"){
+        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration with majors in Financial Management, Marketing Management, Operations Management, Human Resource Development Management, Business Economics and Banking."];
+    }else if (selectDept == "CAS"){
+        courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
+    }else if (selectDept == "CoEd"){
+        courses = ["","BSHRM", "BSECE", "BSCpE"];
+    }else if (selectDept == "CCJE"){
+        courses = ["","Bachelor of Science in Criminology"];
+    }else{
+        courses = [""];
+    }
+
+    const dept_options = departments.map((dept) =>
+      <option key={dept}>{dept}</option>
+    );
+
+  const course_options = courses.map((course) =>
+      <option key={course}>{course}</option>
+    );
+
 
     useEffect(() => {
         getStudents();
@@ -59,6 +96,13 @@ function ManageStudentAccounts() {
       });
       getStudents();
       
+    }
+    const changePassword = async () => {
+      try{
+        await axios.patch(`http://localhost:5000/change/student/password`, passwordForm);
+      }catch(e){
+        console.log(e);
+      }
     }
 
     const deleteStudent = async (id) => {
@@ -116,6 +160,18 @@ function ManageStudentAccounts() {
 
         setEditStudentFormData(newFormData);
     };
+
+    const handleChangePassFormChange = (event) => {
+      event.preventDefault();
+
+      const fieldName = event.target.getAttribute("name");
+      const fieldValue = event.target.value;
+
+      const newFormData = { ...passwordForm };
+      newFormData[fieldName] = fieldValue;
+
+      setPasswordForm(newFormData);
+  };
 
     const handleAddFormSubmit = (event) => {
         event.preventDefault();
@@ -203,6 +259,18 @@ function ManageStudentAccounts() {
         deleteStudent(studentId);
     };
 
+    const handleChangePassword = (id) => {
+      passwordForm.student_id = id;
+      setChangePassModal(true);
+
+    }
+    const handleChangePasswordSubmit = () => {
+      console.log(passwordForm);
+      changePassword();
+      setChangePassModal(false);
+
+    }
+
     const customStyles = {
         content: {
           top: '50%',
@@ -213,6 +281,22 @@ function ManageStudentAccounts() {
           transform: 'translate(-50%, -50%)',
         },
       };
+      
+  const axiosJWT = axios.create();
+
+  axiosJWT.interceptors.request.use(async (config) => {
+    const currentDate = new Date();
+    if (expire * 1000 < currentDate.getTime()) {
+      const response = await axios.get('http://localhost:5000/admin/token');
+      config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+      setToken(response.data.accessToken);
+      const decoded = jwt_decode(response.data.accessToken);
+      setExpire(decoded.exp);
+    }
+    return config;
+  }, (error) => {
+      return Promise.reject(error);
+  });
 
   return (
     <>
@@ -224,7 +308,7 @@ function ManageStudentAccounts() {
         
 
         <form onSubmit={handleEditFormSubmit}>
-          <table>
+          <table className='students-user-table'>
             <thead>
               <tr>
                 <th>Student ID</th>
@@ -254,6 +338,7 @@ function ManageStudentAccounts() {
                       student={student}
                       handleEditClick={handleEditClick}
                       handleDeleteClick={handleDeleteClick}
+                      handleChangePassword={handleChangePassword}
                     />
                   )}
                 </>
@@ -318,6 +403,7 @@ function ManageStudentAccounts() {
                 name="department"
                 onChange={handleAddFormChange}
             />
+
             <input
                 type="text"
                 required="required"
@@ -349,6 +435,22 @@ function ManageStudentAccounts() {
             <button type="submit">Add</button>
             </form>
         </div>
+        </Modal>
+        <Modal
+        isOpen={changePassModal}
+        style={customStyles}
+        ariaHideApp={false}>
+          <form style={{display:'flex', flexDirection:'column', gap:'1em'}}>
+            <input type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange}/>
+            <input type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange}/>
+            <div style={{display:'flex', gap:'1em'}}>
+              <button type="button" onClick={()=>setChangePassModal(false)}>Cancel</button>
+              <button type="button" onClick={handleChangePasswordSubmit}>Change Password</button>
+            </div>
+            
+
+          </form>
+          
         </Modal>
         
       </div> 

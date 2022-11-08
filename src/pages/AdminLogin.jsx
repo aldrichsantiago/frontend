@@ -1,7 +1,8 @@
-import React, {useState} from 'react'
-import Navbar from '../components/Navbar'
+import React, {useState, useEffect} from 'react'
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios';
+import Navbar from '../components/Navbar'
 import Logo from '../assets/logo.png'
 import '../components/styles/userLogin.css'
 
@@ -26,6 +27,25 @@ function AdminLogin() {
             }
         }
     }
+    useEffect(()=>{
+        if(!msg){
+
+        }else{
+        notify();
+
+        }
+    },[msg]);
+
+    const notify = () => toast.error(msg, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+        });
   
   return (
     <div>
@@ -43,6 +63,17 @@ function AdminLogin() {
             </div>
         
         </div>
+        <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </div>
   )
 }
