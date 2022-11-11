@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react'
 import Navbar from '../components/Navbar'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import Logo from '../assets/logo.png'
@@ -63,7 +63,7 @@ function DeanLogin() {
                     <input type="submit" value="LOG IN" onClick={Auth}/>
                 </form>
                 <div>
-                    <a href='register/dean'>Create an account</a>
+                    <Link href='register/dean'>Create an account</Link>
                 </div>
             </div>
         </div>
