@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import Navbar from '../components/Navbar'
 import '../components/styles/userLogin.css'
@@ -63,7 +63,7 @@ function StudentLogin() {
                 </form>
                 <div>
                     
-                    <a href='register/student'>Create an account</a>
+                    <Link href='register/student'>Create an account</Link>
                 </div>
             </div>
         
