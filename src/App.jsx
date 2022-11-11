@@ -19,7 +19,6 @@ import DeanAccountDetails from './pages/dean/DeanAccountDetails'
 
 import AdminHome from './pages/admin/AdminHome'
 import AdminViewApplications from './pages/admin/ViewApplications'
-import AdminEditAppStatus from './pages/admin/EditApplicationStatus'
 import AdminManageUsers from './pages/admin/ManageUserAccounts'
 import AdminUpdateSite from './pages/admin/UpdateSiteContent'
 import ScholarshipForm from './pages/student/ScholarshipForm'
@@ -56,7 +55,6 @@ function App() {
         <Route path="/admin/applications" element={<AdminViewApplications/>}/>
         <Route path="/admin/applications/review/:id" element={<AdminApplicationReview/>}/>
         <Route path="/admin/approved/application/:id" element={<AdminApprovedApplications/>}/>
-        <Route path="/admin/status" element={<AdminEditAppStatus/>}/>
         <Route path='/admin/users' element={<AdminManageUsers/>}/>
         <Route path="/admin/site" element={<AdminUpdateSite/>}/>
 

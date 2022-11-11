@@ -48,14 +48,7 @@ function AccountDetails() {
       courses = [""];
   }
 
-    const dept_options = departments.map((dept) =>
-        <option key={dept}>{dept}</option>
-    );
-
-    const course_options = courses.map((course) => 
-        <option key={course}>{course}</option>
-        
-    );
+  
 
   useEffect(() => {
     refreshToken();
@@ -96,7 +89,7 @@ function AccountDetails() {
 
   const getStudent = async (id) => {
     id = student_id;
-    const response = await axios.get(`http://localhost:5000/student/details/${id}`, {
+    const response = await axiosJWT.get(`http://localhost:5000/student/details/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -117,8 +110,10 @@ function AccountDetails() {
   const editStudent = async (id) => {
     checkForm();
     id = student_id;
-    await axios.patch(`http://localhost:5000/update/student/details/${id}`,
-      studentFormData);
+    await axiosJWT.patch(`http://localhost:5000/update/student/details/${id}`,
+      studentFormData, {headers: {
+        Authorization: `Bearer ${token}`
+      }});
   }
 
   const refreshToken = async () => {
@@ -158,7 +153,19 @@ function AccountDetails() {
       return Promise.reject(error);
   });
 
-  
+  const dept_options = departments.map((dept) =>{
+    if (dept == student.department)
+      return <option key={dept} selected>{dept}</option>
+    return <option key={dept}>{dept}</option>
+  }
+  );
+
+  const course_options = courses.map((course) => {
+    if (course == student.course)
+      return <option key={course} selected>{course}</option>
+    return <option key={course}>{course}</option>
+  });
+ 
 
   return (
     <>

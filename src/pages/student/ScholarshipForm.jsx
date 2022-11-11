@@ -20,7 +20,6 @@ const AttachementInputs = ({requirement, index, handleFileInputChange}) =>{
             onChange={handleFileInputChange}
             name={nameOfInput}
             required
-            
             />
             <br />
         </div>
@@ -219,7 +218,9 @@ function ScholarshipForm() {
         dataToPass= {...subjCodesUnits, ...attachments, ...userInfo, student_sign: sigData, scholarship_type: scholarship.scholarship_name};
         console.log(dataToPass);
         try{
-            await axios.post('http://localhost:5000/submit/student/application', dataToPass);
+            await axios.post('http://localhost:5000/submit/student/application', dataToPass, {headers: {
+                Authorization: `Bearer ${token}`
+              }});
             navigate('/student/status');
         }catch(e){
             console.log(e);
@@ -283,7 +284,7 @@ function ScholarshipForm() {
                         <p>Note: Be sure to sign and save</p>
                     </div>
                 </div>
-                <button className='scholarFormSubmit' type='button' onClick={submitForm}>SUBMIT APPLICATION</button>
+                <button className='scholarFormSubmit' type='submit' onClick={submitForm}>SUBMIT APPLICATION</button>
                 
             </form>
         </div>
@@ -301,7 +302,6 @@ function ScholarshipForm() {
                 
             </div>
         </Modal>
-
     </Layout>
     
     )}else{

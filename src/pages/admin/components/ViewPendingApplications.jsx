@@ -11,7 +11,7 @@ const EachApplication = ({application, handleAcceptApplication, handleRejectAppl
           <td>{application.student_id}</td>
           <td>{application.first_name} {application.last_name}</td>
           <td>
-            <a href={`/admin/applications/review/${application.id}`} target="_blank">View Application</a>
+            <a id='view-pending-app-link' href={`/admin/applications/review/${application.id}`} target="_blank">View Application</a>
           </td>
           <td>
               <button onClick={()=>handleAcceptApplication(application.id)}>ACCEPT</button>
@@ -44,9 +44,9 @@ function ViewPendingApplications() {
   }else if (selectDept == "CONAMS"){
       courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
   }else if (selectDept == "CHTM"){
-      courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management major in Travel Operations"];
+    courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
   }else if (selectDept == "CBA"){
-      courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration with majors in Financial Management, Marketing Management, Operations Management, Human Resource Development Management, Business Economics and Banking."];
+    courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
   }else if (selectDept == "CAS"){
       courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
   }else if (selectDept == "CoEd"){
@@ -59,7 +59,7 @@ function ViewPendingApplications() {
 
 
   useEffect(()=>{
-    // refreshToken();
+    refreshToken();
     getApplications();
   },[]);
 
@@ -89,7 +89,10 @@ function ViewPendingApplications() {
 
   const getApplications = async() => {
     try{
-      const response = await axios.get(`http://localhost:5000/admin/view/applications`, {
+      const response = await axiosJWT.get(`http://localhost:5000/admin/view/applications`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
     });
       setApplications(response.data);
     }catch(e){
@@ -99,7 +102,10 @@ function ViewPendingApplications() {
 
   const getDeptFilteredApplications = async() => {
     try{
-      const response = await axios.get(`http://localhost:5000/admin/view/applications/department/${selectDept}`, {
+      const response = await axiosJWT.get(`http://localhost:5000/admin/view/applications/department/${selectDept}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
     });
       setApplications(response.data);
     }catch(e){
@@ -108,7 +114,10 @@ function ViewPendingApplications() {
   }
   const getCourseFilteredApplications = async() => {
     try{
-      const response = await axios.get(`http://localhost:5000/admin/view/applications/course/${selectCourse}`, {
+      const response = await axiosJWT.get(`http://localhost:5000/admin/view/applications/course/${selectCourse}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
     });
       setApplications(response.data);
     }catch(e){
@@ -118,8 +127,11 @@ function ViewPendingApplications() {
 
   const getApplicantData = async(id) => {
     try {
-        const response = await axios.get(`http://localhost:5000/admin/view/application/${id}`,{
-        });
+        const response = await axiosJWT.get(`http://localhost:5000/admin/view/application/${id}`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+      });
         setApplicantData(response.data);
     } catch (error) {
         console.log(error);
@@ -128,7 +140,7 @@ function ViewPendingApplications() {
 
   const acceptApplication = async (id) => {
     try {
-          axios.post(`http://localhost:5000/admin/approve/application`,{
+          axiosJWT.post(`http://localhost:5000/admin/approve/application`,{
           subj_1: applicantData.subj_1,subj_2: applicantData.subj_2,
           subj_3: applicantData.subj_3,subj_4: applicantData.subj_4,
           subj_5: applicantData.subj_5,subj_6: applicantData.subj_6,
@@ -168,7 +180,10 @@ function ViewPendingApplications() {
           email: applicantData.email,
           contact_no: applicantData.contact_no,
           id: applicantData.id
-
+        },{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
         deleteFromSubmittedApps(id);
     } catch (error) {
@@ -178,7 +193,7 @@ function ViewPendingApplications() {
 
   const rejectApplication = async (id) => {
     try {
-        axios.post(`http://localhost:5000/admin/create/rejected/application`,{
+        axiosJWT.post(`http://localhost:5000/admin/create/rejected/application`,{
           student_id: applicantData.student_id,
           date_submitted: applicantData.date_submitted,
           scholarship_type: applicantData.scholarship_type,
@@ -190,7 +205,9 @@ function ViewPendingApplications() {
           id: applicantData.id,
           rejected_by: "Office for Student Affairs (OSA)",
           reason_of_rejection: rejectReason
-    });
+    },{headers: {
+      Authorization: `Bearer ${token}`
+    }});
       deleteFromSubmittedApps(id);
     } catch (error) {
         console.log(error);
@@ -199,7 +216,11 @@ function ViewPendingApplications() {
 
   const deleteFromSubmittedApps = async (id) => {
     try{
-      await axios.delete(`http://localhost:5000/admin/delete/application/${id}`);
+      await axiosJWT.delete(`http://localhost:5000/admin/delete/application/${id}`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       getApplications();
     }catch(e){
       console.log(e);
@@ -264,7 +285,6 @@ function sigSave(){
   }
 
   const axiosJWT = axios.create();
-
   axiosJWT.interceptors.request.use(async (config) => {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {

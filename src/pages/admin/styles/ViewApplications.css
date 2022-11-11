@@ -28,7 +28,19 @@
 .rejected-applications, .approved-applications {
   overflow-x: scroll;
 }
+.rejected-applications::-webkit-scrollbar, .approved-applications::-webkit-scrollbar {
+  display: none;
+}
 .rejected-applications table a, .approved-applications table a {
+  color: #fff;
+  background-color: #105652;
+  padding: 0.35em 3em;
+  text-decoration: none;
+  margin-right: 1em;
+  border-radius: 5px;
+}
+
+#view-pending-app-link {
   color: #fff;
   background-color: #105652;
   padding: 0.35em 3em;

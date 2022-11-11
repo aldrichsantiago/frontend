@@ -1,4 +1,6 @@
 import React, {useState,  useEffect} from 'react'
+import jwt_decode from 'jwt-decode'
+import axios from 'axios'
 import AdminLayout from './AdminLayout'
 import ManageStudentAccounts from './components/ManageStudentAccounts'
 import ManageDeanAccounts from './components/ManageDeanAccounts'
@@ -8,8 +10,33 @@ import ManagePendingDeanRegistrations from './components/ManagePendingDeanRegist
 import './styles/ManageUserAccounts.css'
 
 
+
+
 function ManageUserAccounts() {
   const [whichTable, setWhichTable] = useState('Students');
+  const [token, setToken] = useState('');
+  const [expire, setExpire] = useState('');
+
+
+  useEffect(() => {
+    refreshToken();
+  }, []);
+  
+  const refreshToken = async () => {
+    axios.defaults.withCredentials = true;
+    try {
+      const response = await axios.get('http://localhost:5000/admin/token');
+      setToken(response.data.accessToken);
+      const decoded = jwt_decode(response.data.accessToken);
+      setExpire(decoded.exp);
+    }
+    catch (error) {
+      if (error.response) {
+        navigate("/");
+  
+      }
+    }
+  }
 
   let tableToRender;
     if (whichTable == 'Students') {

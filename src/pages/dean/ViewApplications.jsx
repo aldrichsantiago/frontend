@@ -13,7 +13,7 @@ const EachApplication = ({application, handleAcceptApplication, handleRejectAppl
     <tr key={application.id}>
           <td>{application.student_id}</td>
           <td>{application.first_name} {application.last_name}</td>
-          <td>
+          <td className='dean-view-apps-container'>
             <a href={`/dean/applications/review/${application.id}`} target="_blank">View Application</a>
           </td>
           <td>
@@ -36,9 +36,8 @@ function ViewApplications() {
   const [applicantData, setApplicantData] = useState([]);
   const [rejectReason, setRejectReason] = useState('');
   let dateSubmitted = '';
-  let idOfStudent = '';
   let deanSig = '';
-
+  let idOfStudent = '';
 
   const navigate = useNavigate();
 
@@ -47,13 +46,13 @@ function ViewApplications() {
   let courses = [""];
 
   if (department == "CECT"){
-      courses = ["","BSIT", "BSEE", "BSCpE"];
+    courses = ["","BSIT", "BSEE", "BSCpE"];
   }else if (department == "CONAMS"){
       courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
   }else if (department == "CHTM"){
-      courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management major in Travel Operations"];
+      courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
   }else if (department == "CBA"){
-      courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration with majors in Financial Management, Marketing Management, Operations Management, Human Resource Development Management, Business Economics and Banking."];
+      courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
   }else if (department == "CAS"){
       courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
   }else if (department == "CoEd"){
@@ -92,6 +91,9 @@ function ViewApplications() {
   const getDean = async () => {
     try{
       const response = await axios.get(`http://localhost:5000/dean/details/${deanId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
     });
       setDepartment(response.data.department);
     }catch(e){
@@ -101,7 +103,10 @@ function ViewApplications() {
 
   const getApplications = async() => {
     try{
-      const response = await axios.get(`http://localhost:5000/dean/view/applications/${department}`, {
+      const response = await axios.get(`http://localhost:5000/dean/view/applications/dept/${department}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
     });
       setApplications(response.data);
     }catch(e){
@@ -112,6 +117,9 @@ function ViewApplications() {
   const getFilteredApplications = async() => {
     try{
       const response = await axios.get(`http://localhost:5000/dean/view/applications/course/${selectChange}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
     });
       setApplications(response.data);
     }catch(e){
@@ -122,7 +130,10 @@ function ViewApplications() {
   const getApplicantData = async(id) => {
     try {
         const response = await axios.get(`http://localhost:5000/dean/applications/review/${id}`,{
-        });
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+      });
         setApplicantData(response.data);
     } catch (error) {
         console.log(error);
@@ -170,8 +181,9 @@ function ViewApplications() {
           email: applicantData.email,
           contact_no: applicantData.contact_no,
           id: applicantData.id
-
-        });
+        }, {headers: {
+          Authorization: `Bearer ${token}`
+        }});
         deleteFromSubmittedApps(id);
     } catch (error) {
         console.log(error);
@@ -192,7 +204,9 @@ function ViewApplications() {
           id: applicantData.id,
           rejected_by: department + " DEAN",
           reason_of_rejection: rejectReason
-    });
+    },{headers: {
+      Authorization: `Bearer ${token}`
+    }});
       deleteFromSubmittedApps(id);
     } catch (error) {
         console.log(error);
@@ -201,7 +215,11 @@ function ViewApplications() {
 
   const deleteFromSubmittedApps = async (id) => {
     try{
-      await axios.delete(`http://localhost:5000/delete/submitted/application/${id}`);
+      await axios.delete(`http://localhost:5000/delete/submitted/application/${id}`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       getApplications();
     }catch(e){
       console.log(e);
@@ -348,13 +366,11 @@ function sigSave(){
         isOpen={rejectModal}
         style={customStyles}
         ariaHideApp={false}>
-            <textarea type="text" placeholder='Reason for Rejection...' cols={60} rows={10} onChange={(e)=>setRejectReason(e.target.value)} value={rejectReason}></textarea>
+            <textarea type="text" placeholder='Reason for Rejection...' cols={60} rows={10} onChange={(e)=>setRejectReason(e.target.value)} value={rejectReason} required></textarea>
             <div className='flex'>
               <button onClick={()=>setRejectModal(false)}>CANCEL</button>
-              <button onClick={logReason}>Reject</button>
+              <button onClick={logReason}>REJECT</button>
             </div>
-            
-
       </Modal>
     </DeanLayout>
   )

@@ -13,11 +13,60 @@ $tertiary-color: #B91646;
 .dean-view-applications{
     padding: 0em 3em;
     .dean-view-header{
+        margin: 1em 0em;
+
         display: flex;
         flex-wrap: wrap;
         align-items: center;
         #dean-select-course{
             width: 30ch;
+        }
+    }
+    .dean-view-body{
+    overflow-x: scroll;
+    &::-webkit-scrollbar{
+        display: none;
+    }
+    
+    thead{
+        background-color: #105652;
+        tr{
+            filter: brightness(70%);
+            td{
+                font-family: Bebas Neue;
+                font-size: 20px;
+            }
+        }
+    }
+    tbody{
+        border: none;
+
+        tr{
+            &:hover{
+                filter: brightness(95%);
+            }
+        }
+    }
+    
+
+        .dean-view-apps-container{
+            width: 10px;
+            a{
+                padding: 0.5em 2em;
+                text-decoration: none;
+                background-color: #105652;
+                color: #fff;
+                border-radius: 5px;
+                
+                &:hover{
+                    filter: brightness(85%);
+                }
+            }
+        }
+        button{
+            &:hover{
+                filter: brightness(85%);
+            }
         }
     }
 }

@@ -12,9 +12,9 @@ function DeanHome() {
   const navigate = useNavigate();
 
 
-  // useEffect(() => {
-  //   refreshToken();
-  // }, []);
+  useEffect(() => {
+    refreshToken();
+  }, []);
 
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
@@ -27,7 +27,7 @@ function DeanHome() {
     }
     catch (error) {
       if (error.response) {
-        navigate("/");
+        navigate("/dean");
 
       }
     }

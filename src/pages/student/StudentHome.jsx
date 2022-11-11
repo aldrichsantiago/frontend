@@ -34,7 +34,7 @@ function StudentHome() {
     }
     catch (error) {
       if (error.response) {
-        navigate("/");
+        navigate("/student");
 
       }
     }

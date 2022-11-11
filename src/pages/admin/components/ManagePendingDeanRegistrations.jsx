@@ -1,11 +1,14 @@
 import React, {useState,  useEffect} from 'react'
 import Modal from 'react-modal'
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 import PendingDeanReadOnlyRow from './../../../components/PendingDeanReadOnlyRow'
 
 function ManagePendingDeanRegistrations() {
     const [deans, setDeans] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [token, setToken] = useState();
+    const [expire, setExpire] = useState('');
     const [addDeanFormData, setAddDeanFormData] = useState({
         dean_id: "",
         last_name: "",
@@ -32,11 +35,45 @@ function ManagePendingDeanRegistrations() {
     const [editDeanId, setEditDeanId] = useState(null);
 
     useEffect(() => {
-        getDeans();
+      refreshToken();
+      getDeans();
     }, []);
 
+    const refreshToken = async () => {
+      axios.defaults.withCredentials = true;
+      try {
+        const response = await axios.get('http://localhost:5000/admin/token');
+        setToken(response.data.accessToken);
+        const decoded = jwt_decode(response.data.accessToken);
+        setExpire(decoded.exp);
+      }
+      catch (error) {
+        if (error.response) {
+          navigate("/");
+        }
+      }
+    }
+  
+    const axiosJWT = axios.create();
+    axiosJWT.interceptors.request.use(async (config) => {
+      const currentDate = new Date();
+      if (expire * 1000 < currentDate.getTime()) {
+        const response = await axios.get('http://localhost:5000/admin/token');
+        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        setToken(response.data.accessToken);
+        const decoded = jwt_decode(response.data.accessToken);
+        setExpire(decoded.exp);
+      }
+      return config;
+    }, (error) => {
+        return Promise.reject(error);
+    });
+
     const getDeans = async () => {
-        const response = await axios.get('http://localhost:5000/pendingdeans/get', {
+        const response = await axiosJWT.get('http://localhost:5000/pendingdeans/get', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
         setDeans(response.data);
     }
@@ -46,7 +83,7 @@ function ManagePendingDeanRegistrations() {
         const index = deans.findIndex((dean) => dean.id === DeanId);
         const dean = deans[index];
 
-        await axios.post('http://localhost:5000/approve/registration/dean', {
+        await axiosJWT.post('http://localhost:5000/approve/registration/dean', {
           last_name: dean.last_name,
           first_name: dean.first_name,
           middle_name: dean.middle_name,
@@ -55,18 +92,23 @@ function ManagePendingDeanRegistrations() {
           department: dean.department,
           dean_id: dean.dean_id,
           password: dean.password
+        },{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
-
         rejectDean(DeanId);
-
-
       } catch (error) {
         console.log(error);
       }
     }
 
     const rejectDean = async (id) => {
-      await axios.delete(`http://localhost:5000/reject/registration/dean/${id}`);
+      await axiosJWT.delete(`http://localhost:5000/reject/registration/dean/${id}`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       getDeans();
     }
 
@@ -167,7 +209,7 @@ function ManagePendingDeanRegistrations() {
 
   return (
     <>
-      <div className="users-table">
+      <div className="users-table-header">
         <div style={{display:'flex', gap:'1em', textAlign:'left', width: '100%'}}>
           <h1>Pending Dean Registrations</h1>
         </div>

@@ -2,6 +2,8 @@ import React from 'react'
 import { useState, useEffect } from 'react'
 import axios from 'axios'
 import Modal from 'react-modal'
+import jwt_decode from 'jwt-decode'
+
 
 function DeleteButton ({
     announcement,
@@ -19,12 +21,12 @@ function UpdateButton ({
 
 function ManageAnnouncements() {
     const [announcements,  setAnnouncements] = useState([]);
-    const [title, setTitle] = useState('');
-    const [body, setBody] = useState('');
-    const [annId, setAnnId] = useState('');
     const [addIsOpen, setAddIsOpen] = useState(false);
     const [editIsOpen, setEditIsOpen] = useState(false);
     const [editAnnounceId, setEditAnnounceId] = useState();
+    const [msg, setMsg] = useState('');
+    const [token, setToken] = useState('');
+    const [expire, setExpire] = useState('');
 
     const [addAnnounceFormData, setAddAnnounceFormData] = useState({
         title: "",
@@ -39,14 +41,49 @@ function ManageAnnouncements() {
 
 
     useEffect(()=>{
+        refreshToken();
         getAnnouncements();
     },[]);
 
+    const refreshToken = async () => {
+        axios.defaults.withCredentials = true;
+        try {
+          const response = await axios.get('http://localhost:5000/admin/token');
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+          setExpire(decoded.exp);
+        }
+        catch (error) {
+          if (error.response) {
+            navigate("/");
+      
+          }
+        }
+      }
+          
+      const axiosJWT = axios.create();
+    
+      axiosJWT.interceptors.request.use(async (config) => {
+        const currentDate = new Date();
+        if (expire * 1000 < currentDate.getTime()) {
+          const response = await axios.get('http://localhost:5000/admin/token');
+          config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+          setExpire(decoded.exp);
+        }
+        return config;
+      }, (error) => {
+          return Promise.reject(error);
+      });
+
     const addAnnouncements = async() => {
-        await axios.post('http://localhost:5000/announcements/add',{
+        await axiosJWT.post('http://localhost:5000/announcements/add',{
             title: addAnnounceFormData.title,
             body: addAnnounceFormData.body
-        });
+        }, {headers: {
+            Authorization: `Bearer ${token}`
+          }});
     }
 
     const getAnnouncements = async () => {
@@ -61,13 +98,20 @@ function ManageAnnouncements() {
     }
 
     const updateAnnouncements = async(id) => {
-        axios.patch(`http://localhost:5000/announcements/update/${id}`,
-            editAnnounceFormData
+        axiosJWT.patch(`http://localhost:5000/announcements/update/${id}`,
+            editAnnounceFormData, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+            }
         );
     }
 
     const deleteAnnouncements = async(id) => {
-        await axios.delete(`http://localhost:5000/announcements/delete/${id}`,{
+        await axiosJWT.delete(`http://localhost:5000/announcements/delete/${id}`,{
+            headers: {
+                Authorization: `Bearer ${token}`
+              }
         });
         getAnnouncements();
     }
@@ -96,7 +140,6 @@ function ManageAnnouncements() {
         };
 
         setEditAnnounceFormData(formValues);
-        // console.log(formValues);
         setEditIsOpen(true)
     };
 
@@ -264,20 +307,14 @@ function ManageAnnouncements() {
                         name="body"
                         onChange={handleEditFormChange}
                         value={editAnnounceFormData.body}
-
                     />
                     <div className="edit-buttons">
                         <button type="submit" onClick={handleEditFormSubmit}>Update</button>
                         <button onClick={()=>setEditIsOpen(false)}>Cancel</button>
                     </div>
-                    
                     </form>
                 </div>
             </Modal>
-
-        
-
-
     </>
   )
 }

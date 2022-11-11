@@ -30,7 +30,7 @@ function ViewRejectedApplications() {
     const navigate = useNavigate();
 
     useEffect(()=>{
-        // refreshToken();
+        refreshToken();
         getApplications();
     },[]);
     
@@ -50,7 +50,10 @@ function ViewRejectedApplications() {
 
     const getApplications = async() => {
         try{
-            const response = await axios.get(`http://localhost:5000/admin/view/rejected/applications`, {
+            const response = await axiosJWT.get(`http://localhost:5000/admin/view/rejected/applications`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
         });
             setApplications(response.data);
         }catch(e){
@@ -60,7 +63,10 @@ function ViewRejectedApplications() {
 
     const getDeptFilteredApplications = async() => {
         try{
-            const response = await axios.get(`http://localhost:5000/admin/view/rejected/applications/department/${selectDept}`, {
+            const response = await axiosJWT.get(`http://localhost:5000/admin/view/rejected/applications/department/${selectDept}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
         });
         setApplications(response.data);
         }catch(e){
@@ -70,8 +76,11 @@ function ViewRejectedApplications() {
 
     const getApplicantData = async(id) => {
         try {
-            const response = await axios.get(`http://localhost:5000/admin/view/rejected/application/${id}`,{
-            });
+            const response = await axiosJWT.get(`http://localhost:5000/admin/view/rejected/application/${id}`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+        });
             setApplicantData(response.data);
         } catch (error) {
             console.log(error);
@@ -80,7 +89,11 @@ function ViewRejectedApplications() {
 
     const deleteFromRejectedApps = async (id) => {
         try{
-            await axios.delete(`http://localhost:5000/admin/delete/rejected/application/${id}`);
+            await axiosJWT.delete(`http://localhost:5000/admin/delete/rejected/application/${id}`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             getApplications();
         }catch(e){
             console.log(e);
@@ -102,13 +115,11 @@ function ViewRejectedApplications() {
         catch (error) {
           if (error.response) {
             navigate("/");
-    
           }
         }
       }
     
       const axiosJWT = axios.create();
-    
       axiosJWT.interceptors.request.use(async (config) => {
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {

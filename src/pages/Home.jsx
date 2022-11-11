@@ -12,9 +12,9 @@ function Home() {
         <div className='home-container'>
             <div className='left-home'>
                 <h1><strong>WUP</strong>SCHOLARSHIP</h1>
-                <Button to='/student' text='STUDENT / APPLICANT'/>
-                <Button to='/dean' text='COLLEGE DEAN'/>
-                <Button to='/admin' text='ADMINISTRATOR'/>
+                <Button to='/student/home' text='STUDENT / APPLICANT'/>
+                <Button to='/dean/home' text='COLLEGE DEAN'/>
+                <Button to='/admin/home' text='ADMINISTRATOR'/>
                 <div className="contact-info">
                     <p>Mabini Extension, Cabanatuan City,</p>
                     <p>Nueva Ecija, 3100, Philippines</p>

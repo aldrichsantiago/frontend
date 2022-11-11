@@ -1,6 +1,7 @@
 import React, {useState,  useEffect} from 'react'
 import Modal from 'react-modal'
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 import StudentReadOnlyRow from './../../../components/StudentReadOnlyRow'
 import StudentEditableRow from './../../../components/StudentEditableRow'
 
@@ -8,6 +9,8 @@ function ManageStudentAccounts() {
     const [students, setStudents] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [msg, setMsg] = useState('');
+    const [token, setToken] = useState('');
+    const [expire, setExpire] = useState('');
     const [selectDept, setSelectDept] = useState('');
     const [selectCourse, setSelectCourse] = useState('');
     const [addStudentFormData, setAddStudentFormData] = useState({
@@ -72,18 +75,21 @@ function ManageStudentAccounts() {
 
 
     useEffect(() => {
+        refreshToken();
         getStudents();
     }, []);
 
     const getStudents = async () => {
-        const response = await axios.get('http://localhost:5000/students/get', {
-
+        const response = await axiosJWT.get('http://localhost:5000/students/get', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
         setStudents(response.data);
     }
 
     const updateStudent = async (id) => {
-      await axios.patch(`http://localhost:5000/update/student/${id}`, {
+      await axiosJWT.patch(`http://localhost:5000/update/student/${id}`, {
         last_name: editStudentFormData.last_name,
         first_name: editStudentFormData.first_name,
         middle_name: editStudentFormData.middle_name,
@@ -93,27 +99,39 @@ function ManageStudentAccounts() {
         course: editStudentFormData.course,
         year: editStudentFormData.year,
         student_id: editStudentFormData.student_id,
+      },{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
       getStudents();
       
     }
     const changePassword = async () => {
       try{
-        await axios.patch(`http://localhost:5000/change/student/password`, passwordForm);
+        await axiosJWT.patch(`http://localhost:5000/change/student/password`, passwordForm, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
       }catch(e){
         console.log(e);
       }
     }
 
     const deleteStudent = async (id) => {
-      await axios.delete(`http://localhost:5000/delete/student/${id}`);
+      await axiosJWT.delete(`http://localhost:5000/delete/student/${id}`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       getStudents();
     }
 
     const addStudent = async (e) => {
       e.preventDefault();
       try {
-          await axios.post('http://localhost:5000/register/student', {
+          await axiosJWT.post('http://localhost:5000/register/student', {
             id: students.length,
             last_name: addStudentFormData.last_name,
             first_name: addStudentFormData.first_name,
@@ -126,7 +144,9 @@ function ManageStudentAccounts() {
             student_id: addStudentFormData.student_id,
             password: addStudentFormData.password,
             confPassword: addStudentFormData.confPassword
-          });
+          },{headers: {
+            Authorization: `Bearer ${token}`
+          }});
           setModalIsOpen(false);
           getStudents();
 
@@ -281,6 +301,22 @@ function ManageStudentAccounts() {
           transform: 'translate(-50%, -50%)',
         },
       };
+
+  const refreshToken = async () => {
+    axios.defaults.withCredentials = true;
+    try {
+      const response = await axios.get('http://localhost:5000/admin/token');
+      setToken(response.data.accessToken);
+      const decoded = jwt_decode(response.data.accessToken);
+      setExpire(decoded.exp);
+    }
+    catch (error) {
+      if (error.response) {
+        navigate("/");
+  
+      }
+    }
+  }
       
   const axiosJWT = axios.create();
 
@@ -300,7 +336,7 @@ function ManageStudentAccounts() {
 
   return (
     <>
-      <div className="users-table">
+      <div className="users-table-header">
         <div style={{display:'flex', gap:'1em', textAlign:'left', width: '100%'}}>
             <h1>Student Accounts</h1>
             <button className="add_btn" onClick={()=>setModalIsOpen(!modalIsOpen)}>ADD</button>
@@ -447,12 +483,8 @@ function ManageStudentAccounts() {
               <button type="button" onClick={()=>setChangePassModal(false)}>Cancel</button>
               <button type="button" onClick={handleChangePasswordSubmit}>Change Password</button>
             </div>
-            
-
           </form>
-          
         </Modal>
-        
       </div> 
     </>
     )

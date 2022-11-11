@@ -34,6 +34,9 @@ $tertiary-color: #B91646;
 
 .rejected-applications, .approved-applications{
     overflow-x: scroll;
+    &::-webkit-scrollbar{
+        display: none;
+      }
 
     table{
         a{
@@ -48,6 +51,15 @@ $tertiary-color: #B91646;
     }
 }
 
+
+#view-pending-app-link{
+    color: #fff;
+    background-color: #105652;
+    padding: 0.35em 3em;
+    text-decoration: none;
+    margin-right: 1em;
+    border-radius: 5px;
+}
 
 $breakpoint-tablet: 768px;
 @media (min-width: $breakpoint-tablet) {

@@ -63,7 +63,6 @@ function DeanLogin() {
                     <input type="submit" value="LOG IN" onClick={Auth}/>
                 </form>
                 <div>
-                    <a href="#" >Forgot my password</a><br />
                     <a href='register/dean'>Create an account</a>
                 </div>
             </div>

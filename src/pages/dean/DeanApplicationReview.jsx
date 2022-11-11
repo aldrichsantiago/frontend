@@ -8,22 +8,62 @@ import './styles/DeanApplicationReview.css'
 function DeanApplicationReview() {
     let { id } = useParams();
     const [applicantData, setApplicantData] = useState({});
-    const [applicantReqs, setApplicantReqs] = useState([]);
+    const [token, setToken] = useState('');
+    const [expire, setExpire] = useState('');
 
 
+    useEffect(()=>{
+        refreshToken();
+    },[]);
     useEffect(()=>{
         getApplicantData();
     },[id]);
 
     const getApplicantData = async() => {
         try {
-            const response = await axios.get(`http://localhost:5000/dean/applications/review/${id}`,{
-            });
+            const response = await axiosJWT.get(`http://localhost:5000/dean/applications/review/${id}`,{
+                headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+        });
             setApplicantData(response.data);
         } catch (error) {
             console.log(error);
         }
     }
+
+    const refreshToken = async () => {
+        axios.defaults.withCredentials = true;
+        try {
+          const response = await axios.get('http://localhost:5000/dean/token');
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+          setExpire(decoded.exp);
+        }
+        catch (error) {
+          if (error.response) {
+            navigate("/");
+    
+          }
+        }
+      }
+    
+      const axiosJWT = axios.create();
+    
+      axiosJWT.interceptors.request.use(async (config) => {
+        const currentDate = new Date();
+        if (expire * 1000 < currentDate.getTime()) {
+          const response = await axios.get('http://localhost:5000/dean/token');
+          config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+          setToken(response.data.accessToken);
+          const decoded = jwt_decode(response.data.accessToken);
+          setExpire(decoded.exp);
+        }
+        return config;
+      }, (error) => {
+          return Promise.reject(error);
+      });
+    
 
   return (
     <div className='dean-review-application'>

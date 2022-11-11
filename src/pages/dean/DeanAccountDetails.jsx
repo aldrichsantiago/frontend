@@ -58,6 +58,9 @@ function DeanAccountDetails() {
   const getDean = async (id) => {
     id = dean_id;
     const response = await axios.get(`http://localhost:5000/dean/details/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     });
 
     setDean(response.data);
@@ -73,7 +76,11 @@ function DeanAccountDetails() {
     checkForm();
     id = dean_id;
     await axios.patch(`http://localhost:5000/update/dean/details/${id}`,
-      deanFormData);
+      deanFormData, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
   }
 
   const refreshToken = async () => {

@@ -123,7 +123,7 @@ function ApplicationStatus() {
   },[student_id]);
 
   const getRejected = async () => {
-    const response = await axios.get(`http://localhost:5000/student/application/rejected/${student_id}`, {
+    const response = await axiosJWT.get(`http://localhost:5000/student/application/rejected/${student_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -131,7 +131,7 @@ function ApplicationStatus() {
     setRejected(response.data);
   }
   const getApproved = async () => {
-    const response = await axios.get(`http://localhost:5000/student/application/approved/${student_id}`, {
+    const response = await axiosJWT.get(`http://localhost:5000/student/application/approved/${student_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -139,7 +139,7 @@ function ApplicationStatus() {
     setApproved(response.data);
   }
   const getReview = async () => {
-    const response = await axios.get(`http://localhost:5000/student/application/review/${student_id}`, {
+    const response = await axiosJWT.get(`http://localhost:5000/student/application/review/${student_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -147,7 +147,7 @@ function ApplicationStatus() {
     setReview(response.data);
   }
   const getSubmitted = async () => {
-    const response = await axios.get(`http://localhost:5000/student/application/submitted/${student_id}`, {
+    const response = await axiosJWT.get(`http://localhost:5000/student/application/submitted/${student_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }

@@ -7,10 +7,49 @@
   padding: 0em 3em;
 }
 .dean-view-applications .dean-view-header {
+  margin: 1em 0em;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
 }
 .dean-view-applications .dean-view-header #dean-select-course {
   width: 30ch;
+}
+.dean-view-applications .dean-view-body {
+  overflow-x: scroll;
+}
+.dean-view-applications .dean-view-body::-webkit-scrollbar {
+  display: none;
+}
+.dean-view-applications .dean-view-body thead {
+  background-color: #105652;
+}
+.dean-view-applications .dean-view-body thead tr {
+  filter: brightness(70%);
+}
+.dean-view-applications .dean-view-body thead tr td {
+  font-family: Bebas Neue;
+  font-size: 20px;
+}
+.dean-view-applications .dean-view-body tbody {
+  border: none;
+}
+.dean-view-applications .dean-view-body tbody tr:hover {
+  filter: brightness(95%);
+}
+.dean-view-applications .dean-view-body .dean-view-apps-container {
+  width: 10px;
+}
+.dean-view-applications .dean-view-body .dean-view-apps-container a {
+  padding: 0.5em 2em;
+  text-decoration: none;
+  background-color: #105652;
+  color: #fff;
+  border-radius: 5px;
+}
+.dean-view-applications .dean-view-body .dean-view-apps-container a:hover {
+  filter: brightness(85%);
+}
+.dean-view-applications .dean-view-body button:hover {
+  filter: brightness(85%);
 }/*# sourceMappingURL=ViewApplications.css.map */

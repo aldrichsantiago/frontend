@@ -34,19 +34,19 @@ function ViewApprovedApplications() {
   if (selectDept == "CECT"){
     courses = ["","BSIT", "BSEE", "BSCpE"];
   }else if (selectDept == "CONAMS"){
-    courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
+      courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
   }else if (selectDept == "CHTM"){
-    courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management major in Travel Operations"];
+    courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
   }else if (selectDept == "CBA"){
-    courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration with majors in Financial Management, Marketing Management, Operations Management, Human Resource Development Management, Business Economics and Banking."];
+    courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
   }else if (selectDept == "CAS"){
-    courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
+      courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
   }else if (selectDept == "CoEd"){
-    courses = ["","BSHRM", "BSECE", "BSCpE"];
+      courses = ["","BSHRM", "BSECE", "BSCpE"];
   }else if (selectDept == "CCJE"){
-    courses = ["","Bachelor of Science in Criminology"];
+      courses = ["","Bachelor of Science in Criminology"];
   }else{
-    courses = [""];
+      courses = [""];
   }
 
   const dept_options = departments.map((dept) =>
@@ -58,7 +58,7 @@ function ViewApprovedApplications() {
   );
 
   useEffect(()=>{
-    // refreshToken();
+    refreshToken();
     getApplications();
   },[]);
 
@@ -78,7 +78,10 @@ function ViewApprovedApplications() {
 
   const getApplications = async() => {
     try{
-      const response = await axios.get(`http://localhost:5000/admin/view/approved/applications`, {
+      const response = await axiosJWT.get(`http://localhost:5000/admin/view/approved/applications`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+      }
     });
       setApplications(response.data);
     }catch(e){
@@ -88,7 +91,10 @@ function ViewApprovedApplications() {
 
   const getDeptFilteredApplications = async() => {
     try{
-      const response = await axios.get(`http://localhost:5000/admin/view/approved/applications/department/${selectDept}`, {
+      const response = await axiosJWT.get(`http://localhost:5000/admin/view/approved/applications/department/${selectDept}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+      }
     });
       setApplications(response.data);
     }catch(e){
@@ -98,7 +104,10 @@ function ViewApprovedApplications() {
 
   const getCourseFilteredApplications = async() => {
     try{
-      const response = await axios.get(`http://localhost:5000/admin/view/approved/applications/course/${selectCourse}`, {
+      const response = await axiosJWT.get(`http://localhost:5000/admin/view/approved/applications/course/${selectCourse}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+      }
     });
       setApplications(response.data);
     }catch(e){
@@ -108,8 +117,11 @@ function ViewApprovedApplications() {
 
   const getApplicantData = async(id) => {
     try {
-        const response = await axios.get(`http://localhost:5000/admin/view/approved/application/${id}`,{
-        });
+        const response = await axiosJWT.get(`http://localhost:5000/admin/view/approved/application/${id}`,{
+          headers: {
+            Authorization: `Bearer ${token}`
+        }
+      });
         setApplicantData(response.data);
     } catch (error) {
         console.log(error);
@@ -118,7 +130,11 @@ function ViewApprovedApplications() {
 
   const deleteFromApprovedApps = async (id) => {
     try{
-      await axios.delete(`http://localhost:5000/admin/delete/approved/application/${id}`);
+      await axiosJWT.delete(`http://localhost:5000/admin/delete/approved/application/${id}`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+      }
+      });
       getApplications();
     }catch(e){
       console.log(e);

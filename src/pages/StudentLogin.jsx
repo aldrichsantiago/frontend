@@ -62,7 +62,7 @@ function StudentLogin() {
                     <input type="submit" value="LOG IN" />
                 </form>
                 <div>
-                    <a href="#" >Forgot my password</a><br />
+                    
                     <a href='register/student'>Create an account</a>
                 </div>
             </div>

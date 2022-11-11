@@ -12,9 +12,9 @@ function AdminHome() {
   const navigate = useNavigate();
 
 
-  // useEffect(() => {
-  // refreshToken();
-  // }, []);
+  useEffect(() => {
+  refreshToken();
+  }, []);
 
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
@@ -28,7 +28,7 @@ function AdminHome() {
     }
     catch (error) {
       if (error.response) {
-        navigate("/");
+        navigate("/admin");
 
       }
     }

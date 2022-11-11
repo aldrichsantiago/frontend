@@ -1,6 +1,7 @@
 import React, {useState,  useEffect} from 'react'
 import Modal from 'react-modal'
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 import DeanReadOnlyRow from './../../../components/DeanReadOnlyRow'
 import DeanEditableRow from './../../../components/DeanEditableRow'
 
@@ -8,6 +9,8 @@ function ManageDeanAccounts() {
     const [deans, setDeans] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [msg, setMsg] = useState('');
+    const [token, setToken] = useState();
+    const [expire, setExpire] = useState('');
     const [addDeanFormData, setAddDeanFormData] = useState({
         dean_id: "",
         last_name: "",
@@ -31,20 +34,57 @@ function ManageDeanAccounts() {
     });
 
     const [editDeanId, setEditDeanId] = useState(null);
+    const [changePassModal, setChangePassModal] = useState(false);
+    const [passwordForm, setPasswordForm] = useState({
+
+    });
 
     useEffect(() => {
+        refreshToken();
         getDeans();
     }, []);
 
-    const getDeans = async () => {
-        const response = await axios.get('http://localhost:5000/deans/get', {
+    const refreshToken = async () => {
+      axios.defaults.withCredentials = true;
+      try {
+        const response = await axios.get('http://localhost:5000/admin/token');
+        setToken(response.data.accessToken);
+        const decoded = jwt_decode(response.data.accessToken);
+        setExpire(decoded.exp);
+      }
+      catch (error) {
+        if (error.response) {
+          navigate("/");
+        }
+      }
+    }
+  
+    const axiosJWT = axios.create();
+    axiosJWT.interceptors.request.use(async (config) => {
+      const currentDate = new Date();
+      if (expire * 1000 < currentDate.getTime()) {
+        const response = await axios.get('http://localhost:5000/admin/token');
+        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        setToken(response.data.accessToken);
+        const decoded = jwt_decode(response.data.accessToken);
+        setExpire(decoded.exp);
+      }
+      return config;
+    }, (error) => {
+        return Promise.reject(error);
+    });
 
+    const getDeans = async () => {
+        const response = await axiosJWT.get('http://localhost:5000/deans/get', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
         setDeans(response.data);
     }
 
     const updateDean = async (id) => {
-      await axios.patch(`http://localhost:5000/update/dean/${id}`, {
+      await axiosJWT.patch(`http://localhost:5000/update/dean/${id}`, {
         last_name: editDeanFormData.last_name,
         first_name: editDeanFormData.first_name,
         middle_name: editDeanFormData.middle_name,
@@ -52,19 +92,37 @@ function ManageDeanAccounts() {
         email: editDeanFormData.email,
         department: editDeanFormData.department,
         dean_id: editDeanFormData.dean_id,
-      });
+      },{headers: {
+        Authorization: `Bearer ${token}`
+      }});
       getDeans();
     }
 
+    const changePassword = async () => {
+      try{
+        await axiosJWT.patch(`http://localhost:5000/change/dean/password`, passwordForm, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }catch(e){
+        console.log(e);
+      }
+    }
+
     const deleteDean = async (id) => {
-      await axios.delete(`http://localhost:5000/delete/dean/${id}`);
+      await axiosJWT.delete(`http://localhost:5000/delete/dean/${id}`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       getDeans();
     }
 
     const addDean = async (e) => {
       e.preventDefault();
       try {
-        await axios.post('http://localhost:5000/register/dean', {
+        await axiosJWT.post('http://localhost:5000/register/dean', {
           id: deans.length,
           last_name: addDeanFormData.last_name,
           first_name: addDeanFormData.first_name,
@@ -75,6 +133,10 @@ function ManageDeanAccounts() {
           dean_id: addDeanFormData.dean_id,
           password: addDeanFormData.password,
           confPassword: addDeanFormData.confPassword
+        },{
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
           setModalIsOpen(false);
           getDeans();
@@ -109,6 +171,18 @@ function ManageDeanAccounts() {
 
         setEditDeanFormData(newFormData);
     };
+
+    const handleChangePassFormChange = (event) => {
+      event.preventDefault();
+
+      const fieldName = event.target.getAttribute("name");
+      const fieldValue = event.target.value;
+
+      const newFormData = { ...passwordForm };
+      newFormData[fieldName] = fieldValue;
+
+      setPasswordForm(newFormData);
+  };
 
     const handleAddFormSubmit = (event) => {
         event.preventDefault();
@@ -189,6 +263,17 @@ function ManageDeanAccounts() {
 
     };
 
+    const handleChangePassword = (id) => {
+      passwordForm.student_id = id;
+      setChangePassModal(true);
+
+    }
+    const handleChangePasswordSubmit = () => {
+      console.log(passwordForm);
+      changePassword();
+      setChangePassModal(false);
+    }
+
     const customStyles = {
         content: {
           top: '50%',
@@ -202,13 +287,13 @@ function ManageDeanAccounts() {
 
   return (
     <>
-      <div className="users-table">
+      <div className="users-table-header">
         <div style={{display:'flex', gap:'1em', textAlign:'left', width: '100%'}}>
           <h1>Dean Accounts</h1>
           <button onClick={()=>setModalIsOpen(!modalIsOpen)}>ADD</button>
         </div>
         <form onSubmit={handleEditFormSubmit}>
-          <table>
+          <table className='students-user-table'>
             <thead>
               <tr>
                 <th>Dean ID</th>
@@ -236,6 +321,7 @@ function ManageDeanAccounts() {
                       dean={dean}
                       handleEditClick={handleEditClick}
                       handleDeleteClick={handleDeleteClick}
+                      handleChangePassword={handleChangePassword}
                     />
                   )}
                 </>
@@ -318,7 +404,19 @@ function ManageDeanAccounts() {
             </form>
         </div>
         </Modal>
-        
+        <Modal
+        isOpen={changePassModal}
+        style={customStyles}
+        ariaHideApp={false}>
+          <form style={{display:'flex', flexDirection:'column', gap:'1em'}}>
+            <input type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange}/>
+            <input type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange}/>
+            <div style={{display:'flex', gap:'1em'}}>
+              <button type="button" onClick={()=>setChangePassModal(false)}>Cancel</button>
+              <button type="button" onClick={handleChangePasswordSubmit}>Change Password</button>
+            </div>
+          </form>
+        </Modal>
       </div> 
     </>
     )

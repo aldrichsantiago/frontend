@@ -8,8 +8,8 @@ import Menu from '../../assets/menu.png'
 
 function AdminLayout({children}) {
 
-  const [token, setToken] = useState();
   const [name, setName] = useState();
+  const [token, setToken] = useState();
   const [expire, setExpire] = useState('');
   const [isChecked, setIsChecked] = useState('none');
   const navigate = useNavigate();
@@ -27,9 +27,9 @@ function AdminLayout({children}) {
     }
   };
 
-  // useEffect(() => {
-  //   refreshToken();
-  // }, []);
+  useEffect(() => {
+    refreshToken();
+  }, []);
 
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
@@ -50,7 +50,6 @@ function AdminLayout({children}) {
   }
 
   const axiosJWT = axios.create();
-
   axiosJWT.interceptors.request.use(async (config) => {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
@@ -87,7 +86,7 @@ function AdminLayout({children}) {
               <Link to="/admin/applications">VIEW APPLICATIONS</Link><br />
               <Link to="/admin/users">MANAGE USER ACCOUNTS</Link><br />
               <Link to="/admin/site">UPDATE SITE CONTENT</Link><br />
-              <Link to="/admin/home">LOGOUT</Link>
+              <Link to="/" onClick={Logout}>LOGOUT</Link>
           </div>
             <input type="checkbox" name="burg" id="burg" onChange={handleChange}/>
             <label htmlFor="burg"><img src={Menu} alt="menu-icon"/></label>
@@ -97,7 +96,7 @@ function AdminLayout({children}) {
             <Link to="/admin/applications">VIEW APPLICATIONS</Link><br />
             <Link to="/admin/users">MANAGE USER ACCOUNTS</Link><br />
             <Link to="/admin/site">UPDATE SITE CONTENT</Link><br />
-            <Link to="/admin/home">LOGOUT</Link>
+            <Link to="/" onClick={Logout}>LOGOUT</Link>
           </div>
           <main>{children}</main>
         </div>

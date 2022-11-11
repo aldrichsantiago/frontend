@@ -7,7 +7,7 @@
         text-decoration: none;
         color: #ffffff;
         background-color: #105652;
-        padding: 0.5em 1em;
+        padding: 0.5em;
         border-radius: 5px;
         border: 3px solid #ffffff;
         cursor: pointer;
@@ -21,14 +21,16 @@
 
 
 
-.users-table {
+.users-table-header {
     display: flex;
     flex-direction: column;
     gap: 10px;
     padding: 1rem;
     margin-bottom: 3em;
     overflow-x: scroll;
-
+    &::-webkit-scrollbar{
+      display: none;
+    }
 
   }
   
@@ -36,7 +38,7 @@
     border-collapse: collapse;
     width: 100%;
     font-family: Arial, Helvetica, sans-serif;
-
+    
   }
   
   th,
@@ -50,15 +52,16 @@
   }
   
   th {
+    font-family: Bebas Neue;
     font-size: 18px;
-    background-color: rgb(117, 201, 250);
+    background-color: rgb(159, 161, 161);
   }
   
   td {
     max-width: 30ch;
     white-space: nowrap;
     font-size: 16px;
-    background-color: rgb(205, 235, 253);
+    background-color: rgb(216, 205, 205);
     overflow: hidden;
     text-overflow: ellipsis;
     
@@ -74,7 +77,9 @@
       &:nth-child(1){
         background-color: #105652;
       }
-
+      &:nth-child(2){
+        background-color: rgb(58, 206, 95);
+      }
       &:nth-child(2){
         background-color: rgb(206, 58, 58);
       }
@@ -82,6 +87,9 @@
   }
   
   .students-user-table{
+    &::-webkit-scrollbar{
+      display: none;
+  }
     button{
       margin: 3px;
       padding: 0.5em 1em;

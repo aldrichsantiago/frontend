@@ -1,10 +1,12 @@
 import React, {useState,  useEffect} from 'react'
-import Modal from 'react-modal'
 import axios from 'axios'
+import jwt_decode from 'jwt-decode'
 import PendingStudentReadOnlyRow from './../../../components/PendingStudentsReadOnlyRow'
 
 function ManagePendingStudentRegistrations() {
     const [students, setStudents] = useState();
+    const [token, setToken] = useState();
+    const [expire, setExpire] = useState('');
     const [addStudentFormData, setAddStudentFormData] = useState({
         student_id: "",
         last_name: "",
@@ -30,14 +32,21 @@ function ManagePendingStudentRegistrations() {
     const [editStudenttId, setEditStudenttId] = useState(null);
 
     useEffect(() => {
-        getStudents();
+      refreshToken();
+      getStudents();
     }, []);
 
     const getStudents = async () => {
-        const response = await axios.get('http://localhost:5000/pendingstudents/get', {
-
+      try{
+        const response = await axiosJWT.get('http://localhost:5000/pendingstudents/get', {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         });
         setStudents(response.data);
+      }catch(e){
+        console.log(e);
+      }
     }
 
     const approveStudent = async (StudentId) => {
@@ -45,7 +54,7 @@ function ManagePendingStudentRegistrations() {
         const index = students.findIndex((student) => student.id === StudentId);
         const student = students[index];
 
-        await axios.post('http://localhost:5000/approve/registration/student', {
+        await axiosJWT.post('http://localhost:5000/approve/registration/student', {
           last_name: student.last_name,
           first_name: student.first_name,
           middle_name: student.middle_name,
@@ -56,7 +65,9 @@ function ManagePendingStudentRegistrations() {
           year: student.year,
           student_id: student.student_id,
           password: student.password
-        });
+        },{headers: {
+          Authorization: `Bearer ${token}`
+        }});
 
         rejectStudent(StudentId);
 
@@ -67,7 +78,11 @@ function ManagePendingStudentRegistrations() {
     }
 
     const rejectStudent = async (id) => {
-      await axios.delete(`http://localhost:5000/reject/registration/student/${id}`);
+      await axiosJWT.delete(`http://localhost:5000/reject/registration/student/${id}`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       getStudents();
     }
 
@@ -133,9 +148,41 @@ function ManagePendingStudentRegistrations() {
         rejectStudent(studenttId)
     };
 
+    const refreshToken = async () => {
+      axios.defaults.withCredentials = true;
+      try {
+        const response = await axios.get('http://localhost:5000/admin/token');
+        setToken(response.data.accessToken);
+        const decoded = jwt_decode(response.data.accessToken);
+        setExpire(decoded.exp);
+      }
+      catch (error) {
+        if (error.response) {
+          navigate("/");
+    
+        }
+      }
+    }
+        
+    const axiosJWT = axios.create();
+  
+    axiosJWT.interceptors.request.use(async (config) => {
+      const currentDate = new Date();
+      if (expire * 1000 < currentDate.getTime()) {
+        const response = await axios.get('http://localhost:5000/admin/token');
+        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+        setToken(response.data.accessToken);
+        const decoded = jwt_decode(response.data.accessToken);
+        setExpire(decoded.exp);
+      }
+      return config;
+    }, (error) => {
+        return Promise.reject(error);
+    });
+
   return (
     <>
-      <div className="users-table">
+      <div className="users-table-header">
         <div style={{display:'flex', gap:'1em', textAlign:'left', width: '100%'}}>
             <h1>Pending Student Registrations</h1>
         </div>
