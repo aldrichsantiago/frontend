@@ -33,12 +33,15 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path='/' element={<Home/>}/>
+
         <Route path='/student' element={<StudentLogin/>}/>
+        <Route path='/register/student' element={<StudentRegister/>}/>
+        
         <Route path='/dean' element={<DeanLogin/>}/>
+        <Route path='/register/dean' element={<DeanRegister/>}/>
+
         <Route path='/admin' element={<AdminLogin/>}/>
 
-        <Route path='/register/student' element={<StudentRegister/>}/>
-        <Route path='/register/dean' element={<DeanRegister/>}/>
 
         <Route path='/student/home' element={<StudentHome/>}/>
         <Route path="/student/scholarships" element={<ViewScholarship/>}/>
