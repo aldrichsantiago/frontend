@@ -77,7 +77,7 @@ function Layout({children}) {
 
   return (
     <>
-        <Navbar sm="WUPSCHOLARSHIP" user={name} />
+        <Navbar sm="WUPSCHOLARSHIP" user={name + " (DEAN)"} />
         <div className="content-container">
           <div className="sidebar">
               <Link to="/dean/home">HOME</Link><br />

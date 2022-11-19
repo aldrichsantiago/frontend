@@ -186,6 +186,8 @@ function ManagePendingDeanRegistrations() {
     // };
 
     const handleDeleteClick = (DeanId) => {
+      let text = 'Do you want to reject this dean registration? '
+      if(confirm(text) == true){
         const newDeans = [...deans];
 
         const index = deans.findIndex((dean) => dean.id === DeanId);
@@ -194,6 +196,7 @@ function ManagePendingDeanRegistrations() {
 
         setDeans(newDeans);
         rejectDean(DeanId);
+      }else{}
     };
 
     const customStyles = {

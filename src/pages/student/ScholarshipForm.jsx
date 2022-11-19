@@ -19,7 +19,7 @@ const AttachementInputs = ({requirement, index, handleFileInputChange}) =>{
             accept='.jpeg, .jpg, .png'
             onChange={handleFileInputChange}
             name={nameOfInput}
-            required
+            required="required"
             />
             <br />
         </div>
@@ -44,7 +44,8 @@ function ScholarshipForm() {
         req_7: '',
         req_8: '',
         req_9: '',
-        req_10: ''
+        req_10: '',
+        student_sign:''
     });
     const [subjCodesUnits, setSubjCodesUnits] = useState({
         subj_1: '',subj_2: '',
@@ -164,7 +165,8 @@ function ScholarshipForm() {
 
     function sigSave(){
         setSigData(sigPad.current.getTrimmedCanvas().toDataURL("image/png"));
-        console.log(sigData);
+        attachments.student_sign = sigData;
+        console.log(attachments.student_sign);
         setSignModal(false);
     }
 
@@ -215,7 +217,7 @@ function ScholarshipForm() {
       };
 
     const submitForm = async() => {
-        dataToPass= {...subjCodesUnits, ...attachments, ...userInfo, student_sign: sigData, scholarship_type: scholarship.scholarship_name};
+        dataToPass= {...subjCodesUnits, ...attachments, ...userInfo, scholarship_type: scholarship.scholarship_name};
         console.log(dataToPass);
         try{
             await axios.post('http://localhost:5000/submit/student/application', dataToPass, {headers: {
@@ -297,10 +299,16 @@ function ScholarshipForm() {
             ref={sigPad}
             />
             <div className='flex'>
-                <button onClick={sigClear}>CLEAR</button>
-                <button onClick={sigSave}>SAVE</button>
-                
+                <button type="button" onClick={sigClear}>CLEAR</button>
+                <button type="button" onClick={()=>setSignModal(false)}>CLOSE</button>
+                <button type="button" onClick={sigSave}>SAVE</button>
             </div>
+            <hr />
+            <p style={{"textAlign":"center"}}>or upload a signature</p>
+            <div className='flex'>
+                <input type="file" name="student_sign" onChange={handleFileInputChange}/>
+            </div>
+
         </Modal>
     </Layout>
     

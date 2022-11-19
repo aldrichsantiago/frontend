@@ -25,7 +25,7 @@ function StudentRegister() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
 
-    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd"];
+    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE"];
     let courses = [""];
 
     if (department == "CECT"){
@@ -92,7 +92,12 @@ function StudentRegister() {
         }
     }
 
-    useEffect(()=>{notify()},[msg]);
+    useEffect(()=>{
+        if(msg == ''){
+        }else{
+            notify();
+        }
+    },[msg]);
 
     const notify = () => toast.error(msg, {
         position: "bottom-right",

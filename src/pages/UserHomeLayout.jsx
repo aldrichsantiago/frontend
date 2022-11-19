@@ -18,8 +18,8 @@ function UserHomeLayout(props) {
                 <h2>PORTAL</h2>
             </div>
             <div className="user-home-butt-container">
-                <Link href={props.toGreen} className="green-button">{props.greenName}</Link>
-                <Link href={props.toYellow} className="yellow-button" style={{'display' : props.display}}>{props.yellowName}</Link>
+                <Link to={props.toGreen} className="green-button">{props.greenName}</Link>
+                <Link to={props.toYellow} className="yellow-button" style={{'display' : props.display}}>{props.yellowName}</Link>
             </div>
         </div>
         <div className="user-home-footer">

@@ -138,6 +138,8 @@ function ManagePendingStudentRegistrations() {
 
 
     const handleDeleteClick = (studenttId) => {
+      let text = 'Do you want to reject this student registration? '
+      if(confirm(text) == true){
         const newStudents = [...students];
 
         const index = students.findIndex((student) => student.id === studenttId);
@@ -146,6 +148,7 @@ function ManagePendingStudentRegistrations() {
 
         setStudents(newStudents);
         rejectStudent(studenttId)
+      }else{}
     };
 
     const refreshToken = async () => {

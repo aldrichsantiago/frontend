@@ -26,7 +26,7 @@ function AccountDetails() {
   
   });
 
-  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd"];
+  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE"];
 
   let courses = [""];
 

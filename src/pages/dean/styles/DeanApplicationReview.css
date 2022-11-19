@@ -10,17 +10,37 @@
   background-color: #fff;
 }
 .dean-review-application .dean-review-header {
+  display: flex;
+  flex-direction: column;
+}
+.dean-review-application .dean-review-header .uni-details {
+  width: 450px;
   text-align: center;
+  display: flex;
+  align-items: center;
+  margin-bottom: 2em;
+}
+.dean-review-application .dean-review-header .uni-details div {
+  width: auto;
 }
 .dean-review-application .dean-review-body {
   margin: 3em auto;
   width: 50%;
+}
+.dean-review-application .dean-review-body .scholarship-form-msg {
+  width: 90%;
+}
+.dean-review-application .dean-review-body .scholarship-form-msg .scholar-details {
+  text-align: right;
 }
 .dean-review-application .dean-review-body .applicant-data {
   margin: 3em;
 }
 .dean-review-application .dean-review-body .subj-codes-units-table {
   margin: 2em 0em 5em;
+}
+.dean-review-application .dean-review-body table {
+  overflow: scroll;
 }
 .dean-review-application .dean-review-body table thead tr td {
   border: 1px solid black;
@@ -31,10 +51,24 @@
   background-color: #fff;
 }
 .dean-review-application .dean-review-body .signatures {
+  width: 100%;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
-  margin-bottom: 7em;
+  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 3em;
+}
+.dean-review-application .dean-review-body .signatures .student-signature {
+  text-align: left;
+  margin-left: 60%;
+}
+.dean-review-application .dean-review-body .signatures .higher-ups-signs {
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40%;
+}
+.dean-review-application .dean-review-body .signatures .higher-ups-signs div:nth-child(2) {
+  margin-top: 30px;
 }
 .dean-review-application .dean-review-body .other-reqs {
   display: flex;

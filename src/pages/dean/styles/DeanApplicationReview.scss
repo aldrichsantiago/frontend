@@ -17,9 +17,28 @@ $tertiary-color: #B91646;
     padding: 2em 1em;
     background-color: #fff;
     .dean-review-header{
-        text-align: center;
+        display: flex;
+        flex-direction: column;
+        .uni-details{
+            width: 450px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            margin-bottom: 2em;
+            div{
+                width: auto;
+            }       
+        }
+         
     }
     .dean-review-body{
+        .scholarship-form-msg{
+            width: 90%;
+            .scholar-details{
+                text-align: right;
+            }
+        }
+
         .applicant-data{
             margin: 3em;
         }
@@ -30,6 +49,7 @@ $tertiary-color: #B91646;
             margin: 2em 0em 5em;
         }
         table{
+            overflow: scroll;
             thead{
                 tr{
                     td{
@@ -47,11 +67,32 @@ $tertiary-color: #B91646;
                 }
             }
         }
+        // .signatures{
+        //     display: flex;
+        //     justify-content: space-around;
+        //     align-items: center;
+        //     margin-bottom: 7em;
+        // }
+
         .signatures{
+            width: 100%;
             display: flex;
-            justify-content: space-around;
-            align-items: center;
-            margin-bottom: 7em;
+            flex-direction: column;
+            flex-wrap: wrap;
+            gap: 3em;
+            .student-signature{
+                text-align: left;
+                margin-left: 60%;
+            }
+            .higher-ups-signs{
+                width: 100%;
+                display: flex;
+                flex-wrap: wrap;
+                gap: 40%;
+                div:nth-child(2){
+                    margin-top: 30px;
+                }
+            }
         }
 
         .other-reqs{

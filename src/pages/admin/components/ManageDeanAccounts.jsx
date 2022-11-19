@@ -2,6 +2,7 @@ import React, {useState,  useEffect} from 'react'
 import Modal from 'react-modal'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
+import { ToastContainer, toast } from 'react-toastify';
 import DeanReadOnlyRow from './../../../components/DeanReadOnlyRow'
 import DeanEditableRow from './../../../components/DeanEditableRow'
 
@@ -253,6 +254,8 @@ function ManageDeanAccounts() {
     };
 
     const handleDeleteClick = (DeanId) => {
+      let text = 'Do you want to delete this Dean Account? '
+      if(confirm(text) == true){
         const newDeans = [...deans];
 
         const index = deans.findIndex((dean) => dean.id === DeanId);
@@ -260,6 +263,7 @@ function ManageDeanAccounts() {
         newDeans.splice(index, 1);
 
         deleteDean(DeanId);
+      }else{}
 
     };
 
@@ -284,6 +288,25 @@ function ManageDeanAccounts() {
           transform: 'translate(-50%, -50%)',
         },
       };
+
+  useEffect(()=>{
+    if(msg == ''){
+    }else{
+        notify();
+    }
+  },[msg]);
+
+  const notify = () => toast.error(msg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+    });
+    
 
   return (
     <>
@@ -334,8 +357,7 @@ function ManageDeanAccounts() {
         style={customStyles}
         ariaHideApp={false}>
         <div className="add-user-container">
-            <h2>Add a Dean</h2>
-            <a onClick={()=>setModalIsOpen(false)}>X</a>
+            <h2>ADD A DEAN</h2>
             <form onSubmit={addDean} style={{display:'flex', flexDirection:'column'}}>
             <input
                 type="text"
@@ -400,7 +422,11 @@ function ManageDeanAccounts() {
                 name="confPassword"
                 onChange={handleAddFormChange}
             />
-            <button type="submit" onClick={addDean}>Add</button>
+            <div className="flex">
+              <button type="button" onClick={()=>setModalIsOpen(false)}>CANCEL</button>
+              <button type="submit" onClick={addDean}>ADD</button>
+            </div>
+            
             </form>
         </div>
         </Modal>
@@ -418,6 +444,17 @@ function ManageDeanAccounts() {
           </form>
         </Modal>
       </div> 
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </>
     )
 }

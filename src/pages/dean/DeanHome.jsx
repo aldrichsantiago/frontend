@@ -9,11 +9,15 @@ function DeanHome() {
   const [name, setName] = useState('');
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
 
   useEffect(() => {
+    setLoading(true)
     refreshToken();
+    setLoading(false)
   }, []);
 
   const refreshToken = async () => {
@@ -58,10 +62,14 @@ function DeanHome() {
         console.log(error);
       }
   }
+
+  if (loading) {return null}
+
   return (
     <UserHomeLayout 
     user="COLLEGE DEAN" 
-    toGreen="/dean/applications" 
+    toGreen="/dean/applications"
+    toYellow="/dean/home"
     greenName="VIEW SCHOLARSHIP APPLICATIONS"
     display='none'>
         

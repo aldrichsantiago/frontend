@@ -21,7 +21,7 @@ function Announcements() {
     <div>
         <Carousel showArrows={true} autoPlay infiniteLoop swipeable={true}>
             {announcements.map((announce)=>(
-                <div>
+                <div key={announce.id}>
                     <h1>{announce.title}</h1>
                     <p>{announce.body}</p>
                 </div>

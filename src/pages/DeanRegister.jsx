@@ -21,7 +21,7 @@ function StudentRegister() {
     const navigate = useNavigate();
 
 
-    const departments = ["Choose dept","CECT", "CONAMS", "CBA", "CHTM"];
+    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE"];
     const dept_options = departments.map((dept) =>
         <option key={dept}>{dept}</option>
     );
@@ -63,13 +63,12 @@ function StudentRegister() {
     }
 
     useEffect(()=>{
-        if(!msg){
-
+        if(msg == ''){
         }else{
-        notify();
-
+            notify();
         }
     },[msg]);
+
 
     const notify = () => toast.error(msg, {
         position: "bottom-right",

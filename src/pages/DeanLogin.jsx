@@ -3,6 +3,7 @@ import Navbar from '../components/Navbar'
 import { useNavigate, Link } from 'react-router-dom'
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { BiUser, BiLockAlt, BiLogIn } from "react-icons/bi";
 import Logo from '../assets/logo.png'
 import '../components/styles/userLogin.css'
 
@@ -30,10 +31,8 @@ function DeanLogin() {
 
     useEffect(()=>{
         if(!msg){
-
         }else{
-        notify();
-
+            notify();
         }
     },[msg]);
 
@@ -57,13 +56,13 @@ function DeanLogin() {
             <div className="login-form-con">
                 <form onSubmit={Auth}>
                 <img src={Logo} alt="LOGO" width="100px"/>
-
-                    <input type="text" placeholder='Dean ID' value={id} onChange={(e) => setId(e.target.value)}/>
+                    <input type="text" placeholder="Dean ID" value={id} onChange={(e) => setId(e.target.value)}/>
                     <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                    <input type="submit" value="LOG IN" onClick={Auth}/>
+                    <input type="submit" value="Login" onClick={Auth}/>
                 </form>
                 <div>
-                    <Link href='register/dean'>Create an account</Link>
+                    <Link to='/register/dean'>Create an account</Link>
+                    
                 </div>
             </div>
         </div>

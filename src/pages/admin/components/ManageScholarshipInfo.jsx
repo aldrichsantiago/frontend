@@ -164,14 +164,17 @@ function ManageScholarshipInfo() {
   };
 
   const handleDeleteClick = (scholarshipId) => {
-      const newScholarships = [...scholarships];
+    let text = 'Do you want to delete this Scholarship? '
+      if(confirm(text) == true){
+        const newScholarships = [...scholarships];
 
-      const index = scholarships.findIndex((scholarship) => scholarship.id === scholarshipId);
+        const index = scholarships.findIndex((scholarship) => scholarship.id === scholarshipId);
 
-      newScholarships.splice(index, 1);
+        newScholarships.splice(index, 1);
 
-      console.log(scholarshipId);
-      deleteScholarships(scholarshipId);
+        console.log(scholarshipId);
+        deleteScholarships(scholarshipId);
+      }else{}
   };
 
   const handleEditFormSubmit = () => {

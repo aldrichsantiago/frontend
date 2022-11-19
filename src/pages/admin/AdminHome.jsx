@@ -9,11 +9,14 @@ function AdminHome() {
   const [token, setToken] = useState();
   const [name, setName] = useState();
   const [expire, setExpire] = useState('');
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
 
   useEffect(() => {
-  refreshToken();
+    setLoading(true)
+    refreshToken();
+    setLoading(false)
   }, []);
 
   const refreshToken = async () => {
@@ -60,10 +63,13 @@ function AdminHome() {
       }
   }
 
+  if (loading) {return null}
+
   return (
     <UserHomeLayout 
     user="A D M I N I S T R A T O R" 
     toGreen="/admin/applications" 
+    toYellow="/admin/home" 
     greenName="MANAGE SCHOLARSHIP APPLICATIONS"
     display='none'
     logout={Logout}>

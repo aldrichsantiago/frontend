@@ -62,8 +62,7 @@ function StudentLogin() {
                     <input type="submit" value="LOG IN" />
                 </form>
                 <div>
-                    
-                    <Link href='register/student'>Create an account</Link>
+                    <Link to='/register/student'>Create an account</Link>
                 </div>
             </div>
         

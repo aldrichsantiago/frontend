@@ -81,7 +81,17 @@ nav::after {
     padding: 10px 0px;
     flex-direction: row;
   }
+  .right-nav {
+    padding-right: 0px;
+    padding-left: 0em;
+    text-align: right;
+  }
   .right-nav h1 {
     display: block;
+  }
+}
+@media (min-width: 1700px) {
+  .right-nav {
+    padding-left: 30em;
   }
 }/*# sourceMappingURL=Navbar.css.map */

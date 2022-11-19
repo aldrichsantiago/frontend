@@ -11,14 +11,18 @@ function StudentHome() {
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
   const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+
 
   const [id, setId] = useState();
   const navigate = useNavigate();
 
 
   useEffect(() => {
+    setLoading(true)
     refreshToken();
     setData(id)
+    setLoading(false)
   
   }, []);
 
@@ -67,6 +71,7 @@ function StudentHome() {
         }
     }
 
+  if (loading) {return null}
   return (
     <UserHomeLayout 
     user="SCHOLARSHIP APPLICATION" 

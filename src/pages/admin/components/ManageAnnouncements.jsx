@@ -161,14 +161,18 @@ function ManageAnnouncements() {
     };
 
     const handleDeleteClick = (announcementId) => {
-        const newAnnouncements = [...announcements];
+        let text = 'Do you want to delete this Announcement? '
+        if(confirm(text) == true){
+            const newAnnouncements = [...announcements];
 
-        const index = announcements.findIndex((announcement) => announcement.id === announcementId);
+            const index = announcements.findIndex((announcement) => announcement.id === announcementId);
 
-        newAnnouncements.splice(index, 1);
+            newAnnouncements.splice(index, 1);
 
-        console.log(announcementId);
-        deleteAnnouncements(announcementId);
+            console.log(announcementId);
+            deleteAnnouncements(announcementId);
+        }
+        else{}
     };
 
     const handleEditFormSubmit = () => {
