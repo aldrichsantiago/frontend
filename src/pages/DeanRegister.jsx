@@ -21,7 +21,7 @@ function StudentRegister() {
     const navigate = useNavigate();
 
 
-    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE"];
+    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
     const dept_options = departments.map((dept) =>
         <option key={dept}>{dept}</option>
     );
@@ -42,7 +42,7 @@ function StudentRegister() {
     const Register = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/register/dean', {
+            await axios.post(`${import.meta.env.VITE_API_URL}/register/dean`, {
                 last_name: lastName,
                 first_name: firstName, 
                 middle_name: middleName,

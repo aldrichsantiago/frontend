@@ -24,11 +24,12 @@
   width: auto;
 }
 .dean-review-application .dean-review-body {
+  text-align: left;
   margin: 3em auto;
-  width: 50%;
+  width: 57%;
 }
 .dean-review-application .dean-review-body .scholarship-form-msg {
-  width: 90%;
+  width: 70%;
 }
 .dean-review-application .dean-review-body .scholarship-form-msg .scholar-details {
   text-align: right;
@@ -73,8 +74,10 @@
 .dean-review-application .dean-review-body .other-reqs {
   display: flex;
   flex-direction: column;
-  gap: 3em;
+  gap: 3em 0em;
 }
 .dean-review-application .dean-review-body .other-reqs img {
-  max-width: 100%;
+  max-width: 130%;
+  -o-object-fit: contain;
+     object-fit: contain;
 }/*# sourceMappingURL=DeanApplicationReview.css.map */

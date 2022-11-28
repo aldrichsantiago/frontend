@@ -21,7 +21,8 @@ function ManageStudentAccounts() {
         middle_name: "",
         contact_no: "",
         email: "",
-        course: "",
+        department: '',
+        course: '',
         year: "",
         password: "",
         confPassword: "",
@@ -45,34 +46,42 @@ function ManageStudentAccounts() {
     });
 
 
-    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd"];
-    let courses = [""];
+    const departments = ["Choose a Department","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
+    let courses = ["Choose a Course"];
 
     if (selectDept == "CECT"){
-        courses = ["","BSIT", "BSEE", "BSCpE"];
+        courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
     }else if (selectDept == "CONAMS"){
         courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
     }else if (selectDept == "CHTM"){
-        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management major in Travel Operations"];
+        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
     }else if (selectDept == "CBA"){
-        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration with majors in Financial Management, Marketing Management, Operations Management, Human Resource Development Management, Business Economics and Banking."];
+        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
     }else if (selectDept == "CAS"){
         courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
     }else if (selectDept == "CoEd"){
-        courses = ["","BSHRM", "BSECE", "BSCpE"];
+        courses = ["","Bachelor of Elementary Education", "Bachelor of Physical Education"];
     }else if (selectDept == "CCJE"){
         courses = ["","Bachelor of Science in Criminology"];
+    }else if (selectDept == "Medicine"){
+        courses = ["",""];
+    }else if (selectDept == "JWSLG"){
+        courses = ["",""];
+    }else if (selectDept == "High School"){
+        courses = ["","Junior High School", "Senior High School"];
+    }else if (selectDept == "Elementary"){
+        courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
     }else{
         courses = [""];
     }
 
-    const dept_options = departments.map((dept) =>
-      <option key={dept}>{dept}</option>
-    );
+  const dept_options = departments.map((dept) =>
+    <option key={dept} value={dept}>{dept}</option>
+  );
 
   const course_options = courses.map((course) =>
-      <option key={course}>{course}</option>
-    );
+    <option key={course} value={course}>{course}</option>
+  );
 
 
     useEffect(() => {
@@ -81,7 +90,7 @@ function ManageStudentAccounts() {
     }, []);
 
     const getStudents = async () => {
-        const response = await axiosJWT.get('http://localhost:5000/students/get', {
+        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/students/get`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -90,7 +99,7 @@ function ManageStudentAccounts() {
     }
 
     const updateStudent = async (id) => {
-      await axiosJWT.patch(`http://localhost:5000/update/student/${id}`, {
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/update/student/${id}`, {
         last_name: editStudentFormData.last_name,
         first_name: editStudentFormData.first_name,
         middle_name: editStudentFormData.middle_name,
@@ -110,7 +119,7 @@ function ManageStudentAccounts() {
     }
     const changePassword = async () => {
       try{
-        await axiosJWT.patch(`http://localhost:5000/change/student/password`, passwordForm, {
+        await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/change/student/password`, passwordForm, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -121,7 +130,7 @@ function ManageStudentAccounts() {
     }
 
     const deleteStudent = async (id) => {
-      await axiosJWT.delete(`http://localhost:5000/delete/student/${id}`,{
+      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/delete/student/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -132,7 +141,7 @@ function ManageStudentAccounts() {
     const addStudent = async (e) => {
       e.preventDefault();
       try {
-          await axiosJWT.post('http://localhost:5000/register/student', {
+          await axiosJWT.post(`${import.meta.env.VITE_API_URL}/register/student`, {
             id: students.length,
             last_name: addStudentFormData.last_name,
             first_name: addStudentFormData.first_name,
@@ -168,6 +177,7 @@ function ManageStudentAccounts() {
         newFormData[fieldName] = fieldValue;
 
         setAddStudentFormData(newFormData);
+        console.log(newFormData);
     };
 
     const handleEditFormChange = (event) => {
@@ -270,7 +280,7 @@ function ManageStudentAccounts() {
     };
 
     const handleDeleteClick = (studentId) => {
-      let text = 'Do you want to delete this student? '
+      let text = '❌❌❌ Do you want to delete this student? '
       if(confirm(text) == true){
         const newStudents = [...students];
 
@@ -309,7 +319,7 @@ function ManageStudentAccounts() {
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {
-      const response = await axios.get('http://localhost:5000/admin/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setExpire(decoded.exp);
@@ -327,7 +337,7 @@ function ManageStudentAccounts() {
   axiosJWT.interceptors.request.use(async (config) => {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
-      const response = await axios.get('http://localhost:5000/admin/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
@@ -453,21 +463,31 @@ function ManageStudentAccounts() {
                 name="email"
                 onChange={handleAddFormChange}
             />
-            <input
-                type="text"
-                required="required"
-                placeholder="Enter an department..."
-                name="department"
-                onChange={handleAddFormChange}
-            />
 
-            <input
-                type="text"
-                required="required"
-                placeholder="Enter a course..."
-                name="course"
-                onChange={handleAddFormChange}
-            />
+            <select
+              required="required"
+              name="department"
+              value={addStudentFormData.department}
+              onChange={(e)=> {
+                setSelectDept(e.target.value);
+                addStudentFormData.department = e.target.value;
+              }}
+              >
+                {dept_options}
+            </select>
+
+            <select
+              required="required"
+              name="course"
+              value={addStudentFormData.course}
+              onChange={(e)=> {
+                setSelectCourse(e.target.value);
+                addStudentFormData.course = e.target.value;
+              }}
+              >
+              {course_options}
+            </select>
+
             <input
                 type="number"
                 required="required"

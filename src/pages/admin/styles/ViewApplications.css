@@ -25,6 +25,19 @@
   background-color: #0d4946;
 }
 
+.dean-view-applications .search-input, .approved-applications .search-input, .rejected-applications .search-input {
+  width: 150px;
+  height: 25px;
+}
+.dean-view-applications .dept-select, .approved-applications .dept-select, .rejected-applications .dept-select {
+  width: 90px;
+  height: 30px;
+}
+.dean-view-applications .course-select, .approved-applications .course-select, .rejected-applications .course-select {
+  width: 200px;
+  height: 30px;
+}
+
 .rejected-applications, .approved-applications {
   overflow-x: scroll;
 }

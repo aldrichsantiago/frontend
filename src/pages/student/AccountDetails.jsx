@@ -26,12 +26,11 @@ function AccountDetails() {
   
   });
 
-  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE"];
-
+  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
   let courses = [""];
 
   if (department == "CECT"){
-    courses = ["","BSIT", "BSEE", "BSCpE"];
+    courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
   }else if (department == "CONAMS"){
       courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
   }else if (department == "CHTM"){
@@ -41,12 +40,51 @@ function AccountDetails() {
   }else if (department == "CAS"){
       courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
   }else if (department == "CoEd"){
-      courses = ["","BSHRM", "BSECE", "BSCpE"];
+      courses = ["","Bachelor of Elementary Education", "Bachelor of Physical Education"];
   }else if (department == "CCJE"){
       courses = ["","Bachelor of Science in Criminology"];
+  }else if (department == "Medicine"){
+    courses = ["",""];
+  }else if (department == "JWSLG"){
+      courses = ["",""];
+  }else if (department == "High School"){
+      courses = ["","Junior High School", "Senior High School"];
+  }else if (department == "Elementary"){
+      courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
   }else{
       courses = [""];
   }
+
+  let all_courses =["","Bachelor of Science in Information Technology", 
+  "Bachelor of Science in Electronics Engineering", 
+  "Bachelor of Science in Computer Engineering",
+  "Bachelor of Science in Nursing",
+   "Bachelor of Science in Radiologic Technology",
+   "Bachelor of Science in Medical Technology",
+   "Bachelor of Science in Physical Therapy",
+   "Bachelor of Science in Pharmacy",
+  "Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations",
+   "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration",
+   "Bachelor of Science in Tourism Management",
+  "Bachelor of Science in Accountancy",
+   "Bachelor of Science in Accounting Technology",
+   "Bachelor of Science in Business Administration",
+  "Bachelor of Arts in Communication ",
+   "Bachelor of Arts in Political Science",
+   "Bachelor of Arts in Psychology",
+   "Bachelor of Arts in Theology",
+   "Bachelor of Science in Psychology",
+   "Bachelor of Science in Biology",
+   "Bachelor of Science in Social Work",
+  "Bachelor of Elementary Education",
+   "Bachelor of Physical Education",
+  "Bachelor of Science in Criminology",
+   "Junior High School",
+   "Senior High School",
+  "GRADE 1 to 3 ( Primary Level )",
+   "GRADE 4 to 6 ( Intermediate Level )"
+
+  ]
 
   
 
@@ -87,13 +125,12 @@ function AccountDetails() {
     }
   }
 
-  const getStudent = async (id) => {
-    id = student_id;
-    const response = await axiosJWT.get(`http://localhost:5000/student/details/${id}`, {
+  const getStudent = async () => {
+    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/details/${student_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
-  });
+    });
 
     setStudent(response.data);
     setLastName(student.last_name);
@@ -107,10 +144,9 @@ function AccountDetails() {
     console.log(first_name == '');
   }
 
-  const editStudent = async (id) => {
+  const editStudent = async () => {
     checkForm();
-    id = student_id;
-    await axiosJWT.patch(`http://localhost:5000/update/student/details/${id}`,
+    await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/update/student/details/${student.id}`,
       studentFormData, {headers: {
         Authorization: `Bearer ${token}`
       }});
@@ -119,7 +155,7 @@ function AccountDetails() {
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {
-      const response = await axios.get('http://localhost:5000/student/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/student/token`);
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setName(decoded.first_name + ' ' + decoded.last_name);
@@ -140,7 +176,7 @@ function AccountDetails() {
   axiosJWT.interceptors.request.use(async (config) => {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
-      const response = await axios.get('http://localhost:5000/student/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/student/token`);
       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
@@ -157,13 +193,12 @@ function AccountDetails() {
     if (dept == student.department)
       return <option key={dept} selected>{dept}</option>
     return <option key={dept}>{dept}</option>
-  }
-  );
+  });
 
-  const course_options = courses.map((course) => {
-    if (course == student.course)
-      return <option key={course} selected>{course}</option>
-    return <option key={course}>{course}</option>
+  const course_options = all_courses.map((c) => {
+    if (c == student.course)
+      return <option key={c} selected>{c}</option>
+    return <option key={c}>{c}</option>
   });
  
 
@@ -211,7 +246,7 @@ function AccountDetails() {
             </div>
             <div>
               <label htmlFor="student_id">Student ID: </label>
-              <input defaultValue={student.student_id} name="student_id" type="text" placeholder="Enter your Student ID" required onChange={(e)=> setStudentId(e.target.value)}/>
+              <p name="student_id">{student_id}</p>
             </div>
             <button type='button' onClick={editStudent}>UPDATE ACCOUNT DETAILS</button>
           </form>

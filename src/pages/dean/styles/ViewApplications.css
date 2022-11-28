@@ -3,6 +3,18 @@
   margin: 0 auto;
 }
 
+.dean-view-applications-header {
+  align-items: center;
+  flex-wrap: wrap;
+}
+.dean-view-applications-header a {
+  padding: 0.5em 1em;
+  background-color: #105652;
+  color: #fff;
+  border-radius: 7px;
+  margin-top: 3px;
+}
+
 .dean-view-applications {
   padding: 0em 3em;
 }
@@ -17,6 +29,7 @@
 }
 .dean-view-applications .dean-view-body {
   overflow-x: scroll;
+  margin-bottom: 3em;
 }
 .dean-view-applications .dean-view-body::-webkit-scrollbar {
   display: none;

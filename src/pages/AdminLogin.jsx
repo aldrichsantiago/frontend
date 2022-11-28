@@ -16,7 +16,7 @@ function AdminLogin() {
     const Auth = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/admin', {
+            await axios.post(`${import.meta.env.VITE_API_URL}/admin`, {
                 admin_id: id,
                 password: password
             });

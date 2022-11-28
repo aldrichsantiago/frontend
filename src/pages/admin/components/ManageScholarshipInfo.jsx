@@ -46,7 +46,7 @@ function ManageScholarshipInfo() {
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {
-      const response = await axios.get('http://localhost:5000/admin/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setExpire(decoded.exp);
@@ -64,7 +64,7 @@ function ManageScholarshipInfo() {
   axiosJWT.interceptors.request.use(async (config) => {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
-      const response = await axios.get('http://localhost:5000/admin/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
@@ -76,20 +76,19 @@ function ManageScholarshipInfo() {
   });
 
   const addScholarships = async() => {
-      await axiosJWT.post('http://localhost:5000/scholarships/add',{
+      await axiosJWT.post(`${import.meta.env.VITE_API_URL}/scholarships/add`,{
           scholarship_name: addScholarshipFormData.scholarship_name,
           description: addScholarshipFormData.description,
-          requirements: addScholarshipFormData.requirements
-      },{
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+          requirements: addScholarshipFormData.requirements}, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
       });
   }
 
   const getScholarships = async () => {
       try{
-      const response = await axios.get('http://localhost:5000/scholarships/get',{
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/scholarships/get`,{
 
       });
       setScholarships(response.data);
@@ -99,7 +98,7 @@ function ManageScholarshipInfo() {
   }
 
   const updateScholarships = async(id) => {
-      axiosJWT.patch(`http://localhost:5000/scholarships/update/${id}`,
+      axiosJWT.patch(`${import.meta.env.VITE_API_URL}/scholarships/update/${id}`,
           editScholarshipFormData, {
             headers: {
               Authorization: `Bearer ${token}`
@@ -109,7 +108,7 @@ function ManageScholarshipInfo() {
   }
 
   const deleteScholarships = async(id) => {
-      await axiosJWT.delete(`http://localhost:5000/scholarships/delete/${id}`,{
+      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/scholarships/delete/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -214,7 +213,7 @@ function ManageScholarshipInfo() {
 
     <>
       <div className='scholar-header flex'>
-        <h2>Manage Scholarship Information</h2>
+        <h2>Scholarship Informations</h2>
         <button id='add-scholar' onClick={()=>{setAddIsOpen(!addIsOpen)}}>ADD SCHOLARSHIP</button>
       </div>
       <div className="scholarship-info-table">
@@ -256,12 +255,11 @@ function ManageScholarshipInfo() {
           <div className="add-scholarship-container">
               <div className="flex">
                   <h2>Add a Scholarship</h2>
-                  <a onClick={()=>setAddIsOpen(false)}>X</a>
               </div>
               
               <form style={{display:'flex', flexDirection:'column'}} onSubmit={addScholarships}>
               <input
-                  size={100}
+                  size={88}
                   height="10px"
                   type="text"
                   required="required"
@@ -270,7 +268,7 @@ function ManageScholarshipInfo() {
                   onChange={handleAddFormChange}
               />
               <textarea
-                  rows="10" cols="97"
+                  rows="10" cols="90"
                   className='addBody'
                   type="text"
                   required="required"
@@ -279,7 +277,7 @@ function ManageScholarshipInfo() {
                   onChange={handleAddFormChange}
               />
               <textarea
-                  rows="10" cols="97"
+                  rows="10" cols="90"
                   className='addBody'
                   type="text"
                   required="required"
@@ -290,8 +288,8 @@ function ManageScholarshipInfo() {
               <p className='note'>Note: Each requirement should be separated by a comma</p>
 
               <div className="add-buttons">
-                  <button type="submit">Add</button>
-                  <button onClick={()=>setAddIsOpen(false)}>Cancel</button>
+                  <button onClick={()=>setAddIsOpen(false)}>CANCEL</button>
+                  <button type="submit">ADD</button>
               </div>
               
               </form>
@@ -301,14 +299,13 @@ function ManageScholarshipInfo() {
           isOpen={editIsOpen}
           style={customStyles}
           ariaHideApp={false}>
-              <div className="edit-shcolarhip-container">
+              <div className="add-scholarship-container">
                   <div className="flex">
-                      <h2>Edit Scholarships</h2>
-                      <a onClick={()=>setEditIsOpen(false)}>X</a>
+                      <h2>Edit Scholarship</h2>
                   </div>
                   <form style={{display:'flex', flexDirection:'column'}} onSubmit={handleEditFormSubmit}>
                   <input
-                      size={93}
+                      size={88}
                       type="text"
                       required="required"
                       placeholder="Scholarship Name"
@@ -337,8 +334,8 @@ function ManageScholarshipInfo() {
                   />
                   <p className='note'>Note: Each requirement should be separated by a comma</p>
                   <div className="edit-buttons">
-                      <button type="submit" onClick={handleEditFormSubmit}>Update</button>
-                      <button onClick={()=>setEditIsOpen(false)}>Cancel</button>
+                    <button onClick={()=>setEditIsOpen(false)}>CANCEL</button>
+                    <button type="submit" onClick={handleEditFormSubmit}>UPDATE</button>
                   </div>
                   
                   </form>

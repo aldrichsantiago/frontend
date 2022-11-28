@@ -7,7 +7,7 @@ import './styles/UpdateSiteContent.css'
 
 
 function UpdateSiteContent() {
-  const [whichPage, setWhichPage] = useState('Announcements');
+  const [whichPage, setWhichPage] = useState('ScholarshipInfo');
 
   let pageToRender;
     if (whichPage == 'Announcements') {

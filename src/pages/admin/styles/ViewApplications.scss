@@ -32,6 +32,23 @@ $tertiary-color: #B91646;
     }
 }
 
+.dean-view-applications, .approved-applications, .rejected-applications{
+    .search-input{
+        width: 150px;
+        height: 25px;
+    }
+
+    .dept-select{
+        width: 90px;
+        height: 30px;
+    }
+    .course-select{
+        width: 200px;
+        height: 30px;
+    }
+}
+
+
 .rejected-applications, .approved-applications{
     overflow-x: scroll;
     &::-webkit-scrollbar{

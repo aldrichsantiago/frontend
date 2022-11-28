@@ -10,6 +10,8 @@ const EachApplication = ({application, handleAcceptApplication, handleRejectAppl
     <tr key={application.id}>
           <td>{application.student_id}</td>
           <td>{application.first_name} {application.last_name}</td>
+          <td>{application.department}</td>
+          <td>{application.scholarship_type}</td>
           <td>
             <a id='view-pending-app-link' href={`/admin/applications/review/${application.id}`} target="_blank">View Application</a>
           </td>
@@ -31,16 +33,17 @@ function ViewPendingApplications() {
   const [applications, setApplications] = useState([]);
   const [applicantData, setApplicantData] = useState([]);
   const [rejectReason, setRejectReason] = useState('');
+  const [search, setSearch] = useState('');
   let adminSig = '';
   const navigate = useNavigate();
 
   let sigPad = useRef({});
 
-  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd"];
+  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
   let courses = [""];
 
   if (selectDept == "CECT"){
-      courses = ["","BSIT", "BSEE", "BSCpE"];
+      courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
   }else if (selectDept == "CONAMS"){
       courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
   }else if (selectDept == "CHTM"){
@@ -50,9 +53,17 @@ function ViewPendingApplications() {
   }else if (selectDept == "CAS"){
       courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
   }else if (selectDept == "CoEd"){
-      courses = ["","BSHRM", "BSECE", "BSCpE"];
+      courses = ["","","Bachelor of Elementary Education", "Bachelor of Physical Education"];
   }else if (selectDept == "CCJE"){
       courses = ["","Bachelor of Science in Criminology"];
+  }else if (selectDept == "Medicine"){
+    courses = ["",""];
+  }else if (selectDept == "JWSLG"){
+      courses = ["",""];
+  }else if (selectDept == "High School"){
+      courses = ["","Junior High School", "Senior High School"];
+  }else if (selectDept == "Elementary"){
+      courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
   }else{
       courses = [""];
   }
@@ -64,18 +75,44 @@ function ViewPendingApplications() {
   },[]);
 
   useEffect(()=>{
-    getDeptFilteredApplications();
-    if (selectDept == ''){
+    if (selectDept == "") {
+      setSelectCourse("");
+    }
+
+    if(search == "" && selectDept == "" && selectCourse == ""){
+      getApplications();
+    }  else if (search != "" && selectDept != "" && selectCourse != ""){
+      getMultipleFilteredApplications();
+    } else if (selectCourse != ""  && search == "" && selectDept == ""){
+      getCourseFilteredApplications();
+    } else if (selectDept != "" && search == "" && selectCourse == ""){
+      getDeptFilteredApplications();
+    } else if (search != ""  && selectDept == ""){
+      getSearchedApplications(search);
+    } else if (selectCourse == ""  && search != "" && selectDept != ""){
+      getNameDeptFilteredApplications();
+    } else if (search == ""  && selectDept != "" && selectCourse != ""){
+      getCourseFilteredApplications();
+    } else if (search != "" && selectDept != "" && selectCourse != ""){
+      getMultipleFilteredApplications();
+    } else if(search == "" && selectDept == "" && selectCourse == ""){
       getApplications();
     }
-  },[selectDept]);
+  },[search, selectDept, selectCourse]);
 
-  useEffect(()=>{
-    getCourseFilteredApplications();
-    if (selectCourse == ''){
-      getDeptFilteredApplications();
-    }
-  },[selectCourse]);
+  // useEffect(()=>{
+  //   getDeptFilteredApplications();
+  //   if (selectDept == ''){
+  //     getApplications();
+  //   }
+  // },[selectDept]);
+
+  // useEffect(()=>{
+  //   getCourseFilteredApplications();
+  //   if (selectCourse == ''){
+  //     getDeptFilteredApplications();
+  //   }
+  // },[selectCourse]);
 
   
   const dept_options = departments.map((dept) =>
@@ -89,7 +126,20 @@ function ViewPendingApplications() {
 
   const getApplications = async() => {
     try{
-      const response = await axiosJWT.get(`http://localhost:5000/admin/view/applications`, {
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/applications`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+    });
+      setApplications(response.data);
+    }catch(e){
+      console.log(e)
+    }
+  }
+  
+  const getSearchedApplications = async(id) => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/search/applications/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -102,7 +152,7 @@ function ViewPendingApplications() {
 
   const getDeptFilteredApplications = async() => {
     try{
-      const response = await axiosJWT.get(`http://localhost:5000/admin/view/applications/department/${selectDept}`, {
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/applications/department/${selectDept}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -114,7 +164,33 @@ function ViewPendingApplications() {
   }
   const getCourseFilteredApplications = async() => {
     try{
-      const response = await axiosJWT.get(`http://localhost:5000/admin/view/applications/course/${selectCourse}`, {
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/applications/course/${selectCourse}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+    });
+      setApplications(response.data);
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  const getMultipleFilteredApplications = async() => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/applications/${search}/${selectDept}/${selectCourse}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+    });
+      setApplications(response.data);
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  const getNameDeptFilteredApplications = async() => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/name/dept/filter/${search}/${selectDept}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -127,7 +203,7 @@ function ViewPendingApplications() {
 
   const getApplicantData = async(id) => {
     try {
-        const response = await axiosJWT.get(`http://localhost:5000/admin/view/application/${id}`,{
+        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/application/${id}`,{
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -140,7 +216,7 @@ function ViewPendingApplications() {
 
   const acceptApplication = async (id) => {
     try {
-          axiosJWT.post(`http://localhost:5000/admin/approve/application`,{
+          axiosJWT.post(`${import.meta.env.VITE_API_URL}/admin/approve/application`,{
           subj_1: applicantData.subj_1,subj_2: applicantData.subj_2,
           subj_3: applicantData.subj_3,subj_4: applicantData.subj_4,
           subj_5: applicantData.subj_5,subj_6: applicantData.subj_6,
@@ -193,7 +269,7 @@ function ViewPendingApplications() {
 
   const rejectApplication = async (id) => {
     try {
-        axiosJWT.post(`http://localhost:5000/admin/create/rejected/application`,{
+        axiosJWT.post(`${import.meta.env.VITE_API_URL}/admin/create/rejected/application`,{
           student_id: applicantData.student_id,
           date_submitted: applicantData.date_submitted,
           scholarship_type: applicantData.scholarship_type,
@@ -203,7 +279,7 @@ function ViewPendingApplications() {
           email: applicantData.email,
           contact_no: applicantData.contact_no,
           id: applicantData.id,
-          rejected_by: "Office for Student Affairs (OSA)",
+          rejected_by: "Office Of Student Affairs (OSA)",
           reason_of_rejection: rejectReason
     },{headers: {
       Authorization: `Bearer ${token}`
@@ -216,7 +292,7 @@ function ViewPendingApplications() {
 
   const deleteFromSubmittedApps = async (id) => {
     try{
-      await axiosJWT.delete(`http://localhost:5000/admin/delete/application/${id}`,{
+      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/admin/delete/application/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -271,7 +347,7 @@ function sigSave(){
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {
-      const response = await axios.get('http://localhost:5000/admin/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setExpire(decoded.exp);
@@ -288,7 +364,7 @@ function sigSave(){
   axiosJWT.interceptors.request.use(async (config) => {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
-      const response = await axios.get('http://localhost:5000/admin/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
@@ -299,19 +375,46 @@ function sigSave(){
       return Promise.reject(error);
   });
 
+  const handleFileInputChange = (e) => {
+    console.log(e.target.files[0]);
+    const fieldName = e.target.getAttribute("name");
+    const fieldValue = e.target.files[0];
+
+    let file = e.target.files[0];
+    let baseURL = "";
+    // Make new FileReader
+    let reader = new FileReader();
+    // Convert the file to base64 text
+    reader.readAsDataURL(file);
+    reader.onload = () => {
+      baseURL = reader.result;
+      adminSig = baseURL;
+    }
+  }
+
+  const acceptUpload = () => {
+    setAdminModal(false)
+    acceptApplication(applicantData.id);
+  }
+
   return (
     <>
       <div className="dean-view-applications">
         <div className="dean-view-header">
-          <p>Pending Applications</p>
+          <h1>Pending Applications</h1>
+          <div>
+            <label htmlFor="searchField">Search Student ID or Name:  </label>
+            <input type="text" name="searchField" className='search-input' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/>
+          </div>
+          
           <div>
             <label htmlFor="applications-dept">DEPARTMENT: </label>
-            <select name="applications-dept" id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
+            <select name="applications-dept" className='dept-select' id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
               {dept_options} 
             </select>
              
             <label htmlFor="applications-course">COURSE: </label>
-            <select name="applications-course" id='admin-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
+            <select name="applications-course" className='course-select' id='admin-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
               {course_options} 
             </select>
           </div>
@@ -322,6 +425,8 @@ function sigSave(){
               <tr>
                 <td>Student ID</td>
                 <td>Student Name</td>
+                <td>Department</td>
+                <td>Scholarship Type</td>
                 <td>Applications</td>
                 <td>Actions</td>
               </tr>
@@ -350,9 +455,14 @@ function sigSave(){
             <div className='flex'>
                 <button onClick={sigClear}>CLEAR</button>
                 <button onClick={()=>setAdminModal(false)}>CANCEL</button>
-                <button onClick={sigSave}>ACCEPT</button>
-                
+                <button onClick={sigSave}>APPROVE</button>
             </div>
+            <hr />
+            <p style={{"textAlign":"center", "fontFamily": "Arial"}}>or upload a signature</p>
+              <div className='flex'>
+                <input type="file" accept='.jpeg, .jpg, .png' name="dean_sign" onChange={handleFileInputChange}/>
+                <button onClick={()=>acceptUpload()}>APPROVE</button>     
+              </div>
       </Modal>
       <Modal
         shouldCloseOnOverlayClick={true}

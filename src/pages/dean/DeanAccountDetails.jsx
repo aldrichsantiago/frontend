@@ -30,6 +30,16 @@ function DeanAccountDetails() {
     
   },[token]);
 
+
+  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
+
+  const dept_options = departments.map((dept) =>{
+    if (dept == dean.department)
+      return <option key={dept} selected>{dept}</option>
+    return <option key={dept}>{dept}</option>
+  }
+  );
+
   const checkForm = () =>{
     if (last_name != undefined){
       deanFormData["last_name"] = last_name;
@@ -57,7 +67,7 @@ function DeanAccountDetails() {
 
   const getDean = async (id) => {
     id = dean_id;
-    const response = await axios.get(`http://localhost:5000/dean/details/${id}`, {
+    const response = await axios.get(`${import.meta.env.VITE_API_URL}/dean/details/${id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -74,8 +84,8 @@ function DeanAccountDetails() {
 
   const editDean = async (id) => {
     checkForm();
-    id = dean_id;
-    await axios.patch(`http://localhost:5000/update/dean/details/${id}`,
+    id = dean.id;
+    await axios.patch(`${import.meta.env.VITE_API_URL}/update/dean/details/${id}`,
       deanFormData, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -86,7 +96,7 @@ function DeanAccountDetails() {
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {
-      const response = await axios.get('http://localhost:5000/dean/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/dean/token`);
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setLastName(decoded.first_name + ' ' + decoded.last_name);
@@ -107,7 +117,7 @@ function DeanAccountDetails() {
   axiosJWT.interceptors.request.use(async (config) => {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
-      const response = await axios.get('http://localhost:5000/dean/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/dean/token`);
       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
@@ -142,7 +152,9 @@ function DeanAccountDetails() {
             </div>
             <div>
               <label htmlFor="department">Department: </label>
-              <input defaultValue={dean.department} onChange={(e)=>setDepartment(e.target.value)} name="department" type="text" placeholder="Enter your department" required/>
+              <select defaultValue={dean.department} onChange={(e)=>setDepartment(e.target.value)} name="department" type="text" placeholder="Enter your department" required>
+                {dept_options}
+              </select>
             </div>
             <div>
               <label htmlFor="contact_no">Contact no.: </label>

@@ -112,4 +112,22 @@
     padding: 0.1em 2em;
     font-size: 1.8em;
   }
+}
+@media (min-height: 400px) {
+  .user-home-container {
+    height: 60vh;
+    overflow-y: scroll;
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
+  .user-home-container::-webkit-scrollbar {
+    display: none;
+  }
+  .user-home-butt-container a {
+    padding: 0.1em 2em;
+    font-size: 1.8em;
+  }
+  .user-home-footer {
+    position: relative;
+  }
 }/*# sourceMappingURL=UserHomeLayout.css.map */

@@ -25,11 +25,11 @@ function StudentRegister() {
     const [confirmPassword, setConfirmPassword] = useState('');
     const navigate = useNavigate();
 
-    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE"];
+    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
     let courses = [""];
 
     if (department == "CECT"){
-        courses = ["","BSIT", "BSEE", "BSCpE"];
+        courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
     }else if (department == "CONAMS"){
         courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
     }else if (department == "CHTM"){
@@ -39,9 +39,17 @@ function StudentRegister() {
     }else if (department == "CAS"){
         courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
     }else if (department == "CoEd"){
-        courses = ["","BSHRM", "BSECE", "BSCpE"];
+        courses = ["","Bachelor of Elementary Education", "Bachelor of Physical Education"];
     }else if (department == "CCJE"){
         courses = ["","Bachelor of Science in Criminology"];
+    }else if (department == "Medicine"){
+        courses = ["",""];
+    }else if (department == "JWSLG"){
+        courses = ["",""];
+    }else if (department == "High School"){
+        courses = ["","Junior High School", "Senior High School"];
+    }else if (department == "Elementary"){
+        courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
     }else{
         courses = [""];
     }
@@ -71,7 +79,7 @@ function StudentRegister() {
     const Register = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('http://localhost:5000/register/student', {
+            await axios.post(`${import.meta.env.VITE_API_URL}/register/student`, {
                 last_name: lastName,
                 first_name: firstName, 
                 middle_name: middleName,

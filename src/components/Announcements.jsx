@@ -1,7 +1,8 @@
-import React from 'react'
+import React from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {Carousel} from 'react-responsive-carousel'
+
 
 function Announcements() {
     const [announcements, setAnnouncements] = useState([]);
@@ -12,7 +13,7 @@ function Announcements() {
     },[]);
 
     const getAnnouncements = async() =>{
-        const response = await axios.get('http://localhost:5000/announcements/get');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/announcements/get`);
         setAnnouncements(response.data);
     }
     console.log(announcements);

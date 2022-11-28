@@ -9,6 +9,8 @@ const EachApplication = ({application, handleDeleteApplication}) => {
       <tr>
           <td>{application.student_id}</td>
           <td>{application.first_name} {application.last_name}</td>
+          <td>{application.department}</td>
+          <td>{application.scholarship_type}</td>
           <td>
               <a target="_blank" href={`/admin/approved/application/${application.id}`}>View Application</a>
               <button onClick={()=>handleDeleteApplication(application.id)} >Delete</button>
@@ -24,15 +26,16 @@ function ViewApprovedApplications() {
   const [selectDept, setSelectDept] = useState('');
   const [applications, setApplications] = useState([]);
   const [applicantData, setApplicantData] = useState([]);
+  const [search, setSearch] = useState('');
 
   const navigate = useNavigate();
 
 
-  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd"];
+  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
   let courses = [""];
 
   if (selectDept == "CECT"){
-    courses = ["","BSIT", "BSEE", "BSCpE"];
+    courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
   }else if (selectDept == "CONAMS"){
       courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
   }else if (selectDept == "CHTM"){
@@ -45,6 +48,14 @@ function ViewApprovedApplications() {
       courses = ["","BSHRM", "BSECE", "BSCpE"];
   }else if (selectDept == "CCJE"){
       courses = ["","Bachelor of Science in Criminology"];
+  }else if (selectDept == "Medicine"){
+    courses = ["",""];
+  }else if (selectDept == "JWSLG"){
+      courses = ["",""];
+  }else if (selectDept == "High School"){
+      courses = ["","Junior High School", "Senior High School)"];
+  }else if (selectDept == "Elementary"){
+      courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
   }else{
       courses = [""];
   }
@@ -63,22 +74,47 @@ function ViewApprovedApplications() {
   },[]);
 
   useEffect(()=>{
-    getDeptFilteredApplications();
-    if (selectDept == ''){
+    if (selectDept == "") {
+      setSelectCourse("");
+    }
+
+    if(search == "" && selectDept == "" && selectCourse == ""){
+      getApplications();
+    }  else if (search != "" && selectDept != "" && selectCourse != ""){
+      getMultipleFilteredApplications();
+    } else if (selectCourse != ""  && search == "" && selectDept == ""){
+      getCourseFilteredApplications();
+    } else if (selectDept != "" && search == "" && selectCourse == ""){
+      getDeptFilteredApplications();
+    } else if (search != ""  && selectDept == ""){
+      getSearchedApplications(search);
+    } else if (selectCourse == ""  && search != "" && selectDept != ""){
+      getNameDeptFilteredApplications();
+    } else if (search == ""  && selectDept != "" && selectCourse != ""){
+      getCourseFilteredApplications();
+    } else if (search != "" && selectDept != "" && selectCourse != ""){
+      getMultipleFilteredApplications();
+    } else if(search == "" && selectDept == "" && selectCourse == ""){
       getApplications();
     }
-  },[selectDept]);
-
-  useEffect(()=>{
-    getCourseFilteredApplications();
-    if (selectCourse == ''){
-      getDeptFilteredApplications();
-    }
-  },[selectCourse]);
+  },[search, selectDept, selectCourse]);
 
   const getApplications = async() => {
     try{
-      const response = await axiosJWT.get(`http://localhost:5000/admin/view/approved/applications`, {
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/approved/applications`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+      }
+    });
+      setApplications(response.data);
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  const getSearchedApplications = async(id) => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/search/approved/applications/${id}`, {
         headers: {
           Authorization: `Bearer ${token}`
       }
@@ -91,7 +127,7 @@ function ViewApprovedApplications() {
 
   const getDeptFilteredApplications = async() => {
     try{
-      const response = await axiosJWT.get(`http://localhost:5000/admin/view/approved/applications/department/${selectDept}`, {
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/approved/applications/department/${selectDept}`, {
         headers: {
           Authorization: `Bearer ${token}`
       }
@@ -104,7 +140,7 @@ function ViewApprovedApplications() {
 
   const getCourseFilteredApplications = async() => {
     try{
-      const response = await axiosJWT.get(`http://localhost:5000/admin/view/approved/applications/course/${selectCourse}`, {
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/approved/applications/course/${selectCourse}`, {
         headers: {
           Authorization: `Bearer ${token}`
       }
@@ -115,9 +151,35 @@ function ViewApprovedApplications() {
     }
   }
 
+  const getMultipleFilteredApplications = async() => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/applications/approved/${search}/${selectDept}/${selectCourse}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+    });
+      setApplications(response.data);
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  const getNameDeptFilteredApplications = async() => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/name/dept/filter/approved/${search}/${selectDept}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+    });
+      setApplications(response.data);
+    }catch(e){
+      console.log(e)
+    }
+  }
+
   const getApplicantData = async(id) => {
     try {
-        const response = await axiosJWT.get(`http://localhost:5000/admin/view/approved/application/${id}`,{
+        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/approved/application/${id}`,{
           headers: {
             Authorization: `Bearer ${token}`
         }
@@ -130,7 +192,7 @@ function ViewApprovedApplications() {
 
   const deleteFromApprovedApps = async (id) => {
     try{
-      await axiosJWT.delete(`http://localhost:5000/admin/delete/approved/application/${id}`,{
+      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/admin/delete/approved/application/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
       }
@@ -142,14 +204,17 @@ function ViewApprovedApplications() {
   }
 
   const handleDeleteApplication = (id) => {
-    getApplicantData(id);
-    deleteFromApprovedApps(id);
+    let text = 'Do you want to delete this Approved Application? '
+    if(confirm(text) == true){
+      getApplicantData(id);
+      deleteFromApprovedApps(id);
+    } else {}
   }
 
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {
-      const response = await axios.get('http://localhost:5000/admin/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setExpire(decoded.exp);
@@ -167,7 +232,7 @@ function ViewApprovedApplications() {
   axiosJWT.interceptors.request.use(async (config) => {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
-      const response = await axios.get('http://localhost:5000/admin/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
@@ -182,15 +247,19 @@ function ViewApprovedApplications() {
   return (
     <div className="approved-applications">
       <div className="dean-view-header flex">
-          <p>Approved Applications</p>
+          <h1>Approved Applications</h1>
+          <div>
+            <label htmlFor="searchField">Search Student ID or Name:  </label>
+            <input type="text" name="searchField" className='search-input' placeholder='e.g. 00-0000-000' onChange={(e)=>{setSearch(e.target.value)}}/>
+          </div>
           <div>
             <label htmlFor="applications-dept">DEPARTMENT: </label>
-            <select name="applications-dept" id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
+            <select name="applications-dept" className='dept-select' id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
               {dept_options} 
             </select>
              
             <label htmlFor="applications-course">COURSE: </label>
-            <select name="applications-course" id='admin-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
+            <select name="applications-course" className='course-select' id='admin-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
               {course_options} 
             </select>
           </div>
@@ -201,6 +270,8 @@ function ViewApprovedApplications() {
               <tr>
                 <th>Student ID</th>
                 <th>Name</th>
+                <th>Department</th>
+                <th>Shcolarship Type</th>
                 <th>Actions</th>
               </tr>
             </thead>

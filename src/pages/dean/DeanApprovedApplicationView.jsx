@@ -4,11 +4,12 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import Logo from '../../assets/logo.png'
 
-function AdminApprovedApplications() {
+function DeanApprovedApplicationView() {
     let { id } = useParams();
     const [applicantData, setApplicantData] = useState({});
     const [token, setToken] = useState('');
     const [expire, setExpire] = useState('');
+    const navigate = useNavigate();
 
 
     useEffect(()=>{
@@ -18,7 +19,7 @@ function AdminApprovedApplications() {
 
     const getApplicantData = async() => {
         try {
-            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/approved/application/${id}`,{
+            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/approved/application/${id}`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -32,7 +33,7 @@ function AdminApprovedApplications() {
     const refreshToken = async () => {
         axios.defaults.withCredentials = true;
         try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/dean/token`);
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
           setExpire(decoded.exp);
@@ -49,7 +50,7 @@ function AdminApprovedApplications() {
       axiosJWT.interceptors.request.use(async (config) => {
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/dean/token`);
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -82,8 +83,8 @@ function AdminApprovedApplications() {
       }
 
       let dateofscholarship='';
-      if(applicantData.createdAt != null){
-        dateofscholarship = applicantData.createdAt;
+      if(applicantData.date_submitted != null){
+        dateofscholarship = applicantData.date_submitted;
         dateofscholarship = dateofscholarship.split('T');
       }
 
@@ -228,25 +229,6 @@ function AdminApprovedApplications() {
                 <h4>TOTAL UNITS: {applicantData.units_1 + applicantData.units_2 + applicantData.units_3 + applicantData.units_4 + applicantData.units_5 + applicantData.units_6 + applicantData.units_7 + applicantData.units_8 + applicantData.units_9 + applicantData.units_10 + applicantData.units_11 + applicantData.units_12}</h4>
             </div>
 
-            {/* <div className="signatures">
-                <div className="student-sign">
-                    <img src={applicantData.student_sign} alt="Student's Signature Here" width={150}/>
-                    <h3>{applicantData.first_name} {applicantData.last_name}</h3>
-                    <p>---------------------------------------------</p>
-                    <h4>STUDENT'S SIGNATURE</h4>
-                </div>
-                <div className="dean-sign">
-                    <img src={applicantData.dean_sign} alt="Dean's Signature Here" width={150}/>
-                    <p>---------------------------------------------</p>
-                    <h4>DEAN'S SIGNATURE</h4>
-                </div>
-                <div className="admin-sign">
-                    <img src={applicantData.admin_sign} alt="OSA's Signature Here" width={150}/>
-                    <p>---------------------------------------------</p>
-                    <h4>OSA SIGNATURE</h4>
-                </div>
-            </div> */}
-
 
             <div className="other-reqs">
                 <img src={applicantData.req_1  == '' || null ? '' : applicantData.req_1} />
@@ -263,7 +245,7 @@ function AdminApprovedApplications() {
         </div>
         
     </div>   
-        )
+  )
 }
 
-export default AdminApprovedApplications
+export default DeanApprovedApplicationView

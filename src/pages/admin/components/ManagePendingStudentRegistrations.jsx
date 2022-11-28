@@ -38,7 +38,7 @@ function ManagePendingStudentRegistrations() {
 
     const getStudents = async () => {
       try{
-        const response = await axiosJWT.get('http://localhost:5000/pendingstudents/get', {
+        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/pendingstudents/get`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -50,35 +50,36 @@ function ManagePendingStudentRegistrations() {
     }
 
     const approveStudent = async (StudentId) => {
-      try {
-        const index = students.findIndex((student) => student.id === StudentId);
-        const student = students[index];
+      let text = '✅✅✅ Do you want to approve this student? '
+      if(confirm(text) == true){
+        try {
+          const index = students.findIndex((student) => student.id === StudentId);
+          const student = students[index];
 
-        await axiosJWT.post('http://localhost:5000/approve/registration/student', {
-          last_name: student.last_name,
-          first_name: student.first_name,
-          middle_name: student.middle_name,
-          contact_no: student.contact_no,
-          email: student.email,
-          department: student.department,
-          course: student.course,
-          year: student.year,
-          student_id: student.student_id,
-          password: student.password
-        },{headers: {
-          Authorization: `Bearer ${token}`
-        }});
+          await axiosJWT.post(`${import.meta.env.VITE_API_URL}/approve/registration/student`, {
+            last_name: student.last_name,
+            first_name: student.first_name,
+            middle_name: student.middle_name,
+            contact_no: student.contact_no,
+            email: student.email,
+            department: student.department,
+            course: student.course,
+            year: student.year,
+            student_id: student.student_id,
+            password: student.password
+          },{headers: {
+            Authorization: `Bearer ${token}`
+          }});
 
-        rejectStudent(StudentId);
+          rejectStudent(StudentId);
 
 
-      } catch (error) {
-        console.log(error);
-      }
+        } catch (error) {console.log(error);}
+      }else{}
     }
 
     const rejectStudent = async (id) => {
-      await axiosJWT.delete(`http://localhost:5000/reject/registration/student/${id}`,{
+      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/reject/registration/student/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -154,7 +155,7 @@ function ManagePendingStudentRegistrations() {
     const refreshToken = async () => {
       axios.defaults.withCredentials = true;
       try {
-        const response = await axios.get('http://localhost:5000/admin/token');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
         setExpire(decoded.exp);
@@ -172,7 +173,7 @@ function ManagePendingStudentRegistrations() {
     axiosJWT.interceptors.request.use(async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get('http://localhost:5000/admin/token');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);

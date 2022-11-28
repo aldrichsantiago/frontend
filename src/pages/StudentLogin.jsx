@@ -16,7 +16,7 @@ function StudentLogin() {
         e.preventDefault();
         try {
             axios.defaults.withCredentials = true;
-            await axios.post('http://localhost:5000/student', {
+            await axios.post(`${import.meta.env.VITE_API_URL}/student`, {
                 student_id: id,
                 password: password
             });

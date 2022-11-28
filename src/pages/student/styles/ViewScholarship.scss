@@ -16,6 +16,17 @@ $tertiary-color: #B91646;
     h1{
         font-family: Bebas Neue;
     }
+    span{
+        label{
+            font-size: 22px;
+        }
+        input{
+            border-radius: 3px;
+            height: 28px;
+            width: 30%;
+            font-size: 18px;
+        }
+    }
 }
 
 $breakpoint-tablet: 768px;

@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap");
 * {
   margin: 0 auto;
+  text-decoration: none;
 }
 
 .update-site-content-con .update-header-container {
@@ -31,12 +32,66 @@
   margin: 1em;
 }
 
+.add-announce-container {
+  font-family: Arial, Helvetica, sans-serif;
+}
 .add-announce-container .addTitle {
   height: 10em;
+}
+.add-announce-container input, .add-announce-container textarea {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  padding: 0.5em;
+}
+
+.add-scholarship-container {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.add-scholarship-container input, .add-scholarship-container textarea {
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 18px;
+  padding: 0.5em;
 }
 
 .flex {
   display: flex;
   justify-content: space-between;
   margin: 1em 0em;
+}
+
+.add-buttons, .edit-buttons {
+  display: flex;
+  gap: 5em;
+  margin: 1em;
+}
+.add-buttons button, .edit-buttons button {
+  padding: 1em 3em;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.add-buttons button:hover, .edit-buttons button:hover {
+  background-color: rgb(202, 202, 202);
+}
+.add-buttons button[type=submit], .edit-buttons button[type=submit] {
+  background-color: #105652;
+  color: white;
+}
+.add-buttons button[type=submit]:hover, .edit-buttons button[type=submit]:hover {
+  background-color: #0e4946;
+}
+
+.scholarship-info-table, .announcements-table {
+  overflow: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.scholarship-info-table::-webkit-scrollbar, .announcements-table::-webkit-scrollbar {
+  display: none;
+}
+.scholarship-info-table table, .announcements-table table {
+  overflow: scroll;
+}
+.scholarship-info-table table th, .announcements-table table th {
+  font-size: 24px;
+  font-weight: 100;
 }/*# sourceMappingURL=UpdateSiteContent.css.map */

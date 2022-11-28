@@ -8,6 +8,7 @@ $tertiary-color: #B91646;
 
 *{
     margin: 0 auto;
+    text-decoration: none;
 
 }
 .update-site-content-con{
@@ -44,14 +45,71 @@ $tertiary-color: #B91646;
 }
 
 .add-announce-container{
+    font-family: Arial, Helvetica, sans-serif;
+
     .addTitle{
         height: 10em;
+    }
+    input,textarea{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+
+        padding: 0.5em;
+    }
+}
+
+.add-scholarship-container{
+    font-family: Arial, Helvetica, sans-serif;
+
+    input,textarea{
+        font-family: Arial, Helvetica, sans-serif;
+        font-size: 18px;
+        padding: 0.5em;
     }
 }
 .flex{
     display: flex;
     justify-content: space-between;
     margin: 1em 0em;
+}
+
+.add-buttons, .edit-buttons{
+    display: flex;
+    gap: 5em;
+    margin: 1em;
+
+    button{
+        padding: 1em 3em;
+        border: 1px solid black;
+        border-radius: 5px;
+        &:hover{
+            background-color: rgb(202, 202, 202);
+        }
+    }
+
+    button[type=submit]{
+        background-color: #105652;
+        color: white;
+        &:hover{
+            background-color: #0e4946;
+        }
+    }
+}
+
+.scholarship-info-table, .announcements-table{
+    overflow: scroll;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    &::-webkit-scrollbar {
+        display: none;
+      }
+    table{
+        overflow: scroll;
+        th{
+            font-size: 24px;
+            font-weight: 100;
+        }
+    }
 }
 
 

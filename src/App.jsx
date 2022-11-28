@@ -25,6 +25,7 @@ import ScholarshipForm from './pages/student/ScholarshipForm'
 import DeanApplicationReview from './pages/dean/DeanApplicationReview'
 import AdminApplicationReview from './pages/admin/AdminApplicationReview'
 import AdminApprovedApplications from './pages/admin/AdminApprovedApplications'
+import DeanApprovedApplicationView from './pages/dean/DeanApprovedApplicationView'
 
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
         <Route path='/dean/home' element={<DeanHome/>}/>
         <Route path="/dean/applications" element={<DeanViewApplications/>}/>
         <Route path="/dean/applications/review/:id" element={<DeanApplicationReview/>}/>
+        <Route path="/dean/view/approved/application/:id" element={<DeanApprovedApplicationView/>}/>
         <Route path="/dean/details" element={<DeanAccountDetails/>}/>
 
         <Route path='/admin/home' element={<AdminHome/>}/>

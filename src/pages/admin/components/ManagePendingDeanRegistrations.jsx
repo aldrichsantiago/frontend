@@ -42,7 +42,7 @@ function ManagePendingDeanRegistrations() {
     const refreshToken = async () => {
       axios.defaults.withCredentials = true;
       try {
-        const response = await axios.get('http://localhost:5000/admin/token');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
         setExpire(decoded.exp);
@@ -58,7 +58,7 @@ function ManagePendingDeanRegistrations() {
     axiosJWT.interceptors.request.use(async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get('http://localhost:5000/admin/token');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -70,7 +70,7 @@ function ManagePendingDeanRegistrations() {
     });
 
     const getDeans = async () => {
-        const response = await axiosJWT.get('http://localhost:5000/pendingdeans/get', {
+        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/pendingdeans/get`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -79,32 +79,33 @@ function ManagePendingDeanRegistrations() {
     }
 
     const approveDean = async (DeanId) => {
-      try {
-        const index = deans.findIndex((dean) => dean.id === DeanId);
-        const dean = deans[index];
+      let text = '✅✅✅ Do you want to approve this dean registration? '
+      if(confirm(text) == true){
+        try {
+          const index = deans.findIndex((dean) => dean.id === DeanId);
+          const dean = deans[index];
 
-        await axiosJWT.post('http://localhost:5000/approve/registration/dean', {
-          last_name: dean.last_name,
-          first_name: dean.first_name,
-          middle_name: dean.middle_name,
-          contact_no: dean.contact_no,
-          email: dean.email,
-          department: dean.department,
-          dean_id: dean.dean_id,
-          password: dean.password
-        },{
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        rejectDean(DeanId);
-      } catch (error) {
-        console.log(error);
-      }
+          await axiosJWT.post(`${import.meta.env.VITE_API_URL}/approve/registration/dean`, {
+            last_name: dean.last_name,
+            first_name: dean.first_name,
+            middle_name: dean.middle_name,
+            contact_no: dean.contact_no,
+            email: dean.email,
+            department: dean.department,
+            dean_id: dean.dean_id,
+            password: dean.password
+          },{
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+          });
+          rejectDean(DeanId);
+        } catch (error) {console.log(error);}
+      }else{}
     }
 
     const rejectDean = async (id) => {
-      await axiosJWT.delete(`http://localhost:5000/reject/registration/dean/${id}`,{
+      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/reject/registration/dean/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -186,7 +187,7 @@ function ManagePendingDeanRegistrations() {
     // };
 
     const handleDeleteClick = (DeanId) => {
-      let text = 'Do you want to reject this dean registration? '
+      let text = '❌❌❌ Do you want to reject this dean registration? '
       if(confirm(text) == true){
         const newDeans = [...deans];
 

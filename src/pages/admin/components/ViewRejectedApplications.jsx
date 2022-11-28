@@ -42,7 +42,7 @@ function ViewRejectedApplications() {
     },[selectDept]);
 
 
-    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd"];
+    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
 
     const dept_options = departments.map((dept) =>
         <option key={dept}>{dept}</option>
@@ -50,7 +50,7 @@ function ViewRejectedApplications() {
 
     const getApplications = async() => {
         try{
-            const response = await axiosJWT.get(`http://localhost:5000/admin/view/rejected/applications`, {
+            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/rejected/applications`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -63,7 +63,7 @@ function ViewRejectedApplications() {
 
     const getDeptFilteredApplications = async() => {
         try{
-            const response = await axiosJWT.get(`http://localhost:5000/admin/view/rejected/applications/department/${selectDept}`, {
+            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/rejected/applications/department/${selectDept}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -76,7 +76,7 @@ function ViewRejectedApplications() {
 
     const getApplicantData = async(id) => {
         try {
-            const response = await axiosJWT.get(`http://localhost:5000/admin/view/rejected/application/${id}`,{
+            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/rejected/application/${id}`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -89,7 +89,7 @@ function ViewRejectedApplications() {
 
     const deleteFromRejectedApps = async (id) => {
         try{
-            await axiosJWT.delete(`http://localhost:5000/admin/delete/rejected/application/${id}`,{
+            await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/admin/delete/rejected/application/${id}`,{
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -101,13 +101,16 @@ function ViewRejectedApplications() {
     }
 
     const handleDeleteApplication = (id) => {
-        deleteFromRejectedApps(id);
+        let text = 'Do you want to delete this Rejected Application? '
+        if(confirm(text) == true){
+            deleteFromRejectedApps(id);
+        } else {}
     }
 
     const refreshToken = async () => {
         axios.defaults.withCredentials = true;
         try {
-          const response = await axios.get('http://localhost:5000/admin/token');
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
           setExpire(decoded.exp);
@@ -123,7 +126,7 @@ function ViewRejectedApplications() {
       axiosJWT.interceptors.request.use(async (config) => {
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
-          const response = await axios.get('http://localhost:5000/admin/token');
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -137,10 +140,10 @@ function ViewRejectedApplications() {
   return (
     <div className="rejected-applications">
         <div className="dean-view-header flex">
-          <p>Rejected Applications</p>
+          <h1>Rejected Applications</h1>
           <div>
             <label htmlFor="applications-dept">DEPARTMENT: </label>
-            <select name="applications-dept" id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
+            <select name="applications-dept" className='dept-select' id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
               {dept_options} 
             </select>
           </div>

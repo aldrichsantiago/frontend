@@ -117,9 +117,7 @@ $breakpoint-laptop: 1024px;
         height: 59vh;
     }
     .greetings-container{
-        
         h1{
-            
             font-size: 6em;
             top: 0.8em;
     
@@ -144,6 +142,26 @@ $breakpoint-laptop: 1024px;
 }
 
 
-@media (min-width: 1440px) {
+
+@media (min-height: 400px) {
     
+    .user-home-container{
+        height: 60vh;
+        overflow-y: scroll;
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+        &::-webkit-scrollbar {
+            display: none;
+        }
+    }
+
+    .user-home-butt-container{
+        a{
+            padding: 0.1em 2em;
+            font-size: 1.8em;   
+        }
+    }
+    .user-home-footer{
+        position: relative;
+    }
 }

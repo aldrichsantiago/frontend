@@ -12,6 +12,7 @@ function ManageDeanAccounts() {
     const [msg, setMsg] = useState('');
     const [token, setToken] = useState();
     const [expire, setExpire] = useState('');
+    const [selectDept, setSelectDept] = useState('');
     const [addDeanFormData, setAddDeanFormData] = useState({
         dean_id: "",
         last_name: "",
@@ -45,10 +46,16 @@ function ManageDeanAccounts() {
         getDeans();
     }, []);
 
+    const departments = ["Choose a Deparment","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
+    
+    const dept_options = departments.map((dept) =>
+      <option key={dept} value={dept}>{dept}</option>
+    );
+
     const refreshToken = async () => {
       axios.defaults.withCredentials = true;
       try {
-        const response = await axios.get('http://localhost:5000/admin/token');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
         setExpire(decoded.exp);
@@ -64,7 +71,7 @@ function ManageDeanAccounts() {
     axiosJWT.interceptors.request.use(async (config) => {
       const currentDate = new Date();
       if (expire * 1000 < currentDate.getTime()) {
-        const response = await axios.get('http://localhost:5000/admin/token');
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
         config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
@@ -76,7 +83,7 @@ function ManageDeanAccounts() {
     });
 
     const getDeans = async () => {
-        const response = await axiosJWT.get('http://localhost:5000/deans/get', {
+        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/deans/get`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -85,7 +92,7 @@ function ManageDeanAccounts() {
     }
 
     const updateDean = async (id) => {
-      await axiosJWT.patch(`http://localhost:5000/update/dean/${id}`, {
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/update/dean/${id}`, {
         last_name: editDeanFormData.last_name,
         first_name: editDeanFormData.first_name,
         middle_name: editDeanFormData.middle_name,
@@ -101,7 +108,7 @@ function ManageDeanAccounts() {
 
     const changePassword = async () => {
       try{
-        await axiosJWT.patch(`http://localhost:5000/change/dean/password`, passwordForm, {
+        await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/change/dean/password`, passwordForm, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -112,7 +119,7 @@ function ManageDeanAccounts() {
     }
 
     const deleteDean = async (id) => {
-      await axiosJWT.delete(`http://localhost:5000/delete/dean/${id}`,{
+      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/delete/dean/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -123,7 +130,7 @@ function ManageDeanAccounts() {
     const addDean = async (e) => {
       e.preventDefault();
       try {
-        await axiosJWT.post('http://localhost:5000/register/dean', {
+        await axiosJWT.post(`${import.meta.env.VITE_API_URL}/register/dean`, {
           id: deans.length,
           last_name: addDeanFormData.last_name,
           first_name: addDeanFormData.first_name,
@@ -254,7 +261,7 @@ function ManageDeanAccounts() {
     };
 
     const handleDeleteClick = (DeanId) => {
-      let text = 'Do you want to delete this Dean Account? '
+      let text = '❌❌❌ Do you want to delete this Dean Account? '
       if(confirm(text) == true){
         const newDeans = [...deans];
 
@@ -401,13 +408,17 @@ function ManageDeanAccounts() {
                 name="email"
                 onChange={handleAddFormChange}
             />
-            <input
-                type="text"
-                required="required"
-                placeholder="Enter an department..."
-                name="department"
-                onChange={handleAddFormChange}
-            />
+            <select
+              required="required"
+              name="department"
+              value={addDeanFormData.department}
+              onChange={(e)=> {
+                setSelectDept(e.target.value);
+                addDeanFormData.department = e.target.value;
+              }}
+              >
+                {dept_options}
+            </select>
             <input
                 type="password"
                 required="required"

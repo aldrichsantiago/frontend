@@ -116,6 +116,10 @@ form td:last-child {
   width: 300px;
   height: 30px;
 }
+.add-user-container form select {
+  width: 309px;
+  height: 33px;
+}
 .add-user-container form button {
   padding: 1em 2em;
 }/*# sourceMappingURL=ManageUserAccounts.css.map */

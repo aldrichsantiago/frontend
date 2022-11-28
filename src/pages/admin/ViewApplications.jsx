@@ -18,6 +18,7 @@ function ViewApplications() {
   } else if (applicationTable == 'RejectedApplications') {
     tableToRender = <ViewRejectedApplications/>;
   }
+  
   return (
     <AdminLayout>
         <div className="admin-view-applications">

@@ -211,7 +211,7 @@ function ManageAnnouncements() {
   return (
     <>
         <div className='announce-header flex'>
-            <h2>Manage Announcements</h2>
+            <h2>Announcements</h2>
             <button id='add-announce' onClick={()=>{setAddIsOpen(!addIsOpen)}}>ADD ANNOUNCEMENT</button>
         </div>
 
@@ -252,12 +252,11 @@ function ManageAnnouncements() {
             <div className="add-announce-container">
                 <div className="flex">
                     <h2>Add an Announcement</h2>
-                    <a onClick={()=>setAddIsOpen(false)}>X</a>
                 </div>
                 
                 <form style={{display:'flex', flexDirection:'column'}} onSubmit={addAnnouncements}>
                 <input
-                    size={100}
+                    size={95}
                     height="10px"
                     type="text"
                     required="required"
@@ -275,8 +274,8 @@ function ManageAnnouncements() {
                     onChange={handleAddFormChange}
                 />
                 <div className="add-buttons">
-                    <button type="submit">Add</button>
-                    <button onClick={()=>setAddIsOpen(false)}>Cancel</button>
+                    <button onClick={()=>setAddIsOpen(false)}>CANCEL</button>
+                    <button type="submit">ADD</button>
                 </div>
                 
                 </form>
@@ -289,11 +288,10 @@ function ManageAnnouncements() {
                 <div className="add-announce-container">
                     <div className="flex">
                         <h2>Edit an Announcement</h2>
-                        <a onClick={()=>setEditIsOpen(false)}>X</a>
                     </div>
                     <form style={{display:'flex', flexDirection:'column'}} onSubmit={handleEditFormSubmit}>
                     <input
-                    size={4}
+                        size={95}
                         className='editTitle'
                         type="text"
                         required="required"
@@ -303,7 +301,7 @@ function ManageAnnouncements() {
                         value={editAnnounceFormData.title}
                     />
                     <textarea
-                        rows="20" cols="50"
+                        rows="20" cols="97"
                         className='editBody'
                         type="text"
                         required="required"
@@ -313,8 +311,8 @@ function ManageAnnouncements() {
                         value={editAnnounceFormData.body}
                     />
                     <div className="edit-buttons">
-                        <button type="submit" onClick={handleEditFormSubmit}>Update</button>
-                        <button onClick={()=>setEditIsOpen(false)}>Cancel</button>
+                        <button onClick={()=>setEditIsOpen(false)}>CANCEL</button>
+                        <button type="submit" onClick={handleEditFormSubmit}>UPDATE</button>
                     </div>
                     </form>
                 </div>

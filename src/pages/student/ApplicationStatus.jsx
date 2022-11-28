@@ -123,7 +123,7 @@ function ApplicationStatus() {
   },[student_id]);
 
   const getRejected = async () => {
-    const response = await axiosJWT.get(`http://localhost:5000/student/application/rejected/${student_id}`, {
+    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/application/rejected/${student_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -131,7 +131,7 @@ function ApplicationStatus() {
     setRejected(response.data);
   }
   const getApproved = async () => {
-    const response = await axiosJWT.get(`http://localhost:5000/student/application/approved/${student_id}`, {
+    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/application/approved/${student_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -139,7 +139,7 @@ function ApplicationStatus() {
     setApproved(response.data);
   }
   const getReview = async () => {
-    const response = await axiosJWT.get(`http://localhost:5000/student/application/review/${student_id}`, {
+    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/application/review/${student_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -147,7 +147,7 @@ function ApplicationStatus() {
     setReview(response.data);
   }
   const getSubmitted = async () => {
-    const response = await axiosJWT.get(`http://localhost:5000/student/application/submitted/${student_id}`, {
+    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/application/submitted/${student_id}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -166,7 +166,7 @@ function ApplicationStatus() {
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {
-      const response = await axios.get('http://localhost:5000/student/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/student/token`);
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setName(decoded.first_name + ' ' + decoded.last_name);
@@ -187,7 +187,7 @@ function ApplicationStatus() {
   axiosJWT.interceptors.request.use(async (config) => {
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
-      const response = await axios.get('http://localhost:5000/student/token');
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/student/token`);
       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);

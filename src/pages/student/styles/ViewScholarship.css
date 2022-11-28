@@ -8,4 +8,13 @@
 }
 .view-scholarships h1 {
   font-family: Bebas Neue;
+}
+.view-scholarships span label {
+  font-size: 22px;
+}
+.view-scholarships span input {
+  border-radius: 3px;
+  height: 28px;
+  width: 30%;
+  font-size: 18px;
 }/*# sourceMappingURL=ViewScholarship.css.map */
