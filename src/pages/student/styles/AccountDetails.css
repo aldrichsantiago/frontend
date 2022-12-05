@@ -27,8 +27,11 @@
 * .user-details-container form div input, * .user-details-container form div select {
   border: 2px solid #F9C041;
   border-radius: 3px;
-  width: 90%;
+  width: 100px;
   padding: 0.4em;
+}
+* .user-details-container form div select {
+  width: 180px;
 }
 * .user-details-container form button {
   color: #fff;
@@ -38,6 +41,36 @@
   margin: 3em;
   border-radius: 3px;
   cursor: pointer;
+}
+
+input[name=password], input[name=confPassword] {
+  width: 300px;
+  height: 30px;
+}
+
+.btnCancel, .btnChangePass {
+  padding: 0.5em 1em;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.btnCancel {
+  padding: 0.5em 1em;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.btnCancel:hover {
+  background-color: rgb(185, 185, 185);
+}
+
+.btnChangePass {
+  background-color: #105652;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+.btnChangePass:hover {
+  background-color: #0e4946;
 }
 
 @media (min-width: 768px) {

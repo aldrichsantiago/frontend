@@ -107,6 +107,7 @@ function StudentRegister() {
         }
     },[msg]);
 
+
     const notify = () => toast.error(msg, {
         position: "bottom-right",
         autoClose: 5000,
@@ -116,7 +117,7 @@ function StudentRegister() {
         draggable: true,
         progress: undefined,
         theme: "light",
-        });
+    });
     console.log(msg);
 
     return (

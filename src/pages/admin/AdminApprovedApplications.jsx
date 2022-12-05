@@ -9,6 +9,7 @@ function AdminApprovedApplications() {
     const [applicantData, setApplicantData] = useState({});
     const [token, setToken] = useState('');
     const [expire, setExpire] = useState('');
+    const navigate = useNavigate();
 
 
     useEffect(()=>{

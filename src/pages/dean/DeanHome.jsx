@@ -71,7 +71,8 @@ function DeanHome() {
     toGreen="/dean/applications"
     toYellow="/dean/home"
     greenName="VIEW SCHOLARSHIP APPLICATIONS"
-    display='none'>
+    display='none'
+    logout={Logout}>
         
     </UserHomeLayout>
   )

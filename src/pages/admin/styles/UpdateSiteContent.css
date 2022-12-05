@@ -84,6 +84,7 @@
   overflow: scroll;
   -ms-overflow-style: none;
   scrollbar-width: none;
+  margin-bottom: 3em;
 }
 .scholarship-info-table::-webkit-scrollbar, .announcements-table::-webkit-scrollbar {
   display: none;

@@ -14,7 +14,7 @@ $tertiary-color: #B91646;
 .dean-review-application{
     font-family: Arial;
     width: 100%;
-    padding: 2em 1em;
+    padding: 2em 0em 0.5em 0em;
     background-color: #fff;
     .dean-review-header{
         display: flex;
@@ -102,7 +102,7 @@ $tertiary-color: #B91646;
             flex-direction: column;
             gap: 3em 0em;
             img{
-                max-width: 130%;
+                max-width: 120%;
                 object-fit: contain;
             }
             

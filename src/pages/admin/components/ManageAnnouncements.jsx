@@ -30,11 +30,14 @@ function ManageAnnouncements() {
 
     const [addAnnounceFormData, setAddAnnounceFormData] = useState({
         title: "",
-        body: ""
+        body: "",
+        image:""
     });
     const [editAnnounceFormData, setEditAnnounceFormData] = useState({
         title: "",
-        body: ""
+        body: "",
+        image:""
+
     });
     const [editAnnouncementId, setEditAnnouncementId] = useState(null);
 
@@ -80,7 +83,8 @@ function ManageAnnouncements() {
     const addAnnouncements = async() => {
         await axiosJWT.post('http://localhost:5000/announcements/add',{
             title: addAnnounceFormData.title,
-            body: addAnnounceFormData.body
+            body: addAnnounceFormData.body,
+            image: addAnnounceFormData.image
         }, {headers: {
             Authorization: `Bearer ${token}`
           }});
@@ -137,6 +141,7 @@ function ManageAnnouncements() {
         const formValues = {
         title: announcement.title,
         body: announcement.body,
+        image: announcement.image,
         };
 
         setEditAnnounceFormData(formValues);
@@ -194,6 +199,30 @@ function ManageAnnouncements() {
 
         setEditAnnouncementId(null);
     };
+
+    const handleFileInputChange = e => {
+        if(e.target.files[0].size > 2097152){
+            alert("File is too big! Pls keep it below 2MB");
+            e.target.value = "";
+        }else{
+            console.log(e.target.files[0]);
+            const fieldName = e.target.getAttribute("name");
+            const fieldValue = e.target.files[0];
+            let file = e.target.files[0];
+            let baseURL = "";
+            // Make new FileReader
+            let reader = new FileReader();
+            // Convert the file to base64 text
+            reader.readAsDataURL(file);
+            reader.onload = () => {
+                baseURL = reader.result;
+                addAnnounceFormData[fieldName] = baseURL;
+                editAnnounceFormData[fieldName] = baseURL;
+            }
+
+        }
+        
+    }
 
     const customStyles = {
         content: {
@@ -255,6 +284,7 @@ function ManageAnnouncements() {
                 </div>
                 
                 <form style={{display:'flex', flexDirection:'column'}} onSubmit={addAnnouncements}>
+                <input type="file" accept="image/,.png, .jpg, .jpeg" name="image" id="announcement-image" onChange={handleFileInputChange}/>
                 <input
                     size={95}
                     height="10px"
@@ -289,6 +319,7 @@ function ManageAnnouncements() {
                     <div className="flex">
                         <h2>Edit an Announcement</h2>
                     </div>
+                    <input type="file" accept="image/,.png, .jpg, .jpeg" name="image" id="announcement-image" onChange={handleFileInputChange}/>
                     <form style={{display:'flex', flexDirection:'column'}} onSubmit={handleEditFormSubmit}>
                     <input
                         size={95}

@@ -186,7 +186,7 @@ function DeanApprovedApplications() {
     <>
         <div className="dean-view-applications">
         <div className="dean-view-header">
-          <h1>Approved Applications</h1>
+          <h2>Approved Applications</h2>
           <div>
             <label htmlFor="searchField">Search Student ID or Name:  </label>
             <input type="text" name="searchField" className='search-input' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/>

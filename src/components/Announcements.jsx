@@ -2,6 +2,7 @@ import React from 'react';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import {Carousel} from 'react-responsive-carousel'
+import './styles/Announcements.css'
 
 
 function Announcements() {
@@ -19,10 +20,11 @@ function Announcements() {
     console.log(announcements);
 
   return (
-    <div>
-        <Carousel showArrows={true} autoPlay infiniteLoop swipeable={true}>
+    <div className='slider-container'>
+        <Carousel showArrows={true} autoPlay infiniteLoop swipeable={true} showThumbs={false}>
             {announcements.map((announce)=>(
                 <div key={announce.id}>
+                    <img src={announce.image} alt="" className='announce-img'/>
                     <h1>{announce.title}</h1>
                     <p>{announce.body}</p>
                 </div>

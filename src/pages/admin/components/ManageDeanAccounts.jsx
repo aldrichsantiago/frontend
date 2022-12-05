@@ -449,8 +449,8 @@ function ManageDeanAccounts() {
             <input type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange}/>
             <input type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange}/>
             <div style={{display:'flex', gap:'1em'}}>
-              <button type="button" onClick={()=>setChangePassModal(false)}>Cancel</button>
-              <button type="button" onClick={handleChangePasswordSubmit}>Change Password</button>
+              <button type="button" className='btnCancel' onClick={()=>setChangePassModal(false)}>Cancel</button>
+              <button type="button" className='btnChangePass' onClick={handleChangePasswordSubmit}>Change Password</button>
             </div>
           </form>
         </Modal>

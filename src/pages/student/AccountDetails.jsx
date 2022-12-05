@@ -3,7 +3,10 @@ import { useState, useEffect, useLocation } from 'react'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import { Link, useNavigate } from 'react-router-dom'
+import Modal from 'react-modal'
 import Layout from './Layout'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './styles/AccountDetails.css'
 
 function AccountDetails() {
@@ -12,7 +15,7 @@ function AccountDetails() {
   const [expire, setExpire] = useState('');
   const [student, setStudent] = useState({});
   const [student_id, setStudentId] = useState('');
-
+  const [msg, setMsg] = useState('');
   const [last_name, setLastName] = useState('');
   const [first_name, setFirstName] = useState('');
   const [middle_name, setMiddleName] = useState('');
@@ -22,9 +25,13 @@ function AccountDetails() {
   const [contact_no, setContactNo] = useState('');
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
-  const [studentFormData, setStudentFormData] = useState({
-  
+  const [studentFormData, setStudentFormData] = useState({});
+  const [changePassModal, setChangePassModal] = useState(false);
+
+  const [passwordForm, setPasswordForm] = useState({
+    student_id: student_id
   });
+
 
   const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
   let courses = [""];
@@ -86,13 +93,18 @@ function AccountDetails() {
 
   ]
 
-  
-
   useEffect(() => {
     refreshToken();
     getStudent();
     
   },[token]);
+
+  useEffect(()=>{
+    if(msg == ''){
+    }else{
+        notify();
+    }
+  },[msg]);
 
   const checkForm = () =>{
     if (last_name != undefined){
@@ -125,6 +137,19 @@ function AccountDetails() {
     }
   }
 
+  const checkPassword = () => {
+    if (passwordForm.password.length < 8) {
+      setMsg("Password must be at least 8 characters");
+      errNotify();
+    }else if (passwordForm.password != passwordForm.confPassword){
+      setMsg("Password does not match");
+      errNotify();
+    } else {
+      changePassword();
+      setChangePassModal(false);
+    }
+  };
+
   const getStudent = async () => {
     const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/details/${student_id}`, {
       headers: {
@@ -146,10 +171,32 @@ function AccountDetails() {
 
   const editStudent = async () => {
     checkForm();
-    await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/update/student/details/${student.id}`,
+    try{
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/update/student/details/${student.id}`,
       studentFormData, {headers: {
         Authorization: `Bearer ${token}`
       }});
+      setMsg("Updated Successfully");
+      notify();
+    }catch(e){
+      setMsg(e.response.data.msg);
+      errNotify();
+    }
+  }
+
+  const changePassword = async () => {
+    try{
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/change/student/details/password`, passwordForm, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }});
+      setMsg("Password has been changed");
+      notify();
+    }catch(e){
+      setMsg(e.response.data.msg);
+      errNotify();
+      console.log(e);
+    }
   }
 
   const refreshToken = async () => {
@@ -165,6 +212,7 @@ function AccountDetails() {
     }
     catch (error) {
       if (error.response) {
+        setMsg(error.response.data.msg);
         navigate("/");
 
       }
@@ -200,7 +248,64 @@ function AccountDetails() {
       return <option key={c} selected>{c}</option>
     return <option key={c}>{c}</option>
   });
- 
+
+
+  const handleChangePassFormChange = (event) => {
+    event.preventDefault();
+
+    const fieldName = event.target.getAttribute("name");
+    const fieldValue = event.target.value;
+
+    const newFormData = { ...passwordForm };
+    newFormData[fieldName] = fieldValue;
+
+    setPasswordForm(newFormData);
+};
+
+  const handleChangePassword = () => {
+    passwordForm.student_id = student_id;
+    setChangePassModal(true);
+
+  }
+  const handleChangePasswordSubmit = (e) => {
+    e.preventDefault();
+    console.log(passwordForm);
+    checkPassword();
+
+  }
+
+  const notify = () => toast.success(msg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+});
+
+const errNotify = () => toast.error(msg, {
+  position: "bottom-right",
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "light",
+});
+
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
 
   return (
     <>
@@ -248,10 +353,37 @@ function AccountDetails() {
               <label htmlFor="student_id">Student ID: </label>
               <p name="student_id">{student_id}</p>
             </div>
+            <div>
+              <button style={{padding: '1em'}}type="button" onClick={handleChangePassword}>Change Password</button>
+            </div>
             <button type='button' onClick={editStudent}>UPDATE ACCOUNT DETAILS</button>
           </form>
         </div>
       </Layout>
+      <Modal
+        isOpen={changePassModal}
+        style={customStyles}
+        ariaHideApp={false}>
+          <form onSubmit={handleChangePasswordSubmit} style={{display:'flex', flexDirection:'column', gap:'1em'}}>
+            <input type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange} required/>
+            <input type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange} required/>
+            <div style={{display:'flex', gap:'1em'}}>
+              <button type="button" className='btnCancel' onClick={()=>setChangePassModal(false)}>Cancel</button>
+              <button type="submit" className='btnChangePass'>Change Password</button>
+            </div>
+          </form>
+      </Modal>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </>
   )
 }

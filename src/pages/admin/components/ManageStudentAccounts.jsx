@@ -13,6 +13,7 @@ function ManageStudentAccounts() {
     const [token, setToken] = useState('');
     const [expire, setExpire] = useState('');
     const [selectDept, setSelectDept] = useState('');
+    const [search, setSearch] = useState('');
     const [selectCourse, setSelectCourse] = useState('');
     const [addStudentFormData, setAddStudentFormData] = useState({
         student_id: "",
@@ -89,8 +90,27 @@ function ManageStudentAccounts() {
         getStudents();
     }, []);
 
+    useEffect(() => {
+      if (search==""){
+        getStudents();
+      }else{
+        getSearchedStudents();
+      }
+    }, [search]);
+
+
+
     const getStudents = async () => {
         const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/students/get`, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+        setStudents(response.data);
+    }
+
+    const getSearchedStudents = async () => {
+        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/students/get/${search}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -192,17 +212,6 @@ function ManageStudentAccounts() {
         setEditStudentFormData(newFormData);
     };
 
-    const handleChangePassFormChange = (event) => {
-      event.preventDefault();
-
-      const fieldName = event.target.getAttribute("name");
-      const fieldValue = event.target.value;
-
-      const newFormData = { ...passwordForm };
-      newFormData[fieldName] = fieldValue;
-
-      setPasswordForm(newFormData);
-  };
 
     const handleAddFormSubmit = (event) => {
         event.preventDefault();
@@ -254,6 +263,7 @@ function ManageStudentAccounts() {
 
         setStudents(newStudents);
         setEditStudenttId(null);
+        console.log(editedStudent)
     };
 
     const handleEditClick = (event, student) => {
@@ -292,6 +302,18 @@ function ManageStudentAccounts() {
         deleteStudent(studentId);
       }else{}
     };
+
+    const handleChangePassFormChange = (event) => {
+      event.preventDefault();
+
+      const fieldName = event.target.getAttribute("name");
+      const fieldValue = event.target.value;
+
+      const newFormData = { ...passwordForm };
+      newFormData[fieldName] = fieldValue;
+
+      setPasswordForm(newFormData);
+  };
 
     const handleChangePassword = (id) => {
       passwordForm.student_id = id;
@@ -369,8 +391,12 @@ function ManageStudentAccounts() {
   return (
     <>
       <div className="users-table-header">
-        <div style={{display:'flex', gap:'1em', textAlign:'left', width: '100%'}}>
+        <div style={{display:'flex', gap:'1em', textAlign:'left', width: '100%', alignItems:'center', flexWrap:'wrap'}}>
             <h1>Student Accounts</h1>
+            <div style={{ width: '50%',  textAlign:'right'}}>
+              <label htmlFor="searchField">Search Student ID or Name:  </label>
+              <input type="text" name="searchField" className='search-input' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/>
+            </div>
             <button className="add_btn" onClick={()=>setModalIsOpen(!modalIsOpen)}>ADD</button>
         </div>
         
@@ -525,8 +551,8 @@ function ManageStudentAccounts() {
             <input type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange}/>
             <input type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange}/>
             <div style={{display:'flex', gap:'1em'}}>
-              <button type="button" onClick={()=>setChangePassModal(false)}>Cancel</button>
-              <button type="button" onClick={handleChangePasswordSubmit}>Change Password</button>
+              <button type="button" className='btnCancel' onClick={()=>setChangePassModal(false)}>Cancel</button>
+              <button type="button" className='btnChangePass' onClick={handleChangePasswordSubmit}>Change Password</button>
             </div>
           </form>
         </Modal>

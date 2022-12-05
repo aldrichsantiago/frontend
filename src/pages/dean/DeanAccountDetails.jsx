@@ -3,13 +3,17 @@ import jwt_decode from 'jwt-decode'
 import React from 'react'
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Modal from 'react-modal';
 import DeanLayout from './DeanLayout'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './styles/DeanAccountDetails.css'
 
 
 function DeanAccountDetails() {
 
   const [dean, setDean] = useState({});
+  const [msg, setMsg] = useState('');
   const [last_name, setLastName] = useState(dean.last_name);
   const [first_name, setFirstName] = useState('');
   const [middle_name, setMiddleName] = useState('');
@@ -19,16 +23,24 @@ function DeanAccountDetails() {
   const [dean_id, setDeanId] = useState('');
   const [token, setToken] = useState('');
   const navigate = useNavigate();
-  const [deanFormData, setDeanFormData] = useState({
-  
+  const [deanFormData, setDeanFormData] = useState({});
+  const [changePassModal, setChangePassModal] = useState(false);
+  const [passwordForm, setPasswordForm] = useState({
+    dean_id: dean_id
   });
 
 
   useEffect(() => {
     refreshToken();
     getDean();
-    
   },[token]);
+
+  useEffect(()=>{
+    if(!msg){
+    }else{
+        errNotify();
+    }
+  },[msg]);
 
 
   const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
@@ -84,13 +96,37 @@ function DeanAccountDetails() {
 
   const editDean = async (id) => {
     checkForm();
-    id = dean.id;
-    await axios.patch(`${import.meta.env.VITE_API_URL}/update/dean/details/${id}`,
-      deanFormData, {
+    try{
+      id = dean.id;
+      await axios.patch(`${import.meta.env.VITE_API_URL}/update/dean/details/${id}`,
+        deanFormData, {
         headers: {
           Authorization: `Bearer ${token}`
-        }
-      });
+        }});
+      setMsg("Updated Successfully");
+      notify();
+
+    } catch (e) {
+      setMsg(e.response.data.msg);
+      errNotify();
+    }
+  }
+
+  const changePassword = () => {
+    try{
+      axios.patch(`${import.meta.env.VITE_API_URL}/change/dean/details/password`, passwordForm, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }});
+      setMsg("Password has been changed");
+      notify();
+      setChangePassModal(false);
+
+    } catch (e) {
+      setMsg(e.response.data.msg);
+      errNotify();
+      console.log(e);
+    }
   }
 
   const refreshToken = async () => {
@@ -103,8 +139,7 @@ function DeanAccountDetails() {
       setDeanId(decoded.deanId);
       console.log(dean_id);
       setExpire(decoded.exp);
-    }
-    catch (error) {
+    } catch (error) {
       if (error.response) {
         navigate("/");
 
@@ -130,7 +165,77 @@ function DeanAccountDetails() {
       return Promise.reject(error);
   });
 
-  console.log(dean_id);
+  const handleChangePassFormChange = (event) => {
+    event.preventDefault();
+
+    const fieldName = event.target.getAttribute("name");
+    const fieldValue = event.target.value;
+
+    const newFormData = { ...passwordForm };
+    newFormData[fieldName] = fieldValue;
+
+    setPasswordForm(newFormData);
+    console.log(passwordForm);
+
+  };
+
+  const checkPassword = () => {
+    if (passwordForm.password.length < 8) {
+      setMsg("Password must be at least 8 characters");
+      errNotify();
+    }else if (passwordForm.password != passwordForm.confPassword){
+      setMsg("Password does not match");
+      errNotify();
+    } else {
+      changePassword();
+    }
+  };
+
+  const handleChangePassword = () => {
+    passwordForm.dean_id = dean_id;
+    setChangePassModal(true);
+
+  }
+  const handleChangePasswordSubmit = (e) => {
+    e.preventDefault();
+    passwordForm.dean_id = dean_id;
+    console.log(passwordForm);
+    checkPassword();
+
+  }
+
+  const customStyles = {
+    content: {
+      top: '50%',
+      left: '50%',
+      right: 'auto',
+      bottom: 'auto',
+      marginRight: '-50%',
+      transform: 'translate(-50%, -50%)',
+    },
+  };
+
+  const notify = () => toast.success(msg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+});
+
+const errNotify = () => toast.error(msg, {
+  position: "bottom-right",
+  autoClose: 5000,
+  hideProgressBar: false,
+  closeOnClick: true,
+  pauseOnHover: true,
+  draggable: true,
+  progress: undefined,
+  theme: "light",
+});
 
   return (
     <DeanLayout>
@@ -168,9 +273,36 @@ function DeanAccountDetails() {
               <label htmlFor="dean_id">Dean ID: </label>
               <input defaultValue={dean.dean_id} name="dean_id" type="text" placeholder="Enter your Dean ID" required/>
             </div>
+            <div>
+              <button style={{padding: '0.5em'}}type="button" onClick={handleChangePassword}>Change Password</button>
+            </div>
             <button type='submit' onClick={editDean}>UPDATE ACCOUNT DETAILS</button>
           </form>
         </div>
+        <Modal
+        isOpen={changePassModal}
+        style={customStyles}
+        ariaHideApp={false}>
+          <form onSubmit={handleChangePasswordSubmit} style={{display:'flex', flexDirection:'column', gap:'1em'}}>
+            <input type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange}/>
+            <input type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange}/>
+            <div style={{display:'flex', gap:'1em'}}>
+              <button className='btnCancel' type="button" onClick={()=>setChangePassModal(false)}>Cancel</button>
+              <button className='btnChangePass' type="submit">Change Password</button>
+            </div>
+          </form>
+      </Modal>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </DeanLayout>
   )
 }

@@ -7,6 +7,14 @@ body {
   background-color: #105652;
 }
 
+.scrollbar-hide {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 .home-container {
   background-image: url("../../assets/campus.png");
   background-size: cover;

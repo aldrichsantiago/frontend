@@ -28,12 +28,8 @@ function StudentLogin() {
         }
     }
     useEffect(()=>{
-        if(!msg){
-
-        }else{
-        notify();
-
-        }
+        if(!msg){}
+        else{notify()}
     },[msg]);
 
     const notify = () => toast.error(msg, {
@@ -46,6 +42,18 @@ function StudentLogin() {
         progress: undefined,
         theme: "light",
         });
+
+    const checkForm = () => {
+        if (!id){
+            setMsg("No Student ID");
+            notify();
+        } else if(!password) {
+            setMsg("No Password");
+            notify();
+        }else{
+            Auth();
+        }
+    }
 
   return (
     <div>

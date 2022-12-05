@@ -84,6 +84,50 @@ $tertiary-color: #B91646;
     }
 }
 
+.all-applications-button{
+    a{
+        color: #fff;
+        background-color: #105652;
+        padding: 0.5em 1em;
+        border-radius: 10px;
+        &:hover{
+        background-color: #0c4441;
+
+        }
+    }
+}
+.btnClear{
+    padding: 0.5em 1em;
+    background-color: #fff;
+    color: rgb(15, 15, 15);
+    cursor: pointer;
+    border-radius: 3px;
+    &:hover{
+        background-color: #c2c2c2;
+    }
+}
+
+.btnApprove{
+    padding: 0.5em 1em;
+    background-color: #105652;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+    &:hover{
+        background-color: #0e4946;
+    }
+}
+
+.btnReject{
+    padding: 0.5em 1em;
+    background-color: #B91646;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 3px;
+    &:hover{
+        background-color: #97123a;
+    }
+}
 
 $breakpoint-tablet: 768px;
 @media (min-width: $breakpoint-tablet) {

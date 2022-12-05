@@ -7,7 +7,7 @@ import './styles/Home.css'
 
 function Home() {
   return (
-    <div>
+    <div className='scrollbar-hide'>
         <Navbar/>
         <div className='home-container'>
             <div className='left-home'>

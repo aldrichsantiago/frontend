@@ -15,7 +15,7 @@ const EachApplication = ({application, handleAcceptApplication, handleRejectAppl
         <a href={`/dean/applications/review/${application.id}`} target="_blank">View Application</a>
       </td>
       <td>
-          <button onClick={()=>handleAcceptApplication(application.id)}>ACCEPT</button>
+          <button onClick={()=>handleAcceptApplication(application.id)}>APPROVE</button>
           <button onClick={()=>handleRejectApplication(application.id)}>REJECT</button>
       </td>
     </tr>
@@ -387,7 +387,7 @@ function sigSave(){
       <>
         <div className="dean-view-applications">
         <div className="dean-view-header">
-          <h1>Pending Applications</h1>
+          <h2>Pending Applications</h2>
           <div>
             <label htmlFor="searchField">Search Student ID or Name:  </label>
             <input type="text" name="searchField" className='search-input' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/>
@@ -431,15 +431,15 @@ function sigSave(){
             ref={sigPad}
             />
             <div className='flex'>
-              <button onClick={sigClear}>CLEAR</button>
-              <button onClick={()=>setDeanModal(false)}>CANCEL</button>
-              <button onClick={sigSave}>APPROVE</button>
+              <button className='btnClear' onClick={sigClear}>CLEAR</button>
+              <button className='btnCancel' onClick={()=>setDeanModal(false)}>CANCEL</button>
+              <button className="btnApprove" onClick={sigSave}>APPROVE</button>
             </div>
             <hr />
             <p style={{"textAlign":"center", "fontFamily": "Arial"}}>or upload a signature</p>
               <div className='flex'>
                 <input type="file" accept='.jpeg, .jpg, .png' name="dean_sign" onChange={handleFileInputChange}/>
-                <button onClick={()=>acceptUpload()}>APPROVE</button>     
+                <button className='btnApprove' onClick={()=>acceptUpload()}>APPROVE</button>     
               </div>
       </Modal>
       <Modal
@@ -449,8 +449,8 @@ function sigSave(){
         ariaHideApp={false}>
             <textarea type="text" placeholder='Reason for Rejection...' cols={60} rows={10} onChange={(e)=>setRejectReason(e.target.value)} value={rejectReason} required></textarea>
             <div className='flex'>
-              <button onClick={()=>setRejectModal(false)}>CANCEL</button>
-              <button onClick={logReason}>REJECT</button>
+              <button className='btnCancel' onClick={()=>setRejectModal(false)}>CANCEL</button>
+              <button className='btnReject' onClick={logReason}>REJECT</button>
             </div>
       </Modal>
 

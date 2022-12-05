@@ -27,7 +27,6 @@ $tertiary-color: #B91646;
             gap: 1.6em;
             font-family: Bebas Neue;
 
-
             div{
                 display: flex;
                 flex-direction: column;
@@ -35,8 +34,11 @@ $tertiary-color: #B91646;
                 input, select{
                     border: 2px solid #F9C041;
                     border-radius: 3px;
-                    width: 90%;
+                    width: 100px;
                     padding: 0.4em;
+                }
+                select{
+                    width: 180px;
                 }
             }
 
@@ -54,6 +56,36 @@ $tertiary-color: #B91646;
 
 }
 
+input[name="password"], input[name="confPassword"]{
+    width: 300px;
+    height: 30px;  
+}
+
+.btnCancel, .btnChangePass{
+    padding: 0.5em 1em;
+    border-radius: 3px;
+    cursor: pointer;
+
+}
+.btnCancel{
+    padding: 0.5em 1em;
+    border-radius: 3px;
+    cursor: pointer;
+    &:hover{
+        background-color: rgb(185, 185, 185);
+    }
+
+}
+
+.btnChangePass{
+    background-color: #105652;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    &:hover{
+        background-color: #0e4946;
+    }
+}
 
 $breakpoint-tablet: 768px;
 @media (min-width: $breakpoint-tablet) {

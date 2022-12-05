@@ -1,0 +1,13 @@
+@import url("https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Fuggles&display=swap");
+* {
+  margin: 0 auto;
+}
+
+.slider-container {
+  width: 100%;
+  height: 100%;
+}
+
+.announce-img {
+  height: 500px;
+}/*# sourceMappingURL=Announcements.css.map */

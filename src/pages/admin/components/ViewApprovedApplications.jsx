@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
+import { FaPrint } from "react-icons/fa";
 
 
 const EachApplication = ({application, handleDeleteApplication}) => {
@@ -53,7 +54,7 @@ function ViewApprovedApplications() {
   }else if (selectDept == "JWSLG"){
       courses = ["",""];
   }else if (selectDept == "High School"){
-      courses = ["","Junior High School", "Senior High School)"];
+      courses = ["","Junior High School", "Senior High School"];
   }else if (selectDept == "Elementary"){
       courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
   }else{
@@ -247,7 +248,11 @@ function ViewApprovedApplications() {
   return (
     <div className="approved-applications">
       <div className="dean-view-header flex">
-          <h1>Approved Applications</h1>
+
+        <div className="all-applications-button" style={{display:'flex', alignItems:'center', gap:'1em'}}>
+          <Link to="/admin/view/approved/applications"><FaPrint/> ALL</Link>
+          <h2>Approved Applications</h2>
+        </div>
           <div>
             <label htmlFor="searchField">Search Student ID or Name:  </label>
             <input type="text" name="searchField" className='search-input' placeholder='e.g. 00-0000-000' onChange={(e)=>{setSearch(e.target.value)}}/>

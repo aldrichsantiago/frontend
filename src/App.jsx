@@ -26,6 +26,7 @@ import DeanApplicationReview from './pages/dean/DeanApplicationReview'
 import AdminApplicationReview from './pages/admin/AdminApplicationReview'
 import AdminApprovedApplications from './pages/admin/AdminApprovedApplications'
 import DeanApprovedApplicationView from './pages/dean/DeanApprovedApplicationView'
+import ViewAllApprovedApplications from './pages/admin/components/ViewAllApprovedApplications'
 
 
 function App() {
@@ -60,6 +61,7 @@ function App() {
         <Route path="/admin/applications" element={<AdminViewApplications/>}/>
         <Route path="/admin/applications/review/:id" element={<AdminApplicationReview/>}/>
         <Route path="/admin/approved/application/:id" element={<AdminApprovedApplications/>}/>
+        <Route path="/admin/view/approved/applications" element={<ViewAllApprovedApplications/>}/>
         <Route path='/admin/users' element={<AdminManageUsers/>}/>
         <Route path="/admin/site" element={<AdminUpdateSite/>}/>
 
