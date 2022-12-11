@@ -8,6 +8,7 @@ import SignaturePad from 'react-signature-canvas'
 import Modal from 'react-modal'
 
 import Layout from './Layout'
+import 'react-toastify/dist/ReactToastify.css';
 import'./styles/ScholarshipForm.css'
 
 const AttachementInputs = ({requirement, index, handleFileInputChange}) =>{
@@ -67,6 +68,7 @@ function ScholarshipForm() {
     const [expire, setExpire] = useState('');
     const [msg, setMsg] = useState('');
     const [totalUnits, setTotalUnits] = useState(0);
+    const [isSubmitted, setIsSubmitted] = useState();
     const navigate = useNavigate();
     let student_sig = '';
 
@@ -148,6 +150,21 @@ function ScholarshipForm() {
        
     }
 
+    const alreadySubmitted = async() => {
+        try{
+            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/already/submitted/${studentId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
+            console.log(response.data);
+            setIsSubmitted(response.data);
+        }catch(e){
+            console.log(e);
+        }
+       
+    }
+
     function sigClear(){
         sigPad.current.clear();
 
@@ -169,6 +186,7 @@ function ScholarshipForm() {
     const handleFormChange = (event) => {
         event.preventDefault();
         getStudent();
+        alreadySubmitted();
         const fieldName = event.target.getAttribute("name");
         const fieldValue = event.target.value;
         const newFormData = { ...subjCodesUnits };
@@ -180,8 +198,8 @@ function ScholarshipForm() {
     };
 
     const handleFileInputChange = e => {
-        if(e.target.files[0].size > 2097152){
-            alert("File is too big! Pls keep it below 2MB");
+        if(e.target.files[0].size > 1048576){
+            alert("File is too big! Pls keep it below 1MB");
             e.target.value = "";
         }else{
             console.log(e.target.files[0]);
@@ -221,24 +239,64 @@ function ScholarshipForm() {
         dataToPass = {...subjCodesUnits, ...attachments, ...userInfo, scholarship_type: scholarship.scholarship_name};
         console.log(dataToPass);
         try{
-            axios.post(`${import.meta.env.VITE_API_URL}/submit/student/application`, dataToPass, 
+            await axios.post(`${import.meta.env.VITE_API_URL}/submit/student/application`, dataToPass, 
             {
                 headers: {
                     Authorization: `Bearer ${token}`
               }});
-            setMsg('Application Submitted');
+            notify('Application Submitted');
             navigate('/student/status');
         }catch(e){
             console.log(e);
+
         }
     };
+
+
+    const validateAndSubmit = async() => {
+        const {units_1, units_2, units_3, units_4, units_5, units_6, units_7, units_8, units_9, units_10, units_11, units_12} = subjCodesUnits;
+        setTotalUnits(Number(units_1)+ Number(units_2)+ Number(units_3)+ Number(units_4)+ Number(units_5)+ Number(units_6)+ Number(units_7)+ Number(units_8)+ Number(units_9)+ Number(units_10)+ Number(units_11)+ Number(units_12));
+        
+        if (isSubmitted.length != 0 ){
+            errNotify('You have already submitted an application');
+        } else if (totalUnits < 18){
+            errNotify("Total Units should be at least 18");
+            console.log(totalUnits);
+        } else if (attachments.student_sign == undefined) {
+            errNotify('Student Signature is Required')
+        } else{
+            submitForm();
+        }
+    };
+
+    const notify = (msg) => toast.success(msg, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    
+      const errNotify = (msg) => toast.error(msg, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
 
     if (scholarship){
     return (
     <Layout>
         <div className="scholarship-form-container">
             <h1>{id}</h1>
-            <form className='scholarship-form' onSubmit={submitForm}>
+            <form className='scholarship-form'>
                 <div className="flex">
                     <div className="subject-codes">
                         <label htmlFor="subject">Subject Codes</label>
@@ -270,13 +328,13 @@ function ScholarshipForm() {
                         <input type="number" name="units_11" onChange={handleFormChange}/>
                         <input type="number" name="units_12" onChange={handleFormChange}/>
                         <p>TOTAL UNITS: {totalUnits}</p>
+                        <p>Note: 18 Units is the minimum for an application</p>
                     </div>
                     <div className="other-info">
                         <label htmlFor="semester">Semester: </label>
                         <input type="text" name="semester" placeholder='e.g. 1st' onChange={handleFormChange} required/>
                         <label htmlFor="school_year">School Year: </label>
                         <input type="text" name="school_year" placeholder='e.g. 2021-2022' onChange={handleFormChange} required/>
-                    
                     </div>
                     <div className="scholar-attachments">
                         {requirements?.map((requirement, index)=>(
@@ -291,7 +349,7 @@ function ScholarshipForm() {
                         <p>Note: When you use the digital signature be sure to press save after you sign</p>
                     </div>
                 </div>
-                <button className='scholarFormSubmit' type='submit'>SUBMIT APPLICATION</button>
+                <button className='scholarFormSubmit'  onClick={validateAndSubmit} type='submit'>SUBMIT APPLICATION</button>
                 
             </form>
         </div>
@@ -315,6 +373,17 @@ function ScholarshipForm() {
             </div>
 
         </Modal>
+        <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </Layout>
     
     )}else{

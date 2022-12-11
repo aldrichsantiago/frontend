@@ -38,7 +38,7 @@ function DeanAccountDetails() {
   useEffect(()=>{
     if(!msg){
     }else{
-        errNotify();
+      notify();
     }
   },[msg]);
 
@@ -276,7 +276,7 @@ const errNotify = () => toast.error(msg, {
             <div>
               <button style={{padding: '0.5em'}}type="button" onClick={handleChangePassword}>Change Password</button>
             </div>
-            <button type='submit' onClick={editDean}>UPDATE ACCOUNT DETAILS</button>
+            <button type='button' onClick={editDean}>UPDATE ACCOUNT DETAILS</button>
           </form>
         </div>
         <Modal

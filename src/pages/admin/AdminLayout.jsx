@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import Navbar from '../../components/Navbar'
@@ -83,9 +83,21 @@ function AdminLayout({children}) {
         <div className="content-container">
           <div className="sidebar">
               <Link to="/admin/home">HOME</Link><br />
-              <Link to="/admin/applications">VIEW APPLICATIONS</Link><br />
-              <Link to="/admin/users">MANAGE USER ACCOUNTS</Link><br />
-              <Link to="/admin/site">UPDATE SITE CONTENT</Link><br />
+              <NavLink style={({ isActive }) =>
+              isActive
+                ? { background: '#74112e'}
+                : { background: '#B91646'}
+            } to="/admin/applications">VIEW APPLICATIONS</NavLink><br />
+              <NavLink style={({ isActive }) =>
+              isActive
+                ? { background: '#74112e'}
+                : { background: '#B91646'}
+            } to="/admin/users">MANAGE USER ACCOUNTS</NavLink><br />
+              <NavLink style={({ isActive }) =>
+              isActive
+                ? { background: '#74112e'}
+                : { background: '#B91646'}
+            } to="/admin/site">UPDATE SITE CONTENT</NavLink><br />
               <Link to="/" onClick={Logout}>LOGOUT</Link>
           </div>
             <input type="checkbox" name="burg" id="burg" onChange={handleChange}/>

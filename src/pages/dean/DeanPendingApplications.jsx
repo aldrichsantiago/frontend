@@ -356,23 +356,29 @@ function sigSave(){
   }
 
   const handleFileInputChange = (e) => {
-    console.log(e.target.files[0]);
-    const fieldName = e.target.getAttribute("name");
-    const fieldValue = e.target.files[0];
+    if(e.target.files[0].size > 1048576){
+      alert("File is too big! Pls keep it below 1MB");
+      e.target.value = "";
+      
+    } else {
+      console.log(e.target.files[0]);
+      const fieldName = e.target.getAttribute("name");
+      const fieldValue = e.target.files[0];
 
-    let file = e.target.files[0];
-    let baseURL = "";
-    // Make new FileReader
-    let reader = new FileReader();
-    // Convert the file to base64 text
-    reader.readAsDataURL(file);
-    reader.onload = () => {
-      baseURL = reader.result;
-      dean_signatures[fieldName] = baseURL;
-      deanSig = baseURL;
-      console.log(deanSig);
-      dataToPass.dean_sign = baseURL;
-      dateSubmitted = applicantData.createdAt;
+      let file = e.target.files[0];
+      let baseURL = "";
+      // Make new FileReader
+      let reader = new FileReader();
+      // Convert the file to base64 text
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        baseURL = reader.result;
+        dean_signatures[fieldName] = baseURL;
+        deanSig = baseURL;
+        console.log(deanSig);
+        dataToPass.dean_sign = baseURL;
+        dateSubmitted = applicantData.createdAt;
+      }
     }
   }
 

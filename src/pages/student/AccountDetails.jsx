@@ -102,7 +102,7 @@ function AccountDetails() {
   useEffect(()=>{
     if(msg == ''){
     }else{
-        notify();
+
     }
   },[msg]);
 
@@ -283,18 +283,18 @@ function AccountDetails() {
     draggable: true,
     progress: undefined,
     theme: "light",
-});
+  });
 
-const errNotify = () => toast.error(msg, {
-  position: "bottom-right",
-  autoClose: 5000,
-  hideProgressBar: false,
-  closeOnClick: true,
-  pauseOnHover: true,
-  draggable: true,
-  progress: undefined,
-  theme: "light",
-});
+  const errNotify = () => toast.error(msg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
 
   const customStyles = {
     content: {

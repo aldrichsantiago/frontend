@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { NavLink, Link, useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import Navbar from '../../components/Navbar'
@@ -81,8 +81,16 @@ function Layout({children}) {
         <div className="content-container">
           <div className="sidebar">
               <Link to="/dean/home">HOME</Link><br />
-              <Link to="/dean/applications">VIEW APPLICATIONS</Link><br />
-              <Link to="/dean/details">ACCOUNT DETAILS</Link><br />
+              <NavLink style={({ isActive }) =>
+              isActive
+                ? { background: '#74112e'}
+                : { background: '#B91646'}
+            } to="/dean/applications">VIEW APPLICATIONS</NavLink><br />
+              <NavLink style={({ isActive }) =>
+              isActive
+                ? { background: '#74112e'}
+                : { background: '#B91646'}
+            } to="/dean/details">ACCOUNT DETAILS</NavLink><br />
               <Link to="/" onClick={Logout}>LOGOUT</Link>
           </div>
             <input type="checkbox" name="burg" id="burg" onChange={handleChange}/>
