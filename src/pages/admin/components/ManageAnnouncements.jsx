@@ -81,13 +81,14 @@ function ManageAnnouncements() {
       });
 
     const addAnnouncements = async() => {
-        await axiosJWT.post('http://localhost:5000/announcements/add',{
+        await axios.post('http://localhost:5000/announcements/add',{
             title: addAnnounceFormData.title,
             body: addAnnounceFormData.body,
             image: addAnnounceFormData.image
         }, {headers: {
             Authorization: `Bearer ${token}`
           }});
+          setAddIsOpen(false);
     }
 
     const getAnnouncements = async () => {
@@ -283,7 +284,7 @@ function ManageAnnouncements() {
                     <h2>Add an Announcement</h2>
                 </div>
                 
-                <form style={{display:'flex', flexDirection:'column'}} onSubmit={addAnnouncements}>
+                <form style={{display:'flex', flexDirection:'column'}}>
                 <input type="file" accept="image/,.png, .jpg, .jpeg" name="image" id="announcement-image" onChange={handleFileInputChange}/>
                 <input
                     size={95}
@@ -305,7 +306,7 @@ function ManageAnnouncements() {
                 />
                 <div className="add-buttons">
                     <button onClick={()=>setAddIsOpen(false)}>CANCEL</button>
-                    <button type="submit">ADD</button>
+                    <button type="button" onClick={addAnnouncements}>ADD</button>
                 </div>
                 
                 </form>

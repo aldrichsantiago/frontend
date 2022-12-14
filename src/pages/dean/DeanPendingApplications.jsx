@@ -25,6 +25,7 @@ const EachApplication = ({application, handleAcceptApplication, handleRejectAppl
 function DeanPendingApplications() {
   const [deanId, setDeanId] = useState('');
   const [department, setDepartment] = useState('');
+  const [dean, setDean] = useState({});
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
   const [deanModal, setDeanModal] = useState(false);
@@ -111,6 +112,7 @@ function DeanPendingApplications() {
         }
     });
       setDepartment(response.data.department);
+      setDean(response.data);
     }catch(e){
       console.log(e)
     }
@@ -247,7 +249,7 @@ function DeanPendingApplications() {
           email: applicantData.email,
           contact_no: applicantData.contact_no,
           id: applicantData.id,
-          rejected_by: department + " DEAN",
+          rejected_by: dean.first_name + " " + dean.last_name + " (" + department + " DEAN)",
           reason_of_rejection: rejectReason
     },{headers: {
       Authorization: `Bearer ${token}`
@@ -349,7 +351,6 @@ function sigSave(){
 
   const logReason = async () => {
     console.log(rejectReason);
-    idOfStudent = applicantData.student_id;
     rejectApplication(applicantData.id)
     setRejectModal(false);
     setRejectReason('');
@@ -439,13 +440,13 @@ function sigSave(){
             <div className='flex'>
               <button className='btnClear' onClick={sigClear}>CLEAR</button>
               <button className='btnCancel' onClick={()=>setDeanModal(false)}>CANCEL</button>
-              <button className="btnApprove" onClick={sigSave}>APPROVE</button>
+              <button className="btnApprove" onClick={sigSave}>ACCEPT</button>
             </div>
             <hr />
             <p style={{"textAlign":"center", "fontFamily": "Arial"}}>or upload a signature</p>
               <div className='flex'>
                 <input type="file" accept='.jpeg, .jpg, .png' name="dean_sign" onChange={handleFileInputChange}/>
-                <button className='btnApprove' onClick={()=>acceptUpload()}>APPROVE</button>     
+                <button className='btnApprove' onClick={()=>acceptUpload()}>ACCEPT</button>     
               </div>
       </Modal>
       <Modal

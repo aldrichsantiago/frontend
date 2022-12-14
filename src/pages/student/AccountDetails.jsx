@@ -140,10 +140,10 @@ function AccountDetails() {
   const checkPassword = () => {
     if (passwordForm.password.length < 8) {
       setMsg("Password must be at least 8 characters");
-      errNotify();
+      errNotify("Password must be at least 8 characters");
     }else if (passwordForm.password != passwordForm.confPassword){
       setMsg("Password does not match");
-      errNotify();
+      errNotify("Password does not match");
     } else {
       changePassword();
       setChangePassModal(false);
@@ -177,7 +177,7 @@ function AccountDetails() {
         Authorization: `Bearer ${token}`
       }});
       setMsg("Updated Successfully");
-      notify();
+      notify("Updated Successfully");
     }catch(e){
       setMsg(e.response.data.msg);
       errNotify();
@@ -191,7 +191,7 @@ function AccountDetails() {
           Authorization: `Bearer ${token}`
         }});
       setMsg("Password has been changed");
-      notify();
+      notify("Password has been changed");
     }catch(e){
       setMsg(e.response.data.msg);
       errNotify();
@@ -274,7 +274,7 @@ function AccountDetails() {
 
   }
 
-  const notify = () => toast.success(msg, {
+  const notify = (msg) => toast.success(msg, {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -285,7 +285,7 @@ function AccountDetails() {
     theme: "light",
   });
 
-  const errNotify = () => toast.error(msg, {
+  const errNotify = (msg) => toast.error(msg, {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,

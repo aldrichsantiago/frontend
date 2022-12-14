@@ -271,7 +271,7 @@ const errNotify = () => toast.error(msg, {
             </div>
             <div>
               <label htmlFor="dean_id">Dean ID: </label>
-              <input defaultValue={dean.dean_id} name="dean_id" type="text" placeholder="Enter your Dean ID" required/>
+              <p>{dean.dean_id}</p> 
             </div>
             <div>
               <button style={{padding: '0.5em'}}type="button" onClick={handleChangePassword}>Change Password</button>
