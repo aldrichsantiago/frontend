@@ -245,7 +245,6 @@ function ScholarshipForm() {
                     Authorization: `Bearer ${token}`
               }});
             notify('Application Submitted');
-            navigate('/student/status');
         }catch(e){
             console.log(e);
 
