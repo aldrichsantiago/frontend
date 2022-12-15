@@ -26,6 +26,8 @@ function ViewRejectedApplications() {
     const [selectDept, setSelectDept] = useState('');
     const [applications, setApplications] = useState([]);
     const [applicantData, setApplicantData] = useState([]);
+    const [search, setSearch] = useState('');
+
   
     const navigate = useNavigate();
 
@@ -35,11 +37,18 @@ function ViewRejectedApplications() {
     },[]);
     
     useEffect(()=>{
-        getDeptFilteredApplications();
-        if (selectDept == ''){
+        if (selectDept == "" && search == ""){
+            getApplications();
+        } else if (search != "" && selectDept == "") {
+            getSearchedApplications();
+        } else if (search == "" && selectDept != "") {
+            getDeptFilteredApplications();
+        } else if (search != "" && selectDept != "") {
+            getNameDeptFilteredApplications();
+        } else{
             getApplications();
         }
-    },[selectDept]);
+    },[selectDept, search]);
 
 
     const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
@@ -61,6 +70,19 @@ function ViewRejectedApplications() {
         }
     }
 
+    const getSearchedApplications = async() => {
+        try{
+          const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/search/rejected/applications/${search}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+          }
+        });
+          setApplications(response.data);
+        }catch(e){
+          console.log(e)
+        }
+      }
+
     const getDeptFilteredApplications = async() => {
         try{
             const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/rejected/applications/department/${selectDept}`, {
@@ -73,6 +95,19 @@ function ViewRejectedApplications() {
             console.log(e)
         }
     }
+
+    const getNameDeptFilteredApplications = async() => {
+        try{
+          const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/name/dept/rejected/applications/${search}/${selectDept}`, {
+            headers: {
+              Authorization: `Bearer ${token}`
+            }
+        });
+          setApplications(response.data);
+        }catch(e){
+          console.log(e)
+        }
+      }
 
     const getApplicantData = async(id) => {
         try {
@@ -141,6 +176,10 @@ function ViewRejectedApplications() {
     <div className="rejected-applications">
         <div className="dean-view-header flex">
           <h1>Rejected Applications</h1>
+          <div>
+            <label htmlFor="searchField">Search Student ID or Name:  </label>
+            <input type="text" name="searchField" className='search-input' placeholder='e.g. 00-0000-000' onChange={(e)=>{setSearch(e.target.value)}}/>
+          </div>
           <div>
             <label htmlFor="applications-dept">DEPARTMENT: </label>
             <select name="applications-dept" className='dept-select' id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>

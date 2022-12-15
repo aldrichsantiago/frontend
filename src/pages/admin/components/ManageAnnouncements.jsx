@@ -51,7 +51,7 @@ function ManageAnnouncements() {
     const refreshToken = async () => {
         axios.defaults.withCredentials = true;
         try {
-          const response = await axios.get('http://localhost:5000/admin/token');
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
           setExpire(decoded.exp);
@@ -69,7 +69,7 @@ function ManageAnnouncements() {
       axiosJWT.interceptors.request.use(async (config) => {
         const currentDate = new Date();
         if (expire * 1000 < currentDate.getTime()) {
-          const response = await axios.get('http://localhost:5000/admin/token');
+          const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
           config.headers.Authorization = `Bearer ${response.data.accessToken}`;
           setToken(response.data.accessToken);
           const decoded = jwt_decode(response.data.accessToken);
@@ -81,7 +81,7 @@ function ManageAnnouncements() {
       });
 
     const addAnnouncements = async() => {
-        await axios.post('http://localhost:5000/announcements/add',{
+        await axios.post(`${import.meta.env.VITE_API_URL}/announcements/add`,{
             title: addAnnounceFormData.title,
             body: addAnnounceFormData.body,
             image: addAnnounceFormData.image
@@ -89,11 +89,12 @@ function ManageAnnouncements() {
             Authorization: `Bearer ${token}`
           }});
           setAddIsOpen(false);
+          setAddAnnounceFormData({});
     }
 
     const getAnnouncements = async () => {
         try{
-        const response = await axios.get('http://localhost:5000/announcements/get',{
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/announcements/get`,{
 
         });
         setAnnouncements(response.data);
@@ -103,7 +104,7 @@ function ManageAnnouncements() {
     }
 
     const updateAnnouncements = async(id) => {
-        axiosJWT.patch(`http://localhost:5000/announcements/update/${id}`,
+        axiosJWT.patch(`${import.meta.env.VITE_API_URL}/announcements/update/${id}`,
             editAnnounceFormData, {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -113,7 +114,7 @@ function ManageAnnouncements() {
     }
 
     const deleteAnnouncements = async(id) => {
-        await axiosJWT.delete(`http://localhost:5000/announcements/delete/${id}`,{
+        await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/announcements/delete/${id}`,{
             headers: {
                 Authorization: `Bearer ${token}`
               }
@@ -290,7 +291,6 @@ function ManageAnnouncements() {
                     size={95}
                     height="10px"
                     type="text"
-                    required="required"
                     placeholder="Announcement Title"
                     name="title"
                     onChange={handleAddFormChange}
@@ -299,7 +299,6 @@ function ManageAnnouncements() {
                     rows="20" cols="97"
                     className='addBody'
                     type="text"
-                    required="required"
                     placeholder="Announcement Body"
                     name="body"
                     onChange={handleAddFormChange}

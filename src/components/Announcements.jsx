@@ -7,7 +7,6 @@ import './styles/Announcements.css'
 
 function Announcements() {
     const [announcements, setAnnouncements] = useState([]);
-    const [announcement, setAnnouncement] = useState({});
 
     useEffect(()=>{
         getAnnouncements();
@@ -22,13 +21,24 @@ function Announcements() {
   return (
     <div className='slider-container'>
         <Carousel showArrows={true} autoPlay infiniteLoop swipeable={true} showThumbs={false}>
-            {announcements.map((announce)=>(
-                <div key={announce.id}>
-                    <img src={announce.image} alt="" className='announce-img'/>
-                    <h1>{announce.title}</h1>
-                    <p>{announce.body}</p>
-                </div>
-            ))}
+            {announcements.map((announce)=>{
+                if (!announce.image) {
+                    return(
+                        <div key={announce.id}>
+                            <h1>{announce.title}</h1>
+                            <p>{announce.body}</p>
+                        </div>
+                    )
+                }
+
+                return(
+                    <div key={announce.id}>
+                        <img src={announce.image} alt="" className='announce-img'/>
+                        <h1>{announce.title}</h1>
+                        <p>{announce.body}</p>
+                    </div>
+                )
+            })}
         </Carousel>
     
     </div>

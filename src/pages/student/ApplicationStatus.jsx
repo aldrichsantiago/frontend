@@ -17,18 +17,17 @@ function RejectedStatus(props){
         <p></p>
       </div>
       <div className="application-review">
+        <img src={Checked} alt="timeline-status" width={50}/>
+        <h2>SCHOLARSHIP APPLICATION UNDER REVIEW</h2> 
+      </div>
+      <div className="application-approved">
         <img src={Crossed} alt="timeline-status" width={50}/>
-        <h2>SCHOLARSHIP APPLICATION UNDER REVIEW</h2>
+        <h2>SCHOLARSHIP APPLICATION APPROVED</h2>
+        <p></p>
         <div>
           <p>Rejected By: {props.rejectedBy}</p>
           <p>Reason: {props.reason}</p>
         </div>
-        
-      </div>
-      <div className="application-approved">
-        <img src={Unchecked} alt="timeline-status" width={50}/>
-        <h2>SCHOLARSHIP APPLICATION APPROVED</h2>
-        <p></p>
       </div>
     </>
 
