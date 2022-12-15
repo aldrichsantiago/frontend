@@ -265,6 +265,8 @@ function ScholarshipForm() {
             errNotify('Student Signature is Required')
         } else{
             submitForm();
+            navigate('/student/status');
+
         }
     };
 
