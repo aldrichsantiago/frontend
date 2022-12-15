@@ -199,7 +199,7 @@ function ScholarshipForm() {
 
     const handleFileInputChange = e => {
         if(e.target.files[0].size > 1048576){
-            alert("File is too big! Pls keep it below 1MB");
+            alert("File is too big! Please keep it below 1MB");
             e.target.value = "";
         }else{
             console.log(e.target.files[0]);
@@ -348,7 +348,7 @@ function ScholarshipForm() {
                         <p>Note: When you use the digital signature be sure to press save after you sign</p>
                     </div>
                 </div>
-                <button className='scholarFormSubmit'  onClick={validateAndSubmit} type='submit'>SUBMIT APPLICATION</button>
+                <button className='scholarFormSubmit' onClick={validateAndSubmit} type='button'>SUBMIT APPLICATION</button>
                 
             </form>
         </div>
