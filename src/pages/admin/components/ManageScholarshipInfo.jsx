@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react'
+import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Modal from 'react-modal'
 import jwt_decode from 'jwt-decode'
@@ -25,6 +26,7 @@ function ManageScholarshipInfo() {
     const [msg, setMsg] = useState('');
     const [token, setToken] = useState('');
     const [expire, setExpire] = useState('');
+    const navigate = useNavigate();
 
     const [addScholarshipFormData, setAddScholarshipFormData] = useState({
       scholarship_name: "",
@@ -84,6 +86,7 @@ function ManageScholarshipInfo() {
               Authorization: `Bearer ${token}`
             }
       });
+      getScholarships();
   }
 
   const getScholarships = async () => {
@@ -98,13 +101,15 @@ function ManageScholarshipInfo() {
   }
 
   const updateScholarships = async(id) => {
-      axiosJWT.patch(`${import.meta.env.VITE_API_URL}/scholarships/update/${id}`,
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/scholarships/update/${id}`,
           editScholarshipFormData, {
             headers: {
               Authorization: `Bearer ${token}`
             }
           }
       );
+      getScholarships();
+
   }
 
   const deleteScholarships = async(id) => {
@@ -195,6 +200,10 @@ function ManageScholarshipInfo() {
       console.log(editedScholarship);
 
       setEditScholarshipId(null);
+      setEditIsOpen(false);
+      getScholarships();
+
+
   };
 
   const customStyles = {
@@ -208,6 +217,32 @@ function ManageScholarshipInfo() {
       },
     };
 
+    const validateAdd = () => {
+      if (addScholarshipFormData.scholarship_name.includes('/')){
+        alert("Scholarship names shouldn't include slashes; Use | instead.");
+      } else if (addScholarshipFormData.scholarship_name.includes('\\')){
+        alert("Scholarship names shouldn't include slashes; Use | instead.");
+      } else if (addScholarshipFormData.scholarship_name.includes('.')){
+        alert("Scholarship names shouldn't include dots.");
+      } else{
+        addScholarships();
+        setAddIsOpen(false);
+      }
+    };
+
+    const validateEdit = async() => {
+      if (editScholarshipFormData.scholarship_name.includes('/')){
+        alert("Scholarship names shouldn't include slashes; Use | instead.");
+      } else if (editScholarshipFormData.scholarship_name.includes('\\')){
+        alert("Scholarship names shouldn't include slashes; Use | instead.");
+      } else if (editScholarshipFormData.scholarship_name.includes('.')){
+        alert("Scholarship names shouldn't include dots.");
+      }else{
+        handleEditFormSubmit();
+        setAddIsOpen(false);
+      }
+      getScholarships();
+    };
   
   return (
 
@@ -257,7 +292,7 @@ function ManageScholarshipInfo() {
                   <h2>Add a Scholarship</h2>
               </div>
               
-              <form style={{display:'flex', flexDirection:'column'}} onSubmit={addScholarships}>
+              <form style={{display:'flex', flexDirection:'column'}}>
               <input
                   size={88}
                   height="10px"
@@ -289,7 +324,7 @@ function ManageScholarshipInfo() {
 
               <div className="add-buttons">
                   <button onClick={()=>setAddIsOpen(false)}>CANCEL</button>
-                  <button type="submit">ADD</button>
+                  <button type="button" onClick={validateAdd}>ADD</button>
               </div>
               
               </form>
@@ -303,7 +338,7 @@ function ManageScholarshipInfo() {
                   <div className="flex">
                       <h2>Edit Scholarship</h2>
                   </div>
-                  <form style={{display:'flex', flexDirection:'column'}} onSubmit={handleEditFormSubmit}>
+                  <form style={{display:'flex', flexDirection:'column'}}>
                   <input
                       size={88}
                       type="text"
@@ -335,9 +370,8 @@ function ManageScholarshipInfo() {
                   <p className='note'>Note: Each requirement should be separated by a comma</p>
                   <div className="edit-buttons">
                     <button onClick={()=>setEditIsOpen(false)}>CANCEL</button>
-                    <button type="submit" onClick={handleEditFormSubmit}>UPDATE</button>
+                    <button type="submit" onClick={validateEdit}>UPDATE</button>
                   </div>
-                  
                   </form>
               </div>
           </Modal>

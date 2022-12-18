@@ -35,12 +35,6 @@ function DeanAccountDetails() {
     getDean();
   },[token]);
 
-  useEffect(()=>{
-    if(!msg){
-    }else{
-      notify();
-    }
-  },[msg]);
 
 
   const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
@@ -104,11 +98,11 @@ function DeanAccountDetails() {
           Authorization: `Bearer ${token}`
         }});
       setMsg("Updated Successfully");
-      notify();
+      notify("Updated Successfully");
 
     } catch (e) {
       setMsg(e.response.data.msg);
-      errNotify();
+      errNotify(e.response.data.msg);
     }
   }
 
@@ -119,12 +113,12 @@ function DeanAccountDetails() {
           Authorization: `Bearer ${token}`
         }});
       setMsg("Password has been changed");
-      notify();
+      notify("Password has been changed");
       setChangePassModal(false);
 
     } catch (e) {
       setMsg(e.response.data.msg);
-      errNotify();
+      errNotify(e.response.data.msg);
       console.log(e);
     }
   }
@@ -182,10 +176,10 @@ function DeanAccountDetails() {
   const checkPassword = () => {
     if (passwordForm.password.length < 8) {
       setMsg("Password must be at least 8 characters");
-      errNotify();
+      errNotify("Password must be at least 8 characters");
     }else if (passwordForm.password != passwordForm.confPassword){
       setMsg("Password does not match");
-      errNotify();
+      errNotify("Password does not match");
     } else {
       changePassword();
     }
@@ -215,7 +209,7 @@ function DeanAccountDetails() {
     },
   };
 
-  const notify = () => toast.success(msg, {
+  const notify = (msg) => toast.success(msg, {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -226,7 +220,7 @@ function DeanAccountDetails() {
     theme: "light",
 });
 
-const errNotify = () => toast.error(msg, {
+const errNotify = (msg) => toast.error(msg, {
   position: "bottom-right",
   autoClose: 5000,
   hideProgressBar: false,

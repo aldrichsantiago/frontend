@@ -320,7 +320,7 @@ function ManageDeanAccounts() {
       <div className="users-table-header">
         <div style={{display:'flex', gap:'1em', textAlign:'left', width: '100%'}}>
           <h1>Dean Accounts</h1>
-          <button onClick={()=>setModalIsOpen(!modalIsOpen)}>ADD</button>
+          <button className="add_btn" onClick={()=>setModalIsOpen(!modalIsOpen)}>ADD</button>
         </div>
         <form onSubmit={handleEditFormSubmit}>
           <table className='students-user-table'>

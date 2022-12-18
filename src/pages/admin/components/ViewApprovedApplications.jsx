@@ -263,7 +263,7 @@ function ViewApprovedApplications() {
               {dept_options} 
             </select>
              
-            <label htmlFor="applications-course">COURSE: </label>
+            <label htmlFor="applications-course">&nbsp;COURSE: </label>
             <select name="applications-course" className='course-select' id='admin-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
               {course_options} 
             </select>

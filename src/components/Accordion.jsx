@@ -19,7 +19,7 @@ const Accordion = ({scholarship_name, description, requirements }) => {
               Description: {description}
             </div>
             <div className="accordion-req">
-              Requirements: {requirements}
+              &nbsp; Requirements: {requirements}
             </div>
           </div>
             <div className='accordion-btn'>

@@ -58,7 +58,7 @@
   }
   
   td {
-    max-width: 30ch;
+    max-width: 29ch;
     white-space: nowrap;
     font-size: 16px;
     background-color: rgb(216, 205, 205);
@@ -142,4 +142,23 @@
     }
   }
   
+  .manage-user-table-con{
+
+    .search-input{
+      height: 2em;
+    }
+    .add_btn{
+      text-align: center;
+      width: 5em;
+      height: 3em;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 3px;
+      border: 1px solid black;
+      cursor: pointer;
+      &:hover{
+        background-color: #d8d8d8;
+      }
+    }
+  }
  

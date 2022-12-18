@@ -90,7 +90,7 @@ const StudentEditableRow = ({
       </td>
       <td>
         <input
-          type="text"
+          type="number"
           required="required"
           placeholder="Enter a year..."
           name="year"

@@ -11,24 +11,36 @@ $tertiary-color: #B91646;
 
 }
 .application-status-container{
-    padding: 1em;
+    padding: 1em 2em;
     font-family: Bebas Neue;
     margin-bottom: 3em;
 
-    div{
-        margin: 3em 1em;
-        h2{
-            font-size: 2em;
-        }
-          
-    }
     .status-timeline{
-        padding: 1em 5em;
-        margin: 1em;
+        padding: 1em 2em 1em 3em;
+        margin: 1em 0em;
+        width: 80%;
+    }
+
+    .application-submitted, .application-review, .application-approved{
         width: auto;
+        font-size: 1.5em;
+        margin: 2em auto;
+
+        h2, img{
+            margin: 0;
+            padding: 0;
+        }
+    }
+    .application-approved{
         div{
-            margin: 2em 3px;
-            
+            width:300%;
+            display: flex;
+            flex-wrap: wrap;
+        }
+        p{
+            padding: 0px;
+            margin: 10px 30px 0px 0px;
+            font-size: 20px;
         }
     }
 
@@ -45,10 +57,9 @@ $breakpoint-laptop: 1024px;
 
     .status-timeline{
         div{
-            margin: 2em 3px;
+            margin: 1em 5px;
             display: grid;
-            grid-template-columns: 1fr 1fr 1fr ;
-            
+            grid-template-columns: 1fr 4fr 0.5fr 1fr 1fr 1fr;
         }
     }
 }

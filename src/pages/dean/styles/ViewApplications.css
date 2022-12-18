@@ -29,7 +29,7 @@
 }
 .dean-view-applications .dean-view-body {
   overflow-x: scroll;
-  margin-bottom: 3em;
+  margin-bottom: 5em;
 }
 .dean-view-applications .dean-view-body::-webkit-scrollbar {
   display: none;

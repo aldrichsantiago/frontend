@@ -261,6 +261,9 @@ function ScholarshipForm() {
         } else if (totalUnits < 18){
             errNotify("Total Units should be at least 18");
             console.log(totalUnits);
+        } else if (totalUnits > 29){
+            errNotify("Total Units should be 29 or less");
+            console.log(totalUnits);
         } else if (attachments.student_sign == undefined) {
             errNotify('Student Signature is Required')
         } else{

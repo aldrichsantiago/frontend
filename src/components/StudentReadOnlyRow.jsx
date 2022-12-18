@@ -10,7 +10,7 @@ const StudentReadOnlyRow = ({ student, handleEditClick, handleDeleteClick, handl
       <td>{student.contact_no}</td>
       <td>{student.email}</td>
       <td>{student.department}</td>
-      <td>{student.course}</td>
+      <td><a title={student.course}>{student.course}</a></td>
       <td>{student.year}</td>
       <td>
         <button

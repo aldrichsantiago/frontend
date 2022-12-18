@@ -43,6 +43,20 @@ function ViewScholarship() {
               <label>Scholarship Name: &nbsp; </label>
               <input type="text" name='searchField' placeholder='e.g. Academic Scholarship' onChange={(e)=>{setSearch(e.target.value)}}/>
             </span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span>
+              <label>Scholarship Type: &nbsp; </label>
+              <select className='scholarship-select' id='dean-select-course' onChange={(e)=>setSearch(e.target.value)} value={search}>
+                <option value=""> </option>
+                <option value="Academic">Academic</option>
+                <option value="Athlete">Athlete</option>
+                <option value="Cultural">Cultural</option>
+                <option value="evangelical">Church</option>
+                <option value="Alumn">Alumni</option>
+                <option value="st">School Service</option>
+                <option value="government">Government</option>
+              </select>
+            </span>
           </div>
           <div className="accordion">
             {scholarships.map(({id, scholarship_name, description, requirements }) => (

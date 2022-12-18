@@ -48,6 +48,7 @@ function ManageAnnouncements() {
         getAnnouncements();
     },[]);
 
+
     const refreshToken = async () => {
         axios.defaults.withCredentials = true;
         try {
@@ -90,6 +91,8 @@ function ManageAnnouncements() {
           }});
           setAddIsOpen(false);
           setAddAnnounceFormData({});
+          getAnnouncements();
+
     }
 
     const getAnnouncements = async () => {
@@ -104,13 +107,14 @@ function ManageAnnouncements() {
     }
 
     const updateAnnouncements = async(id) => {
-        axiosJWT.patch(`${import.meta.env.VITE_API_URL}/announcements/update/${id}`,
+        await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/announcements/update/${id}`,
             editAnnounceFormData, {
                 headers: {
                     Authorization: `Bearer ${token}`
                   }
             }
         );
+        getAnnouncements();
     }
 
     const deleteAnnouncements = async(id) => {
@@ -168,7 +172,7 @@ function ManageAnnouncements() {
     };
 
     const handleDeleteClick = (announcementId) => {
-        let text = 'Do you want to delete this Announcement? '
+        let text = '❌ Do you want to delete this Announcement? '
         if(confirm(text) == true){
             const newAnnouncements = [...announcements];
 
@@ -200,6 +204,8 @@ function ManageAnnouncements() {
         console.log(editedAnnouncement);
 
         setEditAnnouncementId(null);
+        setEditIsOpen(false);
+        getAnnouncements();
     };
 
     const handleFileInputChange = e => {
@@ -320,7 +326,7 @@ function ManageAnnouncements() {
                         <h2>Edit an Announcement</h2>
                     </div>
                     <input type="file" accept="image/,.png, .jpg, .jpeg" name="image" id="announcement-image" onChange={handleFileInputChange}/>
-                    <form style={{display:'flex', flexDirection:'column'}} onSubmit={handleEditFormSubmit}>
+                    <form style={{display:'flex', flexDirection:'column'}}>
                     <input
                         size={95}
                         className='editTitle'
@@ -343,7 +349,7 @@ function ManageAnnouncements() {
                     />
                     <div className="edit-buttons">
                         <button onClick={()=>setEditIsOpen(false)}>CANCEL</button>
-                        <button type="submit" onClick={handleEditFormSubmit}>UPDATE</button>
+                        <button type="button" onClick={handleEditFormSubmit}>UPDATE</button>
                     </div>
                     </form>
                 </div>

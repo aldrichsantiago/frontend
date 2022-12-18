@@ -39,6 +39,7 @@
 }
 
 .rejected-applications, .approved-applications {
+  margin-bottom: 5em;
   overflow-x: scroll;
 }
 .rejected-applications::-webkit-scrollbar, .approved-applications::-webkit-scrollbar {

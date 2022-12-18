@@ -50,6 +50,7 @@ $tertiary-color: #B91646;
 
 
 .rejected-applications, .approved-applications{
+    margin-bottom: 5em;
     overflow-x: scroll;
     &::-webkit-scrollbar{
         display: none;
