@@ -290,7 +290,7 @@ function ManageStudentAccounts() {
     };
 
     const handleDeleteClick = (studentId) => {
-      let text = '❌❌❌ Do you want to delete this student? '
+      let text = '❌ Do you want to delete this student? '
       if(confirm(text) == true){
         const newStudents = [...students];
 

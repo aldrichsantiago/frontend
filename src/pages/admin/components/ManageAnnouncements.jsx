@@ -248,7 +248,7 @@ function ManageAnnouncements() {
   return (
     <>
         <div className='announce-header flex'>
-            <h2>Announcements</h2>
+            <h1>Announcements</h1>
             <button id='add-announce' onClick={()=>{setAddIsOpen(!addIsOpen)}}>ADD ANNOUNCEMENT</button>
         </div>
 

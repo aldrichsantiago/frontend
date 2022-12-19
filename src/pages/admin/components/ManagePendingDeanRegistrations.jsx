@@ -79,7 +79,7 @@ function ManagePendingDeanRegistrations() {
     }
 
     const approveDean = async (DeanId) => {
-      let text = '✅✅✅ Do you want to approve this dean registration? '
+      let text = '✅ Do you want to approve this dean registration? '
       if(confirm(text) == true){
         try {
           const index = deans.findIndex((dean) => dean.id === DeanId);
@@ -187,7 +187,7 @@ function ManagePendingDeanRegistrations() {
     // };
 
     const handleDeleteClick = (DeanId) => {
-      let text = '❌❌❌ Do you want to reject this dean registration? '
+      let text = '❌ Do you want to reject this dean registration? '
       if(confirm(text) == true){
         const newDeans = [...deans];
 

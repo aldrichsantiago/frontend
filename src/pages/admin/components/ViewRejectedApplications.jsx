@@ -136,7 +136,7 @@ function ViewRejectedApplications() {
     }
 
     const handleDeleteApplication = (id) => {
-        let text = 'Do you want to delete this Rejected Application? '
+        let text = '❌ Do you want to delete this Rejected Application? '
         if(confirm(text) == true){
             deleteFromRejectedApps(id);
         } else {}

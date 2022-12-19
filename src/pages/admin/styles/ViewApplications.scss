@@ -48,6 +48,12 @@ $tertiary-color: #B91646;
     }
 }
 
+.navlink-admin-applications{
+    border: 2px solid #fff;
+    &:hover{
+        -webkit-filter: brightness(90%);
+    }
+}
 
 .rejected-applications, .approved-applications{
     margin-bottom: 5em;

@@ -53,10 +53,18 @@ $tertiary-color: #B91646;
     .green-button{
         background-color: #105652;
         color: white;
+        &:hover {
+            -webkit-filter: brightness(70%);
+
+        }
     }
     .yellow-button{
         background-color: #F9C041;
         color: black;
+        &:hover {
+            -webkit-filter: brightness(70%);
+
+        }
     }
 
 }
@@ -91,6 +99,10 @@ $tertiary-color: #B91646;
             letter-spacing: 0.2em;
             border: 2.5px solid white;
             border-radius: 0.3em;
+            &:hover {
+                -webkit-filter: brightness(70%);
+    
+            }
         }
     }
 }

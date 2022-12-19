@@ -22,8 +22,8 @@ function UpdateSiteContent() {
       <div className="update-site-content-con">
         <div className="update-header-container">
           <h1>Update Site Content</h1>
-          <a href="#" onClick={()=>setWhichPage('Announcements')}>Announcements</a>
-          <a href="#" onClick={()=>setWhichPage('ScholarshipInfo')}>Scholarship Information</a>
+          <a href="#" className='navlink-admin-applications' onClick={()=>setWhichPage('Announcements')}>Announcements</a>
+          <a href="#" className='navlink-admin-applications' onClick={()=>setWhichPage('ScholarshipInfo')}>Scholarship Information</a>
         </div>
         <div className="update-body-container">
           {pageToRender}

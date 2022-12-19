@@ -38,6 +38,13 @@
   height: 30px;
 }
 
+.navlink-admin-applications {
+  border: 2px solid #fff;
+}
+.navlink-admin-applications:hover {
+  -webkit-filter: brightness(90%);
+}
+
 .rejected-applications, .approved-applications {
   margin-bottom: 5em;
   overflow-x: scroll;

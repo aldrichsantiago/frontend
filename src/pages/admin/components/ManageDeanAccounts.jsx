@@ -261,7 +261,7 @@ function ManageDeanAccounts() {
     };
 
     const handleDeleteClick = (DeanId) => {
-      let text = '❌❌❌ Do you want to delete this Dean Account? '
+      let text = '❌ Do you want to delete this Dean Account? '
       if(confirm(text) == true){
         const newDeans = [...deans];
 

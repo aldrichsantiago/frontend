@@ -48,9 +48,15 @@
   background-color: #105652;
   color: white;
 }
+.user-home-butt-container .green-button:hover {
+  -webkit-filter: brightness(70%);
+}
 .user-home-butt-container .yellow-button {
   background-color: #F9C041;
   color: black;
+}
+.user-home-butt-container .yellow-button:hover {
+  -webkit-filter: brightness(70%);
 }
 
 .user-home-footer {
@@ -83,6 +89,9 @@
   letter-spacing: 0.2em;
   border: 2.5px solid white;
   border-radius: 0.3em;
+}
+.user-home-footer .user-logout-container a:hover {
+  -webkit-filter: brightness(70%);
 }
 
 @media (min-width: 768px) {

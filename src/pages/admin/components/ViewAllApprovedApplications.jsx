@@ -98,7 +98,7 @@ function OneApplication ({application}) {
                             <h5>RECOMMENDED BY: </h5>
                             <br />
                             <img src={application.admin_sign} alt="Admin Signature" width={150}/>
-                            <h5>Adviser/Director/District Superintendent</h5>
+                            <h5>OFFICE OF STUDENT AFFAIRS</h5>
                         </div>
                         <div>
                             <img src={application.dean_sign} alt="Dean Signature" width={150}/>
@@ -194,7 +194,7 @@ function OneApplication ({application}) {
 
 
 function ViewAllApprovedApplications() {
-    const [approvedApplications, setApprovedApplications] = useState();
+    const [approvedApplications, setApprovedApplications] = useState([]);
     const [token, setToken] = useState('');
     const [expire, setExpire] = useState('');
 
@@ -202,6 +202,7 @@ function ViewAllApprovedApplications() {
     useEffect(()=>{
         refreshToken();
         getApprovedApplications();
+
     },[]);
 
     const getApprovedApplications = async() => {
@@ -247,18 +248,29 @@ function ViewAllApprovedApplications() {
       }, (error) => {
           return Promise.reject(error);
       });
+    if (approvedApplications.length == 0){
+      console.log(approvedApplications);
 
-  return (
-
-    <>
-        {
-            approvedApplications?.map((application)=>
-                <OneApplication application={application}/>
+        return (
+            <div>
+                <h1 style={{color: 'white'}}>NO APPLICATIONS FOUND</h1>
+            </div>
+                
             )
-        }
-    </>
-        
-    )
+      } else{
+        console.log(approvedApplications);
+
+        return (
+            <>
+                {
+                    approvedApplications?.map((application)=>
+                        <OneApplication application={application}/>
+                    )
+                }
+            </>
+                
+            )
+    }
 
 }
 

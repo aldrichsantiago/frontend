@@ -25,9 +25,9 @@ function ViewApplications() {
 
           <div className="admin-view-app-header">
             <h1>View Applications</h1>
-            <a href="#" onClick={()=>setApplicationTable('PendingApplications')}>Pending Applications</a>
-            <a href="#" onClick={()=>setApplicationTable('ApprovedApplications')}>Approved Applications</a>
-            <a href='#' onClick={()=>setApplicationTable('RejectedApplications')}>Rejected Applications</a>
+            <a href="#" className='navlink-admin-applications' onClick={()=>setApplicationTable('PendingApplications')}>Pending Applications</a>
+            <a href="#" className='navlink-admin-applications' onClick={()=>setApplicationTable('ApprovedApplications')}>Approved Applications</a>
+            <a href='#' className='navlink-admin-applications' onClick={()=>setApplicationTable('RejectedApplications')}>Rejected Applications</a>
           </div>
 
           <div className="admin-view-app-body">

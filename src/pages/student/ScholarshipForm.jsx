@@ -49,7 +49,8 @@ function ScholarshipForm() {
         units_5: 0, units_6: 0,
         units_7: 0, units_8: 0, 
         units_9: 0, units_10: 0,
-        units_11: 0, units_12: 0
+        units_11: 0, units_12: 0,
+        semester:'', school_year:''
     });
     const [userInfo, setUserInfo] = useState({
         student_id: student.student_id,
@@ -253,7 +254,7 @@ function ScholarshipForm() {
 
 
     const validateAndSubmit = async() => {
-        const {units_1, units_2, units_3, units_4, units_5, units_6, units_7, units_8, units_9, units_10, units_11, units_12} = subjCodesUnits;
+        const {units_1, units_2, units_3, units_4, units_5, units_6, units_7, units_8, units_9, units_10, units_11, units_12, semester, school_year} = subjCodesUnits;
         setTotalUnits(Number(units_1)+ Number(units_2)+ Number(units_3)+ Number(units_4)+ Number(units_5)+ Number(units_6)+ Number(units_7)+ Number(units_8)+ Number(units_9)+ Number(units_10)+ Number(units_11)+ Number(units_12));
         
         if (isSubmitted.length != 0 ){
@@ -264,6 +265,12 @@ function ScholarshipForm() {
         } else if (totalUnits > 29){
             errNotify("Total Units should be 29 or less");
             console.log(totalUnits);
+        } else if (!semester){
+            errNotify("Please enter a semester");
+        } else if (!school_year){
+            errNotify("Please enter a school year");
+        } else if (!attachments.req_1){
+            errNotify("Please upload the requirements");
         } else if (attachments.student_sign == undefined) {
             errNotify('Student Signature is Required')
         } else{

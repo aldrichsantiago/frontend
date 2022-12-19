@@ -3,7 +3,9 @@ import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import { useNavigate } from 'react-router-dom'
 import Layout from './Layout'
+import { ToastContainer, toast } from 'react-toastify';
 import './styles/ApplicationStatus.css'
+import 'react-toastify/dist/ReactToastify.css';
 import Checked  from './../../assets/checked.png'
 import Unchecked from './../../assets/unchecked.png'
 import Crossed from './../../assets/rejected_box.png'
@@ -203,7 +205,7 @@ function ApplicationStatus() {
 
   let status = <DefaultStatus/>;
   if(rejected != 0 ){
-    status = <RejectedStatus rejectedBy={rejected[0].rejected_by} reason={rejected[0].reason_of_rejection}/>
+    status = <RejectedStatus rejectedBy={rejected[rejected.length-1].rejected_by} reason={rejected[rejected.length-1].reason_of_rejection}/>
   }
   if(approved.length != 0){
     status = <ApprovedStatus/>
@@ -212,6 +214,27 @@ function ApplicationStatus() {
     status = <SubmittedReviewStatus/>
   }
 
+  const notify = (msg) => toast.success(msg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
+  const errNotify = (msg) => toast.error(msg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
 
 
   return (
@@ -222,6 +245,18 @@ function ApplicationStatus() {
           {status}
         </div>
       </div>
+
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </Layout>
   )
 }

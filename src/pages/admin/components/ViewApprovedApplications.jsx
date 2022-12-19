@@ -205,7 +205,7 @@ function ViewApprovedApplications() {
   }
 
   const handleDeleteApplication = (id) => {
-    let text = 'Do you want to delete this Approved Application? '
+    let text = '❌ Do you want to delete this Approved Application? '
     if(confirm(text) == true){
       getApplicantData(id);
       deleteFromApprovedApps(id);
@@ -250,8 +250,8 @@ function ViewApprovedApplications() {
       <div className="dean-view-header flex">
 
         <div className="all-applications-button" style={{display:'flex', alignItems:'center', gap:'1em'}}>
-          <Link to="/admin/view/approved/applications"><FaPrint/> ALL</Link>
-          <h2>Approved Applications</h2>
+          <Link to="/admin/view/approved/applications" target="_blank"><FaPrint/> ALL</Link>
+          <h1>Approved Applications</h1>
         </div>
           <div>
             <label htmlFor="searchField">Search Student ID or Name:  </label>

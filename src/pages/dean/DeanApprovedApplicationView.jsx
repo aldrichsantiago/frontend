@@ -154,7 +154,7 @@ function DeanApprovedApplicationView() {
                             <h5>RECOMMENDED BY: </h5>
                             <br />
                             <img src={applicantData.admin_sign} alt="Admin Signature" width={150}/>
-                            <h5>Adviser/Director/District Superintendent</h5>
+                            <h5>OFFICE OF STUDENT AFFAIRS</h5>
                         </div>
                         <div>
                             <img src={applicantData.dean_sign} alt="Dean Signature" width={150}/>

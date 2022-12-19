@@ -50,7 +50,7 @@ function ManagePendingStudentRegistrations() {
     }
 
     const approveStudent = async (StudentId) => {
-      let text = '✅✅✅ Do you want to approve this student? '
+      let text = "✅ Do you want to approve this student's registration? "
       if(confirm(text) == true){
         try {
           const index = students.findIndex((student) => student.id === StudentId);
@@ -139,7 +139,7 @@ function ManagePendingStudentRegistrations() {
 
 
     const handleDeleteClick = (studenttId) => {
-      let text = 'Do you want to reject this student registration? '
+      let text = "❌ Do you want to reject this student's registration? "
       if(confirm(text) == true){
         const newStudents = [...students];
 

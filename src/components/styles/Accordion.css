@@ -20,6 +20,9 @@
   font-family: Bebas Neue;
   font-size: 2em;
 }
+.accordion-name p:hover {
+  -webkit-filter: brightness(80%);
+}
 
 .accordion-content {
   text-align: left;

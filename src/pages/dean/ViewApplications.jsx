@@ -27,7 +27,7 @@ function ViewApplications() {
       <div className="dean-view-applications-header flex">
         <h1>View Applications</h1>
         <a href="#" onClick={()=>setTable('Pending')}>Pending Applications</a>
-        <a href="#" onClick={()=>setTable('Approved')}>Approved Applications</a>
+        <a href="#" onClick={()=>setTable('Approved')}>Accepted Applications</a>
       </div>
       
       {tableToRender}

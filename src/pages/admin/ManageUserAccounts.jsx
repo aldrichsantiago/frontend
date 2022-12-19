@@ -39,11 +39,11 @@ function ManageUserAccounts() {
       <AdminLayout>
       <div className="manage-user-header">
         <h1>Manage User Accounts</h1>
-        <a href="#" onClick={()=>setWhichTable('PendingStudents')}>Pending Student Registrations</a>
-        <a href='#' onClick={()=>setWhichTable('Students')}>Student Accounts</a>
+        <a href="#" className='navlink-admin-applications' onClick={()=>setWhichTable('PendingStudents')}>Pending Student Registrations</a>
+        <a href='#' className='navlink-admin-applications' onClick={()=>setWhichTable('Students')}>Student Accounts</a>
 
-        <a href="#" onClick={()=>setWhichTable('PendingDeans')}>Pending Dean Registrations</a>
-        <a href='#' onClick={()=>setWhichTable('Deans')}>Dean Accounts</a>
+        <a href="#" className='navlink-admin-applications' onClick={()=>setWhichTable('PendingDeans')}>Pending Dean Registrations</a>
+        <a href='#' className='navlink-admin-applications' onClick={()=>setWhichTable('Deans')}>Dean Accounts</a>
       </div>
 
       <div className="manage-user-table-con">

@@ -19,7 +19,6 @@ function StudentRegister() {
     const [department, setDepartment] = useState('');
     const [course, setCourse] = useState('');
     const [year, setYear] = useState('');
-    const [block, setBlock] = useState('');
     const [studId, setStudId] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');

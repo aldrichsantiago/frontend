@@ -28,6 +28,9 @@ $tertiary-color: #B91646;
         color: white;
         font-family: Bebas Neue;
         font-size: 2em;
+        &:hover {
+            -webkit-filter: brightness(80%);
+        }
     }
 }
 .accordion-content{

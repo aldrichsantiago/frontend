@@ -15,7 +15,7 @@ const EachApplication = ({application, handleAcceptApplication, handleRejectAppl
         <a href={`/dean/applications/review/${application.id}`} target="_blank">View Application</a>
       </td>
       <td>
-          <button onClick={()=>handleAcceptApplication(application.id)}>APPROVE</button>
+          <button onClick={()=>handleAcceptApplication(application.id)}>ACCEPT</button>
           <button onClick={()=>handleRejectApplication(application.id)}>REJECT</button>
       </td>
     </tr>

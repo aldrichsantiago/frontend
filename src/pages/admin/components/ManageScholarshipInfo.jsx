@@ -168,7 +168,7 @@ function ManageScholarshipInfo() {
   };
 
   const handleDeleteClick = (scholarshipId) => {
-    let text = 'Do you want to delete this Scholarship? '
+    let text = '❌ Do you want to delete this Scholarship? '
       if(confirm(text) == true){
         const newScholarships = [...scholarships];
 
@@ -248,7 +248,7 @@ function ManageScholarshipInfo() {
 
     <>
       <div className='scholar-header flex'>
-        <h2>Scholarship Informations</h2>
+        <h1>Scholarship Informations</h1>
         <button id='add-scholar' onClick={()=>{setAddIsOpen(!addIsOpen)}}>ADD SCHOLARSHIP</button>
       </div>
       <div className="scholarship-info-table">

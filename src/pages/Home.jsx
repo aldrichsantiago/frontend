@@ -14,7 +14,10 @@ function Home() {
                 <h1><strong>WUP</strong>SCHOLARSHIP</h1>
                 <Button to='/student/home' text='STUDENT / APPLICANT'/>
                 <Button to='/dean/home' text='COLLEGE DEAN'/>
-                <Button to='/admin/home' text='ADMINISTRATOR'/>
+                {/* <Button to='/admin/home' text='ADMINISTRATOR'/> */}
+                <br />
+                <br />
+                <br />
                 <div className="contact-info">
                     <p>Mabini Extension, Cabanatuan City,</p>
                     <p>Nueva Ecija, 3100, Philippines</p>
