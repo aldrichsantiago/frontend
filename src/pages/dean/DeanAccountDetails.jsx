@@ -251,9 +251,7 @@ const errNotify = (msg) => toast.error(msg, {
             </div>
             <div>
               <label htmlFor="department">Department: </label>
-              <select defaultValue={dean.department} onChange={(e)=>setDepartment(e.target.value)} name="department" type="text" placeholder="Enter your department" required>
-                {dept_options}
-              </select>
+              <p>{dean.department}</p>
             </div>
             <div>
               <label htmlFor="contact_no">Contact no.: </label>
