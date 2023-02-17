@@ -7,7 +7,7 @@ function UserHomeLayout(props) {
   return (
     <div>
         <Navbar lg={'WUPSCHOLARSHIP'}/>
-        <div className='user-home-container'>
+        <div className='user-home-container container-fluid'>
             <div className="greetings-container">
                 <h1>Welcome To Our</h1>
             </div>
@@ -22,11 +22,11 @@ function UserHomeLayout(props) {
                 <Link to={props.toYellow} className="yellow-button" style={{'display' : props.display}}>{props.yellowName}</Link>
             </div>
         </div>
-        <div className="user-home-footer">
+        <div className="user-home-footer"> 
             <div className='user-home-contact'>
-                <p>Mabini Extension, Cabanutan City,</p>
-                <p>Nueva Ecija, 3100, Philippines</p>
-                <p>+63 (044) 463-2162 / 463-2074</p>
+                <p className='my-1'>Mabini Extension, Cabanutan City,</p>
+                <p className='my-1'>Nueva Ecija, 3100, Philippines</p>
+                <p className='my-1'>+63 (044) 463-2162 / 463-2074</p>
             </div>
             <div className='user-logout-container'>
                 <a href="#" onClick={props.logout}>LOGOUT</a>

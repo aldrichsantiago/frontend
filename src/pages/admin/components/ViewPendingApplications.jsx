@@ -4,28 +4,29 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import SignaturePad from 'react-signature-canvas'
 import Modal from 'react-modal'
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const EachApplication = ({application, handleAcceptApplication, handleRejectApplication}) => {
   return(
-    <tr key={application.id}>
-          <td>{application.student_id}</td>
-          <td>{application.first_name} {application.last_name}</td>
-          <td>{application.department}</td>
-          <td>{application.scholarship_type}</td>
-          <td>
-            <a id='view-pending-app-link' href={`/admin/applications/review/${application.id}`} target="_blank">View Application</a>
-          </td>
-          <td>
-              <button onClick={()=>handleAcceptApplication(application.id)}>APPROVE</button>
-              <button onClick={()=>handleRejectApplication(application.id)}>REJECT</button>
-          </td>
-      </tr>
+    <tr key={application.application_id}>
+      <th scope='row' className='fit'>{application.student.student_id}</th>
+      <td className='fit col-2'>{application.student.first_name} {application.student.last_name}</td>
+      <td className='fit col-2'>{application.scholarship.scholarship_name}</td>
+      <td className='fit col-3'>
+        <a className='btn btn-info mr-3' href={`/admin/applications/review/${application.application_id}`} target="_blank">View Application</a>
+        <button className="btn btn-success mx-1" onClick={()=>handleAcceptApplication(application.application_id)}>ACCEPT</button>
+        <button className="btn btn-danger mx-1" onClick={()=>handleRejectApplication(application.application_id)}>REJECT</button>
+      </td>
+    </tr>
   )
 } 
 
 function ViewPendingApplications() {
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
+  const [departments, setDepartments] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [adminModal, setAdminModal] = useState(false);
   const [rejectModal, setRejectModal] = useState(false);
   const [selectCourse, setSelectCourse] = useState('');
@@ -39,37 +40,9 @@ function ViewPendingApplications() {
 
   let sigPad = useRef({});
 
-  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
-  let courses = [""];
-
-  if (selectDept == "CECT"){
-      courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
-  }else if (selectDept == "CONAMS"){
-      courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
-  }else if (selectDept == "CHTM"){
-    courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
-  }else if (selectDept == "CBA"){
-    courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
-  }else if (selectDept == "CAS"){
-      courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
-  }else if (selectDept == "CoEd"){
-      courses = ["","","Bachelor of Elementary Education", "Bachelor of Physical Education"];
-  }else if (selectDept == "CCJE"){
-      courses = ["","Bachelor of Science in Criminology"];
-  }else if (selectDept == "Medicine"){
-    courses = ["",""];
-  }else if (selectDept == "JWSLG"){
-      courses = ["",""];
-  }else if (selectDept == "High School"){
-      courses = ["","Junior High School", "Senior High School"];
-  }else if (selectDept == "Elementary"){
-      courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
-  }else{
-      courses = [""];
-  }
-
 
   useEffect(()=>{
+    getDepartments();
     refreshToken();
     getApplications();
   },[]);
@@ -77,8 +50,9 @@ function ViewPendingApplications() {
   useEffect(()=>{
     if (selectDept == "") {
       setSelectCourse("");
-    }
-
+  }else{
+    getCourses();
+  }
     if(search == "" && selectDept == "" && selectCourse == ""){
       getApplications();
     }  else if (search != "" && selectDept != "" && selectCourse != ""){
@@ -100,14 +74,40 @@ function ViewPendingApplications() {
     }
   },[search, selectDept, selectCourse]);
 
+  useEffect(()=>{
+    if (selectDept == "") {
+      setSelectCourse("");
+      setCourses([])
+    }else{
+      getCourses();
+    }
+    if(search == "" && selectDept != "" && selectCourse != ""){
+      getDeptFilteredApplications();
+    }
+  },[selectDept]);
+
   
-  const dept_options = departments.map((dept) =>
-    <option key={dept}>{dept}</option>
+  const dept_options = departments.map(({dept_id, dept_code}) =>
+    <option key={dept_id} value={dept_id}>{dept_code}</option>
+  );
+  const course_options = courses.map(({course_id, course_code}) =>
+    <option key={course_id} value={course_id}>{course_code}</option>
   );
 
-  const course_options = courses.map((course) =>
-    <option key={course}>{course}</option>
-  );
+
+  const getDepartments = async () => {
+    try{
+       const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/departments`);
+       setDepartments(response.data);
+    }catch(e){console.log(e)}
+  }
+
+  const getCourses = async () => {
+      try{
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/courses/${selectDept}`);
+        setCourses(response.data);
+      }catch(e){console.log(e)}
+  }
 
 
   const getApplications = async() => {
@@ -189,12 +189,13 @@ function ViewPendingApplications() {
 
   const getApplicantData = async(id) => {
     try {
-        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/application/${id}`,{
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/admin/view/application/${id}`,{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
       });
-        setApplicantData(response.data);
+      setApplicantData(response.data);
+      console.log(response.data);
     } catch (error) {
         console.log(error);
     }
@@ -202,52 +203,14 @@ function ViewPendingApplications() {
 
   const acceptApplication = async (id) => {
     try {
-          axiosJWT.post(`${import.meta.env.VITE_API_URL}/admin/approve/application`,{
-          subj_1: applicantData.subj_1,subj_2: applicantData.subj_2,
-          subj_3: applicantData.subj_3,subj_4: applicantData.subj_4,
-          subj_5: applicantData.subj_5,subj_6: applicantData.subj_6,
-          subj_7: applicantData.subj_7,subj_8: applicantData.subj_8, 
-          subj_9: applicantData.subj_9,subj_10: applicantData.subj_10,
-          subj_11: applicantData.subj_11,subj_12: applicantData.subj_12,
-          units_1: applicantData.units_1, units_2: applicantData.units_2,
-          units_3: applicantData.units_3, units_4: applicantData.units_4,
-          units_5: applicantData.units_5, units_6: applicantData.units_6,
-          units_7: applicantData.units_7, units_8: applicantData.units_8, 
-          units_9: applicantData.units_9, units_10: applicantData.units_10,
-          units_11: applicantData.units_11, units_12: applicantData.units_12,
-          semester: applicantData.semester,
-          school_year: applicantData.school_year,
-          date_submitted: applicantData.date_submitted,
-          scholarship_type: applicantData.scholarship_type,
-          req_1: applicantData.req_1,
-          req_2: applicantData.req_2,
-          req_3: applicantData.req_3,
-          req_4: applicantData.req_4,
-          req_5: applicantData.req_5,
-          req_6: applicantData.req_6,
-          req_7: applicantData.req_7,
-          req_8: applicantData.req_8,
-          req_9: applicantData.req_9,
-          req_10: applicantData.req_10,
-          dean_sign: applicantData.dean_sign,
-          admin_sign: adminSig,
-          student_sign: applicantData.student_sign,
-          student_id: applicantData.student_id,
-          first_name: applicantData.first_name,
-          last_name: applicantData.last_name,
-          middle_name: applicantData.middle_name,
-          department: applicantData.department,
-          course: applicantData.course,
-          year: applicantData.year,
-          email: applicantData.email,
-          contact_no: applicantData.contact_no,
-          id: applicantData.id
-        },{
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        deleteFromSubmittedApps(id);
+      axiosJWT.patch(`${import.meta.env.VITE_API_URL}/admin/approve/application/${id}`,{
+      admin_sign: adminSig,
+    },{
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    getApplications();
     } catch (error) {
         console.log(error);
     }
@@ -255,39 +218,19 @@ function ViewPendingApplications() {
 
   const rejectApplication = async (id) => {
     try {
-        axiosJWT.post(`${import.meta.env.VITE_API_URL}/admin/create/rejected/application`,{
-          student_id: applicantData.student_id,
-          date_submitted: applicantData.date_submitted,
-          scholarship_type: applicantData.scholarship_type,
-          first_name: applicantData.first_name,
-          last_name: applicantData.last_name,
-          department: applicantData.department,
-          email: applicantData.email,
-          contact_no: applicantData.contact_no,
-          id: applicantData.id,
-          rejected_by: "Office Of Student Affairs (OSA)",
-          reason_of_rejection: rejectReason
-    },{headers: {
-      Authorization: `Bearer ${token}`
-    }});
-      deleteFromSubmittedApps(id);
-    } catch (error) {
+      axiosJWT.patch(`${import.meta.env.VITE_API_URL}/admin/reject/application/${id}`,{
+        rejected_by: "Office Of Student Affairs (OSA)",
+        reason_for_rejection: rejectReason
+      },{
+        headers: {
+          Authorization: `Bearer ${token}`
+        }});
+        getApplications();
+    }catch (error) {
         console.log(error);
     }
   }
 
-  const deleteFromSubmittedApps = async (id) => {
-    try{
-      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/admin/delete/application/${id}`,{
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      getApplications();
-    }catch(e){
-      console.log(e);
-    }
-  }
 
   const handleAcceptApplication = (id) => {
     getApplicantData(id);
@@ -308,8 +251,11 @@ function sigSave(){
     adminSig = sigPad.current.getTrimmedCanvas().toDataURL("image/png");
     console.log(adminSig);
     setAdminModal(false);
-    acceptApplication(applicantData.id);
+    acceptApplication(applicantData.application_id);
     console.log({...applicantData})
+    getApplications();
+    notify("Application approved");
+
 }
 
   const customStyles = {
@@ -325,9 +271,12 @@ function sigSave(){
 
   const logReason = async () => {
     console.log(applicantData);
-    rejectApplication(applicantData.id)
+    rejectApplication(applicantData.application_id)
     setRejectModal(false);
     setRejectReason('');
+    getApplications();
+    errNotify("Application rejected");
+
   }
 
   const refreshToken = async () => {
@@ -386,46 +335,90 @@ function sigSave(){
 
   const acceptUpload = () => {
     setAdminModal(false)
-    acceptApplication(applicantData.id);
+    acceptApplication(applicantData.application_id);
+    notify("Application approved");
+
   }
+  const errNotify = (msg) => toast.error(msg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
+  const notify = (msg) => toast.success(msg, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined, 
+      theme: "light",
+  });
 
   return (
     <>
       <div className="dean-view-applications">
         <div className="dean-view-header">
-          <h1>Pending Applications</h1>
-          <div>
-            <label htmlFor="searchField">Search Student ID or Name:  </label>
-            <input type="text" name="searchField" className='search-input' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/>
+          <h1 className='h2'>PENDING</h1>
+          <div className='col-12 text-left d-flex align-items-center flex-wrap'>
+            <div class="input-group h-25 col-5">
+              <div class="input-group-prepend">
+                <span class="input-group-text" >Name or Student ID</span>
+              </div>
+              <input type="text" name="searchField" className='searchField form-control'class="form-control" onChange={(e)=>{setSearch(e.target.value)}}/>
+            </div>
+            {/* <label htmlFor="searchField">Search Student ID or Name:  </label>
+            <input type="text" name="searchField" className='searchField form-control' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/> */}
+
+            <div className='flex flex-wrap'>
+              {/* <label htmlFor="applications-dept">DEPARTMENT: </label>
+              <select name="applications-dept" className='dept-select' id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
+                <option value=""></option>
+                {dept_options} 
+              </select>
+              <label htmlFor="applications-course">&nbsp;COURSE: </label>
+              <select name="applications-course" className='course-select' id='admin-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
+                <option value=""></option>
+                {course_options} 
+              </select> */}
+
+              <div>
+                <select name="applications-dept" className='course-select-admin custom-select mr-sm-2' id='dean-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
+                  <option value="">Select a department</option>
+                  {dept_options} 
+                </select>
+              </div>
+
+              <div>
+                <select name="applications-course" className='course-select-admin custom-select mr-sm-2' id='dean-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
+                  <option value="">Select a course</option>
+                  {course_options} 
+                </select>
+              </div>
+            </div>
           </div>
           
-          <div>
-            <label htmlFor="applications-dept">DEPARTMENT: </label>
-            <select name="applications-dept" className='dept-select' id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
-              {dept_options} 
-            </select>
-             
-            <label htmlFor="applications-course">&nbsp;COURSE: </label>
-            <select name="applications-course" className='course-select' id='admin-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
-              {course_options} 
-            </select>
-          </div>
         </div>
         <div className="dean-view-body">
-          <table>
+          <table className='table table-responsive'>
             <thead>
               <tr>
-                <td>Student ID</td>
-                <td>Student Name</td>
-                <td>Department</td>
-                <td>Scholarship Type</td>
-                <td>Applications</td>
-                <td>Actions</td>
+              <th scope='col' className='fit'>Student ID</th>
+                <th scope='col' className='fit'>Student Name</th>
+                <th scope='col' className='fit'>Scholarship Type</th>
+                <th scope='col' className='fit'>Actions</th>
               </tr>
             </thead>
             <tbody>
               {applications.map((application)=>
                 <EachApplication
+                key={application.application_id}
                 handleAcceptApplication={handleAcceptApplication}
                 handleRejectApplication={handleRejectApplication}
                 application={application}
@@ -467,6 +460,17 @@ function sigSave(){
               <button className='btnReject' onClick={logReason}>REJECT</button>
             </div>
       </Modal>
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </>
   )
 }

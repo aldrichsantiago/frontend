@@ -56,9 +56,9 @@ function DeanLogin() {
             <div className="login-form-con">
                 <form onSubmit={Auth}>
                 <img src={Logo} alt="LOGO" width="100px"/>
-                    <input type="text" placeholder="Dean ID" value={id} onChange={(e) => setId(e.target.value)}/>
-                    <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-                    <input type="submit" value="Login" onClick={Auth}/>
+                    <input className="form-control py-3" type="text" placeholder="Dean ID" value={id} onChange={(e) => setId(e.target.value)}/>
+                    <input className="form-control py-3" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>
+                    <input className="btn" type="submit" value="Login" onClick={Auth}/>
                 </form>
                 <div>
                     <Link to='/register/dean'>Create an account</Link>

@@ -4,15 +4,16 @@ import axios from 'axios'
 import jwt_decode from 'jwt-decode'
 import { ToastContainer, toast } from 'react-toastify';
 import DeanReadOnlyRow from './../../../components/DeanReadOnlyRow'
-import DeanEditableRow from './../../../components/DeanEditableRow'
 
 function ManageDeanAccounts() {
     const [deans, setDeans] = useState();
     const [modalIsOpen, setModalIsOpen] = useState(false);
+    const [editModal, setEditModal] = useState(false);
     const [msg, setMsg] = useState('');
     const [token, setToken] = useState();
     const [expire, setExpire] = useState('');
     const [selectDept, setSelectDept] = useState('');
+    const [departments, setDepartments] = useState();
     const [addDeanFormData, setAddDeanFormData] = useState({
         dean_id: "",
         last_name: "",
@@ -32,7 +33,8 @@ function ManageDeanAccounts() {
         middle_name: "",
         contact_no: "",
         email: "",
-        department: ""
+        department: "",
+        dept_id: 0
     });
 
     const [editDeanId, setEditDeanId] = useState(null);
@@ -44,13 +46,30 @@ function ManageDeanAccounts() {
     useEffect(() => {
         refreshToken();
         getDeans();
+        getDepartments();
+
     }, []);
 
-    const departments = ["Choose a Deparment","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
-    
-    const dept_options = departments.map((dept) =>
-      <option key={dept} value={dept}>{dept}</option>
+
+  const getDepartments = async () => {
+      try{
+         const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/departments`);
+         setDepartments(response.data);
+      }catch(e){console.log(e)}
+  }
+
+
+    const dept_options = departments?.map((dept) =>
+        <option key={dept.id} value={dept.dept_id}>{dept.dept_code}</option>
     );
+
+    const selected_dept_options = departments?.map((dept) =>{
+      if(editDeanFormData.dept_id == dept.dept_id){
+        return <option key={dept.dept_id} value={dept.dept_id} selected>{dept.dept_code}</option>
+      } else {
+          return <option key={dept.dept_id} value={dept.dept_id}>{dept.dept_code}</option>
+      }
+      });
 
     const refreshToken = async () => {
       axios.defaults.withCredentials = true;
@@ -98,6 +117,7 @@ function ManageDeanAccounts() {
         middle_name: editDeanFormData.middle_name,
         contact_no: editDeanFormData.contact_no,
         email: editDeanFormData.email,
+        dept_id: editDeanFormData.dept_id,
         department: editDeanFormData.department,
         dean_id: editDeanFormData.dean_id,
       },{headers: {
@@ -119,7 +139,7 @@ function ManageDeanAccounts() {
     }
 
     const deleteDean = async (id) => {
-      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/delete/dean/${id}`,{
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/delete/dean/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -148,10 +168,12 @@ function ManageDeanAccounts() {
         });
           setModalIsOpen(false);
           getDeans();
+          notify("Dean has been added to pending registrations");
 
       } catch (error) {
           if (error.response) {
               setMsg(error.response.data.msg);
+              errNotify(error.response.data.msg)
           }
       }
     }
@@ -166,6 +188,7 @@ function ManageDeanAccounts() {
         newFormData[fieldName] = fieldValue;
 
         setAddDeanFormData(newFormData);
+        console.log(addDeanFormData);
     };
 
     const handleEditFormChange = (event) => {
@@ -178,6 +201,7 @@ function ManageDeanAccounts() {
         newFormData[fieldName] = fieldValue;
 
         setEditDeanFormData(newFormData);
+        console.log(editDeanFormData)
     };
 
     const handleChangePassFormChange = (event) => {
@@ -192,26 +216,6 @@ function ManageDeanAccounts() {
       setPasswordForm(newFormData);
   };
 
-    const handleAddFormSubmit = (event) => {
-        event.preventDefault();
-
-        const newDean = {
-        id: deans.length,
-        last_name: addDeanFormData.last_name,
-        first_name: addDeanFormData.first_name,
-        middle_name: addDeanFormData.middle_name,
-        contact_no: addDeanFormData.contact_no,
-        email: addDeanFormData.email,
-        department: addDeanFormData.department,
-        dean_id: addDeanFormData.dean_id,
-        };
-
-        const newDeans = [...deans, newDean];
-        setDeans(newDeans);
-        setModalIsOpen(false);
-        addDean();
-    };
-
     const handleEditFormSubmit = (event) => {
         event.preventDefault();
 
@@ -222,60 +226,53 @@ function ManageDeanAccounts() {
         middle_name: editDeanFormData.middle_name,
         contact_no: editDeanFormData.contact_no,
         email: editDeanFormData.email,
-        department: editDeanFormData.department,
+        dept_id: editDeanFormData.department,
         dean_id: editDeanFormData.dean_id,
         };
 
-        const newDeans = [...deans];
-
-        const index = deans.findIndex((dean) => dean.id === editDeanId);
-
-        newDeans[index] = editedDean;
-
         updateDean(editedDean.id);
         {console.log(editedDean)}
-
-        setDeans(newDeans);
         setEditDeanId(null);
+        setEditModal(false);
+        notify("Dean has been updated");
     };
 
     const handleEditClick = (event, dean) => {
         event.preventDefault();
+        setEditModal(true)
         setEditDeanId(dean.id);
 
         const formValues = {
-        last_name: dean.last_name,
-        first_name: dean.first_name,
-        middle_name: dean.middle_name,
-        contact_no: dean.contact_no,
-        email: dean.email,
-        department: dean.department,
-        dean_id: dean.dean_id,
+          last_name: dean.last_name,
+          first_name: dean.first_name,
+          middle_name: dean.middle_name,
+          contact_no: dean.contact_no,
+          email: dean.email,
+          department: dean.department,
+          dept_id: dean.dept_id,
+          dean_id: dean.dean_id
         };
-
         setEditDeanFormData(formValues);
+        console.log(editDeanFormData);
     };
 
-    const handleCancelClick = () => {
-        setEditDeanId(null);
-    };
 
     const handleDeleteClick = (DeanId) => {
       let text = '❌ Do you want to delete this Dean Account? '
       if(confirm(text) == true){
-        const newDeans = [...deans];
-
         const index = deans.findIndex((dean) => dean.id === DeanId);
-
-        newDeans.splice(index, 1);
-
         deleteDean(DeanId);
+        console.log(DeanId)
+        errNotify("Dean has been deleted");
+        getDeans();
       }else{}
 
     };
 
-    const handleChangePassword = (id) => {
-      passwordForm.student_id = id;
+    const handleChangePassword = (id, dean) => {
+      passwordForm.id = id;
+      passwordForm.name = (dean.last_name + ", " + dean.first_name + ", " + dean.middle_name);
+      passwordForm.dean_id = dean.dean_id;
       setChangePassModal(true);
 
     }
@@ -296,14 +293,7 @@ function ManageDeanAccounts() {
         },
       };
 
-  useEffect(()=>{
-    if(msg == ''){
-    }else{
-        notify();
-    }
-  },[msg]);
-
-  const notify = () => toast.error(msg, {
+  const errNotify = (msg) => toast.error(msg, {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -312,40 +302,44 @@ function ManageDeanAccounts() {
     draggable: true,
     progress: undefined,
     theme: "light",
-    });
-    
+  });
+
+  const notify = (msg) => toast.success(msg, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+  });
 
   return (
     <>
-      <div className="users-table-header">
+      <div className="dean-view-applications">
         <div style={{display:'flex', gap:'1em', textAlign:'left', width: '100%'}}>
           <h1>Dean Accounts</h1>
-          <button className="add_btn" onClick={()=>setModalIsOpen(!modalIsOpen)}>ADD</button>
+          <button className="btn btn-primary my-2 px-5" onClick={()=>setModalIsOpen(!modalIsOpen)}>ADD</button>
         </div>
-        <form onSubmit={handleEditFormSubmit}>
-          <table className='students-user-table'>
+        <form >
+          <table className='students-user-table table table-responsive'>
             <thead>
               <tr>
-                <th>Dean ID</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Contact No.</th>
-                <th>Email</th>
-                <th>Department</th>
-                <th>Actions</th>
+                <th scope='col' className='fit'>Dean ID</th>
+                <th scope='col' className='fit'>Last Name</th>
+                <th scope='col' className='fit'>First Name</th>
+                <th scope='col' className='fit'>Middle Name</th>
+                <th scope='col' className='fit'>Contact No.</th>
+                <th scope='col' className='fit'>Email</th>
+                <th scope='col' className='fit'>Department</th>
+                <th scope='col' className='fit'>Actions</th>
               </tr>
             </thead>
             <tbody>
               {deans?.map((dean) => (
                 <>
-                  {editDeanId === dean.id ? (
-                    <DeanEditableRow
-                      editFormData={editDeanFormData}
-                      handleEditFormChange={handleEditFormChange}
-                      handleCancelClick={handleCancelClick}
-                    />
-                  ) : (
+                  {(
                     <DeanReadOnlyRow
                       key={dean.id}
                       dean={dean}
@@ -363,10 +357,11 @@ function ManageDeanAccounts() {
         isOpen={modalIsOpen}
         style={customStyles}
         ariaHideApp={false}>
-        <div className="add-user-container">
-            <h2>ADD A DEAN</h2>
+        <div className="add-user-container container-fluid text-center p-3 w-100">
+            <h2 className='text-center m-3'>ADD A DEAN</h2>
             <form onSubmit={addDean} style={{display:'flex', flexDirection:'column'}}>
             <input
+              className="form-control m-1"
                 type="text"
                 required="required"
                 placeholder="Enter a dean ID..."
@@ -374,6 +369,7 @@ function ManageDeanAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+              className="form-control m-1"
                 type="text"
                 required="required"
                 placeholder="Enter a last name..."
@@ -381,6 +377,7 @@ function ManageDeanAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+              className="form-control m-1"
                 type="text"
                 required="required"
                 placeholder="Enter a first name..."
@@ -388,6 +385,7 @@ function ManageDeanAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+              className="form-control m-1"
               type="text"
               required="required"
               placeholder="Enter a middle name..."
@@ -395,6 +393,7 @@ function ManageDeanAccounts() {
               onChange={handleAddFormChange}
             />
             <input
+              className="form-control m-1"
                 type="text"
                 required="required"
                 placeholder="Enter a contact no..."
@@ -402,6 +401,7 @@ function ManageDeanAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+              className="form-control m-1"
                 type="email"
                 required="required"
                 placeholder="Enter a email..."
@@ -409,17 +409,19 @@ function ManageDeanAccounts() {
                 onChange={handleAddFormChange}
             />
             <select
+              className="custom-select m-1"
               required="required"
               name="department"
               value={addDeanFormData.department}
               onChange={(e)=> {
                 setSelectDept(e.target.value);
                 addDeanFormData.department = e.target.value;
-              }}
-              >
+              }}>
+                <option value="">Select a department</option>
                 {dept_options}
             </select>
             <input
+              className="form-control m-1"
                 type="password"
                 required="required"
                 placeholder="Enter a password"
@@ -427,6 +429,7 @@ function ManageDeanAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+              className="form-control m-1"
                 type="password"
                 required="required"
                 placeholder="Confirm password"
@@ -434,23 +437,109 @@ function ManageDeanAccounts() {
                 onChange={handleAddFormChange}
             />
             <div className="flex">
-              <button type="button" onClick={()=>setModalIsOpen(false)}>CANCEL</button>
-              <button type="submit" onClick={addDean}>ADD</button>
+              <button className='btn btn-dark' type="button" onClick={()=>setModalIsOpen(false)}>CANCEL</button>
+              <button className='btn btn-success' type="submit">ADD</button>
             </div>
             
             </form>
         </div>
         </Modal>
+
+        <Modal
+        isOpen={editModal}
+        style={customStyles}
+        ariaHideApp={false}>
+        <div className="add-user-container container-fluid text-center p-3">
+            <h2 className='m-3'>ADD A DEAN</h2>
+            <form onSubmit={handleEditFormSubmit} style={{display:'flex', flexDirection:'column'}}>
+            <input
+              className="form-control m-1"
+                type="text"
+                required="required"
+                placeholder="Enter a dean ID..."
+                name="dean_id"
+                value={editDeanFormData.dean_id}
+                onChange={handleEditFormChange}
+            />
+            <input
+              className="form-control m-1"
+                type="text"
+                required="required"
+                placeholder="Enter a last name..."
+                name="last_name"
+                value={editDeanFormData.last_name}
+                onChange={handleEditFormChange}
+            />
+            <input
+              className="form-control m-1"
+                type="text"
+                required="required"
+                placeholder="Enter a first name..."
+                name="first_name"
+                value={editDeanFormData.first_name}
+                onChange={handleEditFormChange}
+            />
+            <input
+              className="form-control m-1"
+              type="text"
+              required="required"
+              placeholder="Enter a middle name..."
+              name="middle_name"
+              value={editDeanFormData.middle_name}
+              onChange={handleEditFormChange}
+            />
+            <input
+              className="form-control m-1"
+                type="text"
+                required="required"
+                placeholder="Enter a contact no..."
+                name="contact_no"
+                value={editDeanFormData.contact_no}
+                onChange={handleEditFormChange}
+            />
+            <input
+              className="form-control m-1"
+                type="email"
+                required="required"
+                placeholder="Enter a email..."
+                name="email"
+                value={editDeanFormData.email}
+                onChange={handleEditFormChange}
+            />
+            <select
+              className='custom-select m-1'
+              required="required"
+              name="dept_id"
+              value={editDeanFormData.dept_id}
+              onChange={(e)=> {
+                setSelectDept(e.target.value);
+                editDeanFormData.dept_id = e.target.value;
+              }}>
+                <option value=""></option>
+                {selected_dept_options}
+            </select>
+            <div className="flex">
+              <button className='btn btn-dark' type="button" onClick={()=>setEditModal(false)}>CANCEL</button>
+              <button className='btn btn-success' type="submit">UPDATE</button>
+            </div>
+            
+            </form>
+        </div>
+        </Modal>
+
+
         <Modal
         isOpen={changePassModal}
         style={customStyles}
         ariaHideApp={false}>
           <form style={{display:'flex', flexDirection:'column', gap:'1em'}}>
-            <input type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange}/>
-            <input type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange}/>
+            <input className='form-control' type="text" disabled name='dean-id' value={passwordForm.dean_id}/>
+            <input className='form-control' type="text" disabled name='dean_name' value={passwordForm.name}/>
+            <input className='form-control' type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange}/>
+            <input className='form-control' type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange}/>
             <div style={{display:'flex', gap:'1em'}}>
-              <button type="button" className='btnCancel' onClick={()=>setChangePassModal(false)}>Cancel</button>
-              <button type="button" className='btnChangePass' onClick={handleChangePasswordSubmit}>Change Password</button>
+              <button type="button" className='btn btnCancel' onClick={()=>setChangePassModal(false)}>Cancel</button>
+              <button type="button" className='btn btnChangePass' onClick={handleChangePasswordSubmit}>Change Password</button>
             </div>
           </form>
         </Modal>

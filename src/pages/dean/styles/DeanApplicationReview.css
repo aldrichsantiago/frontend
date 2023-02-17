@@ -26,7 +26,7 @@
 .dean-review-application .dean-review-body {
   text-align: left;
   margin: 3em auto;
-  width: 57%;
+  width: 90%;
 }
 .dean-review-application .dean-review-body .scholarship-form-msg {
   width: 70%;
@@ -35,7 +35,7 @@
   text-align: right;
 }
 .dean-review-application .dean-review-body .applicant-data {
-  margin: 3em;
+  margin: 50em 0em 0em 0em;
 }
 .dean-review-application .dean-review-body .subj-codes-units-table {
   margin: 2em 0em 5em;
@@ -57,19 +57,26 @@
   flex-direction: column;
   flex-wrap: wrap;
   gap: 3em;
+  margin: 1em 0em;
 }
 .dean-review-application .dean-review-body .signatures .student-signature {
-  text-align: left;
-  margin-left: 60%;
+  margin-right: 20px;
 }
 .dean-review-application .dean-review-body .signatures .higher-ups-signs {
   width: 100%;
+  height: 5em;
   display: flex;
   flex-wrap: wrap;
-  gap: 40%;
+  align-items: center;
+  justify-content: center;
+  gap: 10%;
 }
 .dean-review-application .dean-review-body .signatures .higher-ups-signs div:nth-child(2) {
   margin-top: 30px;
+}
+.dean-review-application .dean-review-body .subj-codes-units-table {
+  margin: 6em 0em;
+  text-align: center;
 }
 .dean-review-application .dean-review-body .other-reqs {
   display: flex;

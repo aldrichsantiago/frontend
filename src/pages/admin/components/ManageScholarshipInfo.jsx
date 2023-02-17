@@ -3,20 +3,21 @@ import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
 import Modal from 'react-modal'
 import jwt_decode from 'jwt-decode'
+import { ToastContainer, toast } from 'react-toastify';
 
 
 function DeleteButton ({
   scholarship,
   handleDeleteClick
 }){
-  return <button onClick={()=>handleDeleteClick(scholarship.id)}>Delete</button>
+  return <button className='btn btn-danger mx-1 px-4' onClick={()=>handleDeleteClick(scholarship.scholarship_id)}>Delete</button>
 }
 
 function UpdateButton ({
   scholarship,
   handleEditClick
 }){
-  return <button onClick={(e)=>handleEditClick(e, scholarship)}>Update</button>
+  return <button className='btn btn-info mx-1 px-4' onClick={(e)=>handleEditClick(e, scholarship)}>Update</button>
 }
 
 function ManageScholarshipInfo() {
@@ -78,18 +79,19 @@ function ManageScholarshipInfo() {
   });
 
   const addScholarships = async() => {
-      await axiosJWT.post(`${import.meta.env.VITE_API_URL}/scholarships/add`,{
-          scholarship_name: addScholarshipFormData.scholarship_name,
-          description: addScholarshipFormData.description,
-          requirements: addScholarshipFormData.requirements}, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-      });
-      getScholarships();
+    await axiosJWT.post(`${import.meta.env.VITE_API_URL}/scholarships/add`,{
+      scholarship_name: addScholarshipFormData.scholarship_name,
+      description: addScholarshipFormData.description,
+      requirements: addScholarshipFormData.requirements}, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+    });
+    getScholarships();
+    notify("Scholarship has been added.");
   }
 
-  const getScholarships = async () => {
+  const getScholarships = async() => {
       try{
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/scholarships/get`,{
 
@@ -113,7 +115,7 @@ function ManageScholarshipInfo() {
   }
 
   const deleteScholarships = async(id) => {
-      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/scholarships/delete/${id}`,{
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/scholarships/delete/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -137,7 +139,7 @@ function ManageScholarshipInfo() {
   const handleEditClick = (event, scholarship) => {
       event.preventDefault();
       console.log(scholarship)
-      setEditScholarshipId(scholarship.id);
+      setEditScholarshipId(scholarship.scholarship_id);
 
       const formValues = {
       scholarship_name: scholarship.scholarship_name,
@@ -172,38 +174,38 @@ function ManageScholarshipInfo() {
       if(confirm(text) == true){
         const newScholarships = [...scholarships];
 
-        const index = scholarships.findIndex((scholarship) => scholarship.id === scholarshipId);
+        const index = scholarships.findIndex((scholarship) => scholarship.scholarship_id === scholarshipId);
 
         newScholarships.splice(index, 1);
 
         console.log(scholarshipId);
         deleteScholarships(scholarshipId);
+        errNotify("Scholarship has been deleted.");
       }else{}
   };
 
   const handleEditFormSubmit = () => {
-      const editedScholarship = {
-      id: editScholarshipId,
-      scholarship_name: editScholarshipFormData.scholarship_name,
-      description: editScholarshipFormData.description,
-      requirements: editScholarshipFormData.requirements
-      
-      };
+    const editedScholarship = {
+    scholarship_id: editScholarshipId,
+    scholarship_name: editScholarshipFormData.scholarship_name,
+    description: editScholarshipFormData.description,
+    requirements: editScholarshipFormData.requirements
+    
+    };
 
-      const newScholarships = [...scholarships];
+    const newScholarships = [...scholarships];
 
-      const index = scholarships.findIndex((scholarship) => scholarship.id === editScholarshipId);
+    const index = scholarships.findIndex((scholarship) => scholarship.scholarship_id === editScholarshipId);
 
-      newScholarships[index] = editedScholarship;
+    newScholarships[index] = editedScholarship;
 
-      updateScholarships(editScholarshipId);
-      console.log(editedScholarship);
+    updateScholarships(editScholarshipId);
+    console.log(editedScholarship);
 
-      setEditScholarshipId(null);
-      setEditIsOpen(false);
-      getScholarships();
-
-
+    setEditScholarshipId(null);
+    setEditIsOpen(false);
+    getScholarships();
+    notify("Scholarship has been updated.");
   };
 
   const customStyles = {
@@ -243,31 +245,54 @@ function ManageScholarshipInfo() {
       }
       getScholarships();
     };
+
+
+    const errNotify = (msg) => toast.error(msg, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+    });
+  
+    const notify = (msg) => toast.success(msg, {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+    });
   
   return (
 
     <>
       <div className='scholar-header flex'>
         <h1>Scholarship Informations</h1>
-        <button id='add-scholar' onClick={()=>{setAddIsOpen(!addIsOpen)}}>ADD SCHOLARSHIP</button>
+        <button id='add-scholar' className='btn btn-success mx-3' onClick={()=>{setAddIsOpen(!addIsOpen)}}>ADD SCHOLARSHIP</button>
       </div>
-      <div className="scholarship-info-table">
-        <table>
+      <div className="scholarship-info-table table-responsive dean-view-applications">
+        <table className='table'>
           <thead>
             <tr>
-            <th>Scholarship Name</th>
-            <th>Description</th>
-            <th>Requirements</th>
-            <th>Actions</th>
+            <th scope='col' className='fit'>Scholarship Name</th>
+            <th scope='col' className='fit'>Description</th>
+            <th scope='col' className='fit'>Requirements</th>
+            <th scope='col' className='fit'>Actions</th>
             </tr>
           </thead>
           <tbody>
             {scholarships.map((scholarship)=>(
               <tr key={scholarship.id}>
-                <td>{scholarship.scholarship_name}</td>
-                <td>{scholarship.description}</td>
-                <td>{scholarship.requirements}</td>
-                <td>
+                <td className='fit col-3'>{scholarship.scholarship_name}</td>
+                <td className='fit col-3'>{scholarship.description}</td>
+                <td className='fit col-3'>{scholarship.requirements}</td>
+                <td className='fit col-3'>
                   <UpdateButton
                       scholarship={scholarship}
                       handleEditClick={handleEditClick}
@@ -287,13 +312,14 @@ function ManageScholarshipInfo() {
       isOpen={addIsOpen}
       style={customStyles}
       ariaHideApp={false}>
-          <div className="add-scholarship-container">
-              <div className="flex">
+          <div className="add-scholarship-container container container-fluid">
+              <div className="flex ">
                   <h2>Add a Scholarship</h2>
               </div>
               
               <form style={{display:'flex', flexDirection:'column'}}>
               <input
+                className='form-control'
                   size={88}
                   height="10px"
                   type="text"
@@ -304,7 +330,7 @@ function ManageScholarshipInfo() {
               />
               <textarea
                   rows="10" cols="90"
-                  className='addBody'
+                  className='addBody form-control my-2'
                   type="text"
                   required="required"
                   placeholder="Description"
@@ -313,7 +339,7 @@ function ManageScholarshipInfo() {
               />
               <textarea
                   rows="10" cols="90"
-                  className='addBody'
+                  className='addBody form-control'
                   type="text"
                   required="required"
                   placeholder="Requirements"
@@ -322,9 +348,9 @@ function ManageScholarshipInfo() {
               />
               <p className='note'>Note: Each requirement should be separated by a comma</p>
 
-              <div className="add-buttons">
-                  <button onClick={()=>setAddIsOpen(false)}>CANCEL</button>
-                  <button type="button" onClick={validateAdd}>ADD</button>
+              <div className="add-buttons flex">
+                  <button className='btn btn-dark' onClick={()=>setAddIsOpen(false)}>CANCEL</button>
+                  <button className='btn btn-success' type="button" onClick={validateAdd}>ADD</button>
               </div>
               
               </form>
@@ -334,12 +360,13 @@ function ManageScholarshipInfo() {
           isOpen={editIsOpen}
           style={customStyles}
           ariaHideApp={false}>
-              <div className="add-scholarship-container">
-                  <div className="flex">
+              <div className="add-scholarship-container container container-fluid">
+                  <div className="flex text-center">
                       <h2>Edit Scholarship</h2>
                   </div>
                   <form style={{display:'flex', flexDirection:'column'}}>
                   <input
+                    className='form-control'
                       size={88}
                       type="text"
                       required="required"
@@ -350,7 +377,7 @@ function ManageScholarshipInfo() {
                   />
                   <textarea
                       rows="10" cols="90"
-                      className='editBody'
+                      className='editBody form-control my-2'
                       type="text"
                       required="required"
                       placeholder="Description"
@@ -359,6 +386,7 @@ function ManageScholarshipInfo() {
                       value={editScholarshipFormData.description}
                   />
                   <textarea
+                    className='form-control'
                       rows="10" cols="90"
                       type="text"
                       required="required"
@@ -368,13 +396,24 @@ function ManageScholarshipInfo() {
                       value={editScholarshipFormData.requirements}
                   />
                   <p className='note'>Note: Each requirement should be separated by a comma</p>
-                  <div className="edit-buttons">
-                    <button onClick={()=>setEditIsOpen(false)}>CANCEL</button>
-                    <button type="submit" onClick={validateEdit}>UPDATE</button>
+                  <div className="edit-buttons flex">
+                    <button className='btn btn-dark' onClick={()=>setEditIsOpen(false)}>CANCEL</button>
+                    <button className='btn btn-success' type="button" onClick={validateEdit}>UPDATE</button>
                   </div>
                   </form>
               </div>
           </Modal>
+        <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
     </>
   )
 }

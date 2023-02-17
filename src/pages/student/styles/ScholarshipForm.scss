@@ -11,6 +11,9 @@ $tertiary-color: #B91646;
 
 .scholarship-form-container{
     padding: 0em 2em;
+    label, p{
+        font-size: large;
+    }
 
     .scholarship-form{
         display: block;
@@ -20,16 +23,25 @@ $tertiary-color: #B91646;
             flex-wrap: wrap;
         }
 
-        .subject-codes, .units{
+        .subject-codes{
             display: flex;
             flex-direction: column;
             gap: 3px;
 
-            input[type=text]{
-                width: 100px;
+            select{
+                width: 300px;
             }
-            input[type=number]{
-                width: 40px;
+        }
+
+        .units{
+            display: flex;
+            flex-direction: column;
+            gap: 3px;
+            align-items: center;
+            justify-content: center;
+            
+            select{
+                width: 100px;
             }
         }
         .other-info{
@@ -58,6 +70,13 @@ $tertiary-color: #B91646;
 
             }
         }
+    }
+}
+
+.schoolyear-container{
+    display: flex;
+    p{
+        margin: 0px 3px;
     }
 }
 

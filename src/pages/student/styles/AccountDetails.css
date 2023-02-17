@@ -25,13 +25,15 @@
   flex-direction: column;
 }
 * .user-details-container form div input, * .user-details-container form div select {
+  font-family: Arial, Helvetica, sans-serif;
   border: 2px solid #F9C041;
   border-radius: 3px;
-  width: 100px;
+  width: 13em;
   padding: 0.4em;
+  color: black;
 }
 * .user-details-container form div select {
-  width: 180px;
+  max-width: 90%;
 }
 * .user-details-container form button {
   color: #fff;

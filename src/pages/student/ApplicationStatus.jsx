@@ -104,65 +104,52 @@ function SubmittedReviewStatus(props){
 
 function ApplicationStatus() {
   const [token, setToken] = useState();
-  const [name, setName] = useState('');
+  const [student, setStudent] = useState({});
+  const [application, setApplication] = useState({});
   const [expire, setExpire] = useState('');
-  const [rejected, setRejected] = useState([]);
-  const [approved, setApproved] = useState([]);
-  const [review, setReview] = useState([]);
-  const [submitted, setSubmitted] = useState([]);
   const [student_id, setStudentId] = useState('');
+  const [status, setStatus] = useState('');
 
   const navigate = useNavigate();
 
   useEffect(()=>{
     refreshToken();
-    
-  },[token]);
+    getStudent();
+  },[token,student_id]);
+
   useEffect(()=>{
     getStatus();
-    
-  },[student_id]);
+  },[student]);
 
-  const getRejected = async () => {
-    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/application/rejected/${student_id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-  });
-    setRejected(response.data);
-  }
-  const getApproved = async () => {
-    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/application/approved/${student_id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-  });
-    setApproved(response.data);
-  }
-  const getReview = async () => {
-    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/application/review/${student_id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-  });
-    setReview(response.data);
-  }
-  const getSubmitted = async () => {
-    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/application/submitted/${student_id}`, {
-      headers: {
-        Authorization: `Bearer ${token}`
-      }
-  });
-    setSubmitted(response.data);
+  useEffect(()=>{
+    setTimeout(()=>{
+      getStatus();
+      console.log('hello')
+    },1000);
+  },[]);
+
+  const getStudent = async() => {
+    try{
+        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/min/details/${student_id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+              }
+    });
+        setStudent(response.data);
+    }catch(e){
+        console.log(e);
+    }
   }
 
-  const getStatus = async() => {
-    getApproved();
-    getRejected();
-    getReview();
-    getSubmitted();
+  const getStatus = async () => {
+    const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/application/status/${student.id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+  });
+    setApplication(response.data);
+    setStatus(response.data.status)
   }
-  
 
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
@@ -170,7 +157,6 @@ function ApplicationStatus() {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/student/token`);
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
-      setName(decoded.first_name + ' ' + decoded.last_name);
       setStudentId(decoded.studentId);
       console.log(student_id);
       setExpire(decoded.exp);
@@ -192,7 +178,6 @@ function ApplicationStatus() {
       config.headers.Authorization = `Bearer ${response.data.accessToken}`;
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
-      setName(decoded.last_name);
       setStudentId(decoded.studentId);
       setExpire(decoded.exp);
     }
@@ -201,17 +186,16 @@ function ApplicationStatus() {
       return Promise.reject(error);
   });
 
-  console.log(rejected, approved, review, submitted);
 
-  let status = <DefaultStatus/>;
-  if(rejected != 0 ){
-    status = <RejectedStatus rejectedBy={rejected[rejected.length-1].rejected_by} reason={rejected[rejected.length-1].reason_of_rejection}/>
+  let status_component = <DefaultStatus/>;
+  if(status == 'rejected'){
+    status_component = <RejectedStatus rejectedBy={application?.rejected_by} reason={application?.reason_for_rejection}/>
   }
-  if(approved.length != 0){
-    status = <ApprovedStatus/>
+  if(status == 'approved'){
+    status_component = <ApprovedStatus/>
   }
-  if(submitted.length != 0 || review.length != 0 ){
-    status = <SubmittedReviewStatus/>
+  if(status == 'submitted' || status == 'review'){
+    status_component = <SubmittedReviewStatus/>
   }
 
   const notify = (msg) => toast.success(msg, {
@@ -236,13 +220,12 @@ function ApplicationStatus() {
     theme: "light",
   });
 
-
   return (
     <Layout>
       <div className="application-status-container">
         <h1>Application Status: </h1>
         <div className="status-timeline">
-          {status}
+          {status_component}
         </div>
       </div>
 

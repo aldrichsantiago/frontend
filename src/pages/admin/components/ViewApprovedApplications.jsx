@@ -3,19 +3,20 @@ import { useNavigate, Link } from 'react-router-dom';
 import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import { FaPrint } from "react-icons/fa";
+import { ToastContainer, toast } from 'react-toastify';
+
 
 
 const EachApplication = ({application, handleDeleteApplication}) => {
   return(
-      <tr>
-          <td>{application.student_id}</td>
-          <td>{application.first_name} {application.last_name}</td>
-          <td>{application.department}</td>
-          <td>{application.scholarship_type}</td>
-          <td>
-              <a target="_blank" href={`/admin/approved/application/${application.id}`}>View Application</a>
-              <button onClick={()=>handleDeleteApplication(application.id)} >Delete</button>
-          </td>
+      <tr key={application.application_id}>
+        <th scope='row' className='fit'>{application.student.student_id}</th>
+        <td className='fit col-2'>{application.student.first_name} {application.student.last_name}</td>
+        <td className='fit col-2'>{application.scholarship.scholarship_name}</td>
+        <td className='fit col-3'>
+            <a className='btn btn-info mr-3' target="_blank" href={`/admin/approved/application/${application.application_id}`}>View Application</a>
+            <button className="btn btn-danger mx-3" onClick={()=>handleDeleteApplication(application.application_id)} >Delete</button>
+        </td>
       </tr>
   )
 }
@@ -23,6 +24,8 @@ const EachApplication = ({application, handleDeleteApplication}) => {
 function ViewApprovedApplications() {
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
+  const [departments, setDepartments] = useState([]);
+  const [courses, setCourses] = useState([]);
   const [selectCourse, setSelectCourse] = useState('');
   const [selectDept, setSelectDept] = useState('');
   const [applications, setApplications] = useState([]);
@@ -31,54 +34,24 @@ function ViewApprovedApplications() {
 
   const navigate = useNavigate();
 
-
-  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
-  let courses = [""];
-
-  if (selectDept == "CECT"){
-    courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
-  }else if (selectDept == "CONAMS"){
-      courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
-  }else if (selectDept == "CHTM"){
-    courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
-  }else if (selectDept == "CBA"){
-    courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
-  }else if (selectDept == "CAS"){
-      courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
-  }else if (selectDept == "CoEd"){
-      courses = ["","BSHRM", "BSECE", "BSCpE"];
-  }else if (selectDept == "CCJE"){
-      courses = ["","Bachelor of Science in Criminology"];
-  }else if (selectDept == "Medicine"){
-    courses = ["",""];
-  }else if (selectDept == "JWSLG"){
-      courses = ["",""];
-  }else if (selectDept == "High School"){
-      courses = ["","Junior High School", "Senior High School"];
-  }else if (selectDept == "Elementary"){
-      courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
-  }else{
-      courses = [""];
-  }
-
-  const dept_options = departments.map((dept) =>
-    <option key={dept}>{dept}</option>
-  );
-
-  const course_options = courses.map((course) =>
-    <option key={course}>{course}</option>
-  );
+ 
 
   useEffect(()=>{
     refreshToken();
+    getDepartments();
     getApplications();
   },[]);
+  useEffect(()=>{
+    getCourses();
+  },[selectDept]);
 
   useEffect(()=>{
     if (selectDept == "") {
       setSelectCourse("");
+      setCourses([]);
+    }else{
+      getCourses();
     }
-
     if(search == "" && selectDept == "" && selectCourse == ""){
       getApplications();
     }  else if (search != "" && selectDept != "" && selectCourse != ""){
@@ -99,6 +72,39 @@ function ViewApprovedApplications() {
       getApplications();
     }
   },[search, selectDept, selectCourse]);
+
+  useEffect(()=>{
+    if (selectDept == "") {
+      setSelectCourse("");
+      setCourses([])
+    }else{
+      getCourses();
+    }
+    if(search == "" && selectDept != "" && selectCourse != ""){
+      getDeptFilteredApplications();
+    }
+  },[selectDept]);
+
+  const dept_options = departments.map(({dept_id, dept_code}) =>
+  <option key={dept_id} value={dept_id}>{dept_code}</option>
+  );
+  const course_options = courses.map(({course_id, course_code}) =>
+    <option key={course_id} value={course_id}>{course_code}</option>
+  );
+
+  const getDepartments = async () => {
+    try{
+       const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/departments`);
+       setDepartments(response.data);
+    }catch(e){console.log(e)}
+}
+
+const getCourses = async () => {
+    try{
+       const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/courses/${selectDept}`);
+       setCourses(response.data);
+    }catch(e){console.log(e)}
+}
 
   const getApplications = async() => {
     try{
@@ -193,14 +199,16 @@ function ViewApprovedApplications() {
 
   const deleteFromApprovedApps = async (id) => {
     try{
-      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/admin/delete/approved/application/${id}`,{
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/admin/delete/approved/application/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
       }
       });
       getApplications();
+      errNotify("Application deleted");
     }catch(e){
       console.log(e);
+      console.log(e.response.data.msg);
     }
   }
 
@@ -209,6 +217,7 @@ function ViewApprovedApplications() {
     if(confirm(text) == true){
       getApplicantData(id);
       deleteFromApprovedApps(id);
+
     } else {}
   }
 
@@ -231,6 +240,8 @@ function ViewApprovedApplications() {
   const axiosJWT = axios.create();
 
   axiosJWT.interceptors.request.use(async (config) => {
+    axios.defaults.withCredentials = true;
+
     const currentDate = new Date();
     if (expire * 1000 < currentDate.getTime()) {
       const response = await axios.get(`${import.meta.env.VITE_API_URL}/admin/token`);
@@ -243,40 +254,69 @@ function ViewApprovedApplications() {
   }, (error) => {
       return Promise.reject(error);
   });
+  const errNotify = (msg) => toast.error(msg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
+  const notify = (msg) => toast.success(msg, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+  });
 
 
   return (
-    <div className="approved-applications">
-      <div className="dean-view-header flex">
+    <div className="dean-view-applications">
+      <div className="dean-view-header">
+        <div className="col-3 flex align-items-center">
+          <h1 className='h2'>APPROVED</h1>
+          <Link to="/admin/view/approved/applications" target="_blank" className='print-all-approved'><FaPrint/> ALL</Link>
 
-        <div className="all-applications-button" style={{display:'flex', alignItems:'center', gap:'1em'}}>
-          <Link to="/admin/view/approved/applications" target="_blank"><FaPrint/> ALL</Link>
-          <h1>Approved Applications</h1>
         </div>
-          <div>
-            <label htmlFor="searchField">Search Student ID or Name:  </label>
-            <input type="text" name="searchField" className='search-input' placeholder='e.g. 00-0000-000' onChange={(e)=>{setSearch(e.target.value)}}/>
+        
+        <div className='col-12 text-left d-flex align-items-center flex-wrap'>
+          <div class="input-group h-25 col-5">
+            <div class="input-group-prepend">
+              <span class="input-group-text" >Name or Student ID</span>
+            </div>
+            <input type="text" name="searchField" className='searchField form-control'class="form-control" onChange={(e)=>{setSearch(e.target.value)}}/>
           </div>
-          <div>
-            <label htmlFor="applications-dept">DEPARTMENT: </label>
-            <select name="applications-dept" className='dept-select' id='admin-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
-              {dept_options} 
-            </select>
-             
-            <label htmlFor="applications-course">&nbsp;COURSE: </label>
-            <select name="applications-course" className='course-select' id='admin-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
-              {course_options} 
-            </select>
+          <div className='flex flex-wrap'>
+            <div>
+              <select name="applications-dept" className='course-select-admin custom-select mr-sm-2' id='dean-select-course' onChange={(e)=>setSelectDept(e.target.value)} value={selectDept}>
+                <option value="">Select a department</option>
+                {dept_options} 
+              </select>
+            </div>
+            <div>
+              <select name="applications-course" className='course-select-admin custom-select mr-sm-2' id='dean-select-course' onChange={(e)=>setSelectCourse(e.target.value)} value={selectCourse}>
+                <option value="">Select a course</option>
+                {course_options} 
+              </select>
+            </div>
           </div>
         </div>
+          
+      </div>
         <div className="approved-applications-table">
-          <table>
+          <table className='table'>
             <thead>
               <tr>
                 <th>Student ID</th>
                 <th>Name</th>
-                <th>Department</th>
-                <th>Shcolarship Type</th>
+                <th>Scholarship Type</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -290,7 +330,18 @@ function ViewApprovedApplications() {
             </tbody>
           </table>
         </div>
-    </div>
+        <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
+  </div>
   )
 }
 

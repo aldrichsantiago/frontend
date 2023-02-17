@@ -4,19 +4,20 @@ import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import SignaturePad from 'react-signature-canvas'
 import Modal from 'react-modal'
+import { ToastContainer, toast } from 'react-toastify';
+
 
 
 const EachApplication = ({application, handleAcceptApplication, handleRejectApplication}) => {
   return(
-    <tr key={application.id}>
-      <td>{application.student_id}</td>
-      <td>{application.first_name} {application.last_name}</td>
-      <td className='dean-view-apps-container'>
-        <a href={`/dean/applications/review/${application.id}`} target="_blank">View Application</a>
-      </td>
-      <td>
-          <button onClick={()=>handleAcceptApplication(application.id)}>ACCEPT</button>
-          <button onClick={()=>handleRejectApplication(application.id)}>REJECT</button>
+    <tr key={application.application_id}>
+      <th scope='row' className='fit'>{application.student.student_id}</th>
+      <td className='fit col-7'>{application.student.first_name} {application.student.last_name}</td>
+      <td className='fit'>{application.scholarship.scholarship_name}</td>
+      <td className='td-btn' id='td-btn'>
+        <a className='btn btn-info mr-3' href={`/dean/applications/review/${application.application_id}`} target="_blank">View Application</a>
+        <button className="btn btn-success mx-1" onClick={()=>handleAcceptApplication(application.application_id)}>ACCEPT</button>
+        <button className="btn btn-danger mx-1" onClick={()=>handleRejectApplication(application.application_id)}>REJECT</button>
       </td>
     </tr>
   )
@@ -25,6 +26,7 @@ const EachApplication = ({application, handleAcceptApplication, handleRejectAppl
 function DeanPendingApplications() {
   const [deanId, setDeanId] = useState('');
   const [department, setDepartment] = useState('');
+  const [courses, setCourses] = useState([]);
   const [dean, setDean] = useState({});
   const [token, setToken] = useState('');
   const [expire, setExpire] = useState('');
@@ -45,45 +47,22 @@ function DeanPendingApplications() {
 
   let sigPad = useRef({});
 
-  let courses = [""];
-
-  if (department == "CECT"){
-      courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
-  }else if (department == "CONAMS"){
-      courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
-  }else if (department == "CHTM"){
-      courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
-  }else if (department == "CBA"){
-      courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
-  }else if (department == "CAS"){
-      courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
-  }else if (department == "CoEd"){
-      courses = ["","BSHRM", "BSECE", "BSCpE"];
-  }else if (department == "CCJE"){
-      courses = ["","Bachelor of Science in Criminology"];
-  }else if (department == "Medicine"){
-      courses = ["",""];
-  }else if (department == "JWSLG"){
-      courses = ["",""];
-  }else if (department == "High School"){
-      courses = ["","Junior High School", "Senior High School)"];
-  }else if (department == "Elementary"){
-      courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
-  }else{
-      courses = [""];
-  }
 
   useEffect(()=>{
-    refreshToken();
-  },[]);
-
-  useEffect(()=>{
-    getDean();
+    if(!token){
+      refreshToken();
+    }else{
+      getDean();
+    }
   },[deanId]);
 
   useEffect(()=>{
     getApplications();
-  },[department]);
+    setTimeout(()=>{
+      getApplications();
+      getCourses();
+    },800)
+  },[dean, department]);
 
 
   useEffect(()=>{
@@ -100,8 +79,8 @@ function DeanPendingApplications() {
 
   
 
-  const course_options = courses.map((course) =>
-    <option key={course}>{course}</option>
+  const course_options = courses?.map(({course_id, course_code, course_name}) =>
+    <option key={course_id} value={course_id}>{course_code}</option>
   );
 
   const getDean = async () => {
@@ -111,16 +90,25 @@ function DeanPendingApplications() {
           Authorization: `Bearer ${token}`
         }
     });
-      setDepartment(response.data.department);
       setDean(response.data);
+      console.log(dean);
+      console.log(department);
     }catch(e){
       console.log(e)
     }
   }
 
+  const getCourses = async () => {
+    try{
+       const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/courses/${department}`);
+       setCourses(response.data);
+       console.log(courses)
+    }catch(e){console.log(e)}
+}
+
   const getApplications = async() => {
     try{
-      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/applications/dept/${department}`, {
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/applications/dept/${dean?.dept_id}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -146,7 +134,7 @@ function DeanPendingApplications() {
 
   const getSearchedApplications = async() => {
     try{
-      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/applications/name/${search}`, {
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/applications/dept/${department}/name/${search}`, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -187,94 +175,43 @@ function DeanPendingApplications() {
   const acceptApplication = async (id) => {
     try {
       dataToPass = {
-        subj_1: applicantData.subj_1,subj_2: applicantData.subj_2,
-        subj_3: applicantData.subj_3,subj_4: applicantData.subj_4,
-        subj_5: applicantData.subj_5,subj_6: applicantData.subj_6,
-        subj_7: applicantData.subj_7,subj_8: applicantData.subj_8, 
-        subj_9: applicantData.subj_9,subj_10: applicantData.subj_10,
-        subj_11: applicantData.subj_11,subj_12: applicantData.subj_12,
-        units_1: applicantData.units_1, units_2: applicantData.units_2,
-        units_3: applicantData.units_3, units_4: applicantData.units_4,
-        units_5: applicantData.units_5, units_6: applicantData.units_6,
-        units_7: applicantData.units_7, units_8: applicantData.units_8, 
-        units_9: applicantData.units_9, units_10: applicantData.units_10,
-        units_11: applicantData.units_11, units_12: applicantData.units_12,
-        semester: applicantData.semester,
-        school_year: applicantData.school_year,
-        scholarship_type: applicantData.scholarship_type,
-        req_1: applicantData.req_1,
-        req_2: applicantData.req_2,
-        req_3: applicantData.req_3,
-        req_4: applicantData.req_4,
-        req_5: applicantData.req_5,
-        req_6: applicantData.req_6,
-        req_7: applicantData.req_7,
-        req_8: applicantData.req_8,
-        req_9: applicantData.req_9,
-        req_10: applicantData.req_10,
-        student_sign: applicantData.student_sign,
-        student_id: applicantData.student_id,
-        first_name: applicantData.first_name,
-        last_name: applicantData.last_name,
-        middle_name: applicantData.middle_name,
-        department: applicantData.department,
-        course: applicantData.course,
-        year: applicantData.year,
-        email: applicantData.email,
-        contact_no: applicantData.contact_no,
-        id: applicantData.id,
-        date_submitted: dateSubmitted,
+        status: 'review',
+        application_id: applicantData.application_id,
+        dean_sign: deanSig,
         ...dataToPass
       };
-      await axiosJWT.post(`${import.meta.env.VITE_API_URL}/create/review/application`,{
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/create/review/application/${id}`,{
         ...dataToPass
     }, { headers: {
       Authorization: `Bearer ${token}`
     }});
-    deleteFromSubmittedApps(id);
-    } catch (error) {
+    getApplications();
+
+  } catch (error) {
         console.log(error);
     }
   }
 
   const rejectApplication = async (id) => {
     try {
-        axiosJWT.post(`${import.meta.env.VITE_API_URL}/create/rejected/application`,{
-          student_id: applicantData.student_id,
-          date_submitted: applicantData.createdAt,
-          scholarship_type: applicantData.scholarship_type,
-          first_name: applicantData.first_name,
-          last_name: applicantData.last_name,
-          department: applicantData.department,
-          email: applicantData.email,
-          contact_no: applicantData.contact_no,
-          id: applicantData.id,
-          rejected_by: dean.first_name + " " + dean.last_name + " (" + department + " DEAN)",
-          reason_of_rejection: rejectReason
-    },{headers: {
-      Authorization: `Bearer ${token}`
-    }});
-      deleteFromSubmittedApps(id);
+      axiosJWT.patch(`${import.meta.env.VITE_API_URL}/create/rejected/application/${id}`,{
+        status: 'rejected',
+        rejected_by: dean.first_name + " " + dean.last_name + " (" + dean.department?.dept_code + " DEAN)",
+        reason_for_rejection: rejectReason
+    },{
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    });
+    getApplications();
     } catch (error) {
         console.log(error);
     }
   }
 
-  const deleteFromSubmittedApps = async (id) => {
-    try{
-      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/delete/submitted/application/${id}`,{
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      getApplications();
-    }catch(e){
-      console.log(e);
-    }
-  }
-
   const handleAcceptApplication = (id) => {
     getApplicantData(id);
+    console.log(applications)
     setDeanModal(true);
   }
   const handleRejectApplication = (id) => {
@@ -295,7 +232,9 @@ function sigSave(){
     dataToPass.dean_sign = deanSig;
     console.log(dean_signatures);
     setDeanModal(false);
-    acceptApplication(applicantData.id);
+    acceptApplication(applicantData.application_id);
+    notify("Application accepted");
+
 }
 
 
@@ -306,6 +245,8 @@ function sigSave(){
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setDeanId(decoded.deanId);
+      setDepartment(decoded.dept_id);
+      console.log(decoded.dept_id);
       setExpire(decoded.exp);
     }
     catch (error) {
@@ -326,17 +267,13 @@ function sigSave(){
       setToken(response.data.accessToken);
       const decoded = jwt_decode(response.data.accessToken);
       setDeanId(decoded.deanId);
+      setDepartment(decoded.dept_id);
       setExpire(decoded.exp);
     }
     return config;
   }, (error) => {
       return Promise.reject(error);
   });
-
-  const selectValue = () => {
-    console.log(selectChange);
-  }
-  selectValue();
 
   const customStyles = {
     content: {
@@ -351,9 +288,12 @@ function sigSave(){
 
   const logReason = async () => {
     console.log(rejectReason);
-    rejectApplication(applicantData.id)
+    rejectApplication(applicantData.application_id)
     setRejectModal(false);
     setRejectReason('');
+    getApplications();
+    errNotify("Application rejected");
+
   }
 
   const handleFileInputChange = (e) => {
@@ -387,38 +327,69 @@ function sigSave(){
     dateSubmitted = applicantData.createdAt;
     setDeanModal(false)
     console.log(deanSig);
-    acceptApplication(applicantData.id);
+    acceptApplication(applicantData.application_id);
+    notify("Application accepted");
   }
+
+  const errNotify = (msg) => toast.error(msg, {
+    position: "bottom-right",
+    autoClose: 5000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  });
+
+  const notify = (msg) => toast.success(msg, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+  });
+
 
   return (
       <>
         <div className="dean-view-applications">
-        <div className="dean-view-header">
-          <h2>Pending Applications</h2>
-          <div>
-            <label htmlFor="searchField">Search Student ID or Name:  </label>
-            <input type="text" name="searchField" className='search-input' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/>
+        <div className="dean-view-header flex flex-wrap align-items-center">
+          <h2 className='h2 ml-3'>PENDING</h2>
+          <div className='col-5 text-left display flex'>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" >Name or Student ID</span>
+              </div>
+              <input type="text" name="searchField" className='searchField form-control'class="form-control" onChange={(e)=>{setSearch(e.target.value)}}/>
+            </div>
+            {/* <label htmlFor="searchField">Search Student ID or Name:  </label>
+            <input type="text" name="searchField" className='searchField form-control' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/> */}
           </div>
           <div>
-            <label htmlFor="applications-course">COURSE: </label>
-            <select name="applications-course" className='course-select' id='dean-select-course' onChange={(e)=>setSelectChange(e.target.value)} value={selectChange}>
+            <select name="applications-course" className='course-select-dean custom-select mr-sm-2' id='dean-select-course' onChange={(e)=>setSelectChange(e.target.value)} value={selectChange}>
+              <option value="">Select a course</option>
               {course_options} 
             </select>
           </div>
         </div>
         <div className="dean-view-body">
-          <table>
+          <table className='table table-responsive'>
             <thead>
               <tr>
-                <td>Student ID</td>
-                <td>Student Name</td>
-                <td>Applications</td>
-                <td>Actions</td>
+                <th scope='col' className='fit'>Student ID</th>
+                <th scope='col' className='fit'>Student Name</th>
+                <th scope='col' className='fit'>Scholarship Type</th>
+                <th scope='col' className='fit'>Actions</th>
               </tr>
             </thead>
             <tbody>
-              {applications.map((application)=>
+              {applications?.map((application)=>
                 <EachApplication
+                key={application.application_id}
                 handleAcceptApplication={handleAcceptApplication}
                 handleRejectApplication={handleRejectApplication}
                 application={application}
@@ -460,7 +431,17 @@ function sigSave(){
               <button className='btnReject' onClick={logReason}>REJECT</button>
             </div>
       </Modal>
-
+      <ToastContainer
+        position="bottom-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"/>
       </>
   )
 }

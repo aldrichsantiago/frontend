@@ -4,52 +4,32 @@ import jwt_decode from 'jwt-decode';
 import Logo from '../../../assets/logo.png'
 
 
-function OneApplication ({application}) {
-
-    let non_abbv_dept = ''
-    if(application.department == "CECT"){
-      non_abbv_dept = "College of Engineering and Computer Technology"
-    } else if (application.department == "CAS") {
-      non_abbv_dept = "College of Arts & Sciences"
-    } else if (application.department == "CBA") {
-      non_abbv_dept = "College of Business and Accountancy"
-    } else if (application.department == "CCJE") {
-      non_abbv_dept = "College of Criminal Justice Education"
-    } else if (application.department == "CoEd") {
-      non_abbv_dept = "College of Education"
-    } else if (application.department == "CHTM") {
-      non_abbv_dept = "College of Hospitality and Tourism Management"
-    } else if (application.department == "CONAMS") {
-      non_abbv_dept = "College of Nursing and Allied Sciences"
-    }  else if (application.department == "MEDICINE") {
-      non_abbv_dept = "College of Medicine"
-    } else if (application.department == "JWSLG") {
-      non_abbv_dept = "John Wesley School of Law and Governance"
-    }
+function OneApplication ({applicantData}) {
 
     let dateofscholarship='';
-    if(application.createdAt != null){
-      dateofscholarship = application.createdAt;
-      dateofscholarship = dateofscholarship.split('T');
-    }
-
-    let fullNameOfApplicant = '';
-    let middleName = '';
-    let middleInit = '';
-    if(application.last_name != null || application.first_name != null || application.middle_name != null){
-      middleName = application.middle_name;
-      if(middleName.includes(' ')){
-          middleName = middleName.split(' ');
-          middleInit = middleName[0][0] + '.' + middleName[1][0] + '.';
-          middleName = middleName[0] + middleName[1];
-      }else{
-          middleInit = middleName[0] + '.';
+      if(applicantData?.createdAt != null){
+        dateofscholarship = applicantData?.createdAt;
+        dateofscholarship = dateofscholarship.split('T');
       }
-      fullNameOfApplicant = application.first_name + " " + middleInit+ " " + application.last_name;
-      fullNameOfApplicant = fullNameOfApplicant.toUpperCase();
-    }
-    return(
-        <div className='dean-review-application'>
+
+      let fullNameOfApplicant = '';
+      let middleName = '';
+      let middleInit = '';
+      if(applicantData?.student.last_name != null || applicantData?.student.first_name != null || applicantData?.student.middle_name != null){
+        middleName = applicantData?.student.middle_name;
+        if(middleName.includes(' ')){
+            middleName = middleName.split(' ');
+            middleInit = middleName[0][0] + '.' + middleName[1][0] + '.';
+            middleName = middleName[0] + middleName[1];
+        }else{
+            middleInit = middleName[0] + '.';
+        }
+        fullNameOfApplicant = applicantData?.student.first_name + " " + middleInit+ " " + applicantData?.student.last_name;
+        fullNameOfApplicant = fullNameOfApplicant.toUpperCase();
+      }
+
+  return (
+    <div className='dean-review-application'>
         <div className="dean-review-header">
             <div className="uni-details">
                 <div>
@@ -70,16 +50,16 @@ function OneApplication ({application}) {
         <div className="dean-review-body">
             <div className="scholarship-form-msg">
                 <div className="scholar-details">
-                    {application.createdAt? <p>Date: {dateofscholarship[0]}</p> : <></>}
-                    {application.contact_no? <p>Contact #: {application.contact_no}</p> : <></>}
+                    {applicantData?.createdAt? <p>Date: {dateofscholarship[0]}</p> : <></>}
+                    {applicantData?.student.contact_no? <p>Contact #: {applicantData?.student.contact_no}</p> : <></>}
                 </div>
                <div>
                 <p>The Scholarship Committee</p>
                 <br />
                 <p>Sir/Madam:</p>
                 <br />
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;May I/we apply fot the scholarhsip priveleges in the&nbsp;  
-                    <strong>{non_abbv_dept}</strong>&nbsp;this <strong>{application.semester}</strong> semester, S.Y. <strong>{application.school_year}</strong>.
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;May I/we apply for the scholarhsip priveleges in the&nbsp;  
+                    <strong>{applicantData?.student.department.dept_name}</strong>&nbsp;this <strong>{applicantData?.semester}</strong> semester, S.Y. <strong>{applicantData?.school_year}</strong>.
                 </p>
                 <br />
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I/we promise to abide by the scholarhisp rules and regulations of Wesleyan University-Philippines and shall do my best to perform duties assigned by the Administration reserving to itself the right to suspend any or all of its scholarship priveleges granted to me.
@@ -89,7 +69,7 @@ function OneApplication ({application}) {
                 <div className="signatures">
                     <div className='student-signature'>
                         <p>Respectfully yours,</p>
-                        <img src={application.student_sign} alt="" width={150}/>
+                        <img src={applicantData?.student_sign} alt="" width={150}/>
                         <h3>{fullNameOfApplicant}</h3>
                         <h5>STUDENT'S PRINTED NAME & SIGNATURE</h5>
                     </div>
@@ -97,11 +77,11 @@ function OneApplication ({application}) {
                         <div>
                             <h5>RECOMMENDED BY: </h5>
                             <br />
-                            <img src={application.admin_sign} alt="Admin Signature" width={150}/>
+                            <img src={applicantData?.admin_sign} alt="Admin Signature" width={150}/>
                             <h5>OFFICE OF STUDENT AFFAIRS</h5>
                         </div>
                         <div>
-                            <img src={application.dean_sign} alt="Dean Signature" width={150}/>
+                            <img src={applicantData?.dean_sign} alt="Dean Signature" width={150}/>
                             <h5>DEAN/PRINCIPAL</h5>
                         </div>
                        
@@ -111,14 +91,14 @@ function OneApplication ({application}) {
             </div>
 
             <div className="applicant-data">
-                <h3>Student ID: {application.student_id}</h3>
-                <h3>Name: {application.last_name}, {application.first_name}, {application.middle_name}</h3>
-                <h3>Year Level: {application.year}</h3>
-                <h3>Department: {application.department}</h3>
-                <h3>Course: {application.course}</h3>
-                <h3>Email: {application.email}</h3>
-                <h3>Contact No.: {application.contact_no}</h3>
-                <h3>Scholarship Type: {application.scholarship_type}</h3>
+                <h3>Student ID: {applicantData?.student?.student_id}</h3>
+                <h3>Name: {applicantData?.student?.last_name}, {applicantData?.student?.first_name}, {applicantData?.student?.middle_name}</h3>
+                <h3>Year Level: {applicantData?.student?.year}</h3>
+                <h3>Department: {applicantData?.student?.department.dept_name + " (" + applicantData?.student?.department.dept_code + ")"}</h3>
+                <h3>Course: {applicantData?.student?.course.course_name + " (" + applicantData?.student?.course.course_code + ")"}</h3>
+                <h3>Email: {applicantData?.student?.email}</h3>
+                <h3>Contact No.: {applicantData?.student?.contact_no}</h3>
+                <h3>Scholarship Type: {applicantData?.scholarship?.scholarship_name}</h3>
             </div>
             <div className="subj-codes-units-table">
                 <table>
@@ -132,64 +112,64 @@ function OneApplication ({application}) {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{application.subj_1}</td>
-                            <td>{application.units_1 == 0 ? '' : application.units_1}</td>
-                            <td>{application.subj_7}</td>
-                            <td>{application.units_7 == 0 ? '' : application.units_7}</td>
+                            <td>{applicantData?.subject_unit?.subject_1}</td>
+                            <td>{applicantData?.subject_unit?.unit_1 == 0 ? '' : applicantData?.subject_unit?.unit_1}</td>
+                            <td>{applicantData?.subject_unit?.subject_7}</td>
+                            <td>{applicantData?.subject_unit?.unit_7 == 0 ? '' : applicantData?.subject_unit?.unit_7}</td>
                         </tr>
                         <tr>
-                            <td>{application.subj_2}</td>
-                            <td>{application.units_2 == 0 ? '' : application.units_1}</td>
-                            <td>{application.subj_8}</td>
-                            <td>{application.units_8 == 0 ? '' : application.units_1}</td>
+                            <td>{applicantData?.subject_unit?.subject_2}</td>
+                            <td>{applicantData?.subject_unit?.unit_2 == 0 ? '' : applicantData?.subject_unit?.unit_2}</td>
+                            <td>{applicantData?.subject_unit?.subject_8}</td>
+                            <td>{applicantData?.subject_unit?.unit_8 == 0 ? '' : applicantData?.subject_unit?.unit_8}</td>
                         </tr>
                         <tr>
-                            <td>{application.subj_3}</td>
-                            <td>{application.units_3 == 0 ? '' : application.units_1}</td>
-                            <td>{application.subj_9}</td>
-                            <td>{application.units_9 == 0 ? '' : application.units_1}</td>
+                            <td>{applicantData?.subject_unit?.subject_3}</td>
+                            <td>{applicantData?.subject_unit?.unit_3 == 0 ? '' : applicantData?.subject_unit?.unit_3}</td>
+                            <td>{applicantData?.subject_unit?.subject_9}</td>
+                            <td>{applicantData?.subject_unit?.unit_9 == 0 ? '' : applicantData?.subject_unit?.unit_9}</td>
                         </tr>
                         <tr>
-                            <td>{application.subj_4}</td>
-                            <td>{application.units_4 == 0 ? '' : application.units_1}</td>
-                            <td>{application.subj_10}</td>
-                            <td>{application.units_10 == 0 ? '' : application.units_10}</td>
+                            <td>{applicantData?.subject_unit?.subject_4}</td>
+                            <td>{applicantData?.subject_unit?.unit_4 == 0 ? '' : applicantData?.subject_unit?.unit_4}</td>
+                            <td>{applicantData?.subject_unit?.subject_10}</td>
+                            <td>{applicantData?.subject_unit?.unit_10 == 0 ? '' : applicantData?.subject_unit?.unit_10}</td>
                         </tr>
                         <tr>
-                            <td>{application.subj_5}</td>
-                            <td>{application.units_5 == 0 ? '' : application.units_1}</td>
-                            <td>{application.subj_11}</td>
-                            <td>{application.units_11 == 0 ? '' : application.units_11}</td>
+                            <td>{applicantData?.subject_unit?.subject_5}</td>
+                            <td>{applicantData?.subject_unit?.unit_5 == 0 ? '' : applicantData?.subject_unit?.unit_5}</td>
+                            <td>{applicantData?.subject_unit?.subject_11}</td>
+                            <td>{applicantData?.subject_unit?.unit_11 == 0 ? '' : applicantData?.subject_unit?.unit_11}</td>
                         </tr>
                         <tr>
-                            <td>{application.subj_6}</td>
-                            <td>{application.units_6 == 0 ? '' : application.units_1}</td>
-                            <td>{application.subj_12}</td>
-                            <td>{application.units_12 == 0 ? '' : application.units_12}</td>
+                            <td>{applicantData?.subject_unit?.subject_6}</td>
+                            <td>{applicantData?.subject_unit?.unit_6 == 0 ? '' : applicantData?.subject_unit?.unit_6}</td>
+                            <td>{applicantData?.subject_unit?.subject_12}</td>
+                            <td>{applicantData?.subject_unit?.unit_12 == 0 ? '' : applicantData?.subject_unit?.unit_12}</td>
                         </tr>
                     </tbody>
                 </table>
                 <br />
-                <h4>TOTAL UNITS: {application.units_1 + application.units_2 + application.units_3 + application.units_4 + application.units_5 + application.units_6 + application.units_7 + application.units_8 + application.units_9 + application.units_10 + application.units_11 + application.units_12}</h4>
+                <h4>TOTAL UNITS: {applicantData?.subject_unit?.unit_1 + applicantData?.subject_unit?.unit_2 + applicantData?.subject_unit?.unit_3 + applicantData?.subject_unit?.unit_4 + applicantData?.subject_unit?.unit_5 + applicantData?.subject_unit?.unit_6 + applicantData?.subject_unit?.unit_7 + applicantData?.subject_unit?.unit_8 + applicantData?.subject_unit?.unit_9 + applicantData?.subject_unit?.unit_10 + applicantData?.subject_unit?.unit_11 + applicantData?.subject_unit?.unit_12}</h4>
             </div>
 
             <div className="other-reqs">
-                <img src={application.req_1  == '' || null ? '' : application.req_1} />
-                <img src={application.req_2  == '' || null ? '' : application.req_2} />
-                <img src={application.req_3  == '' || null ? '' : application.req_3} />
-                <img src={application.req_4  == '' || null ? '' : application.req_4} />
-                <img src={application.req_5  == '' || null ? '' : application.req_5} />
-                <img src={application.req_6  == '' || null ? '' : application.req_6} />
-                <img src={application.req_7  == '' || null ? '' : application.req_7} />
-                <img src={application.req_8  == '' || null ? '' : application.req_8} />
-                <img src={application.req_9  == '' || null ? '' : application.req_9} />
-                <img src={application.req_10 == '' || null ? '' : application.req_10} />
+                <img src={applicantData?.req_1  == '' || null ? '' : applicantData?.req_1} />
+                <img src={applicantData?.req_2  == '' || null ? '' : applicantData?.req_2} />
+                <img src={applicantData?.req_3  == '' || null ? '' : applicantData?.req_3} />
+                <img src={applicantData?.req_4  == '' || null ? '' : applicantData?.req_4} />
+                <img src={applicantData?.req_5  == '' || null ? '' : applicantData?.req_5} />
+                <img src={applicantData?.req_6  == '' || null ? '' : applicantData?.req_6} />
+                <img src={applicantData?.req_7  == '' || null ? '' : applicantData?.req_7} />
+                <img src={applicantData?.req_8  == '' || null ? '' : applicantData?.req_8} />
+                <img src={applicantData?.req_9  == '' || null ? '' : applicantData?.req_9} />
+                <img src={applicantData?.req_10 == '' || null ? '' : applicantData?.req_10} />
             </div>
         </div>
-            <hr />
-            <hr />
+        <hr />
+        <hr />
     </div>
-    )
+  )
 }
 
 
@@ -264,7 +244,7 @@ function ViewAllApprovedApplications() {
             <>
                 {
                     approvedApplications?.map((application)=>
-                        <OneApplication application={application}/>
+                        <OneApplication applicantData={application}/>
                     )
                 }
             </>

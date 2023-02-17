@@ -95,4 +95,11 @@
 .scholarship-info-table table th, .announcements-table table th {
   font-size: 24px;
   font-weight: 100;
+}
+
+.table tbody td {
+  max-width: 37ch;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }/*# sourceMappingURL=UpdateSiteContent.css.map */

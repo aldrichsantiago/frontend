@@ -25,6 +25,8 @@ function AdminApprovedApplications() {
                 }
         });
             setApplicantData(response.data);
+            document.title = response.data.student?.student_id + " APPROVED Application"
+
         } catch (error) {
             console.log(error);
         }
@@ -61,27 +63,6 @@ function AdminApprovedApplications() {
           return Promise.reject(error);
       });
 
-      let non_abbv_dept = ''
-      if(applicantData.department == "CECT"){
-        non_abbv_dept = "College of Engineering and Computer Technology"
-      } else if (applicantData.department == "CAS") {
-        non_abbv_dept = "College of Arts & Sciences"
-      } else if (applicantData.department == "CBA") {
-        non_abbv_dept = "College of Business and Accountancy"
-      } else if (applicantData.department == "CCJE") {
-        non_abbv_dept = "College of Criminal Justice Education"
-      } else if (applicantData.department == "CoEd") {
-        non_abbv_dept = "College of Education"
-      } else if (applicantData.department == "CHTM") {
-        non_abbv_dept = "College of Hospitality and Tourism Management"
-      } else if (applicantData.department == "CONAMS") {
-        non_abbv_dept = "College of Nursing and Allied Sciences"
-      }  else if (applicantData.department == "MEDICINE") {
-        non_abbv_dept = "College of MEDICINE"
-      } else if (applicantData.department == "JWSLG") {
-        non_abbv_dept = "John Wesley School of Law and Governance"
-      }
-
       let dateofscholarship='';
       if(applicantData.createdAt != null){
         dateofscholarship = applicantData.createdAt;
@@ -91,8 +72,8 @@ function AdminApprovedApplications() {
       let fullNameOfApplicant = '';
       let middleName = '';
       let middleInit = '';
-      if(applicantData.last_name != null || applicantData.first_name != null || applicantData.middle_name != null){
-        middleName = applicantData.middle_name;
+      if(applicantData.student?.last_name != null || applicantData.student?.first_name != null || applicantData.student?.middle_name != null){
+        middleName = applicantData.student?.middle_name;
         if(middleName.includes(' ')){
             middleName = middleName.split(' ');
             middleInit = middleName[0][0] + '.' + middleName[1][0] + '.';
@@ -100,7 +81,7 @@ function AdminApprovedApplications() {
         }else{
             middleInit = middleName[0] + '.';
         }
-        fullNameOfApplicant = applicantData.first_name + " " + middleInit+ " " + applicantData.last_name;
+        fullNameOfApplicant = applicantData.student?.first_name + " " + middleInit+ " " + applicantData.student?.last_name;
         fullNameOfApplicant = fullNameOfApplicant.toUpperCase();
       }
 
@@ -127,15 +108,15 @@ function AdminApprovedApplications() {
             <div className="scholarship-form-msg">
                 <div className="scholar-details">
                     {applicantData.createdAt? <p>Date: {dateofscholarship[0]}</p> : <></>}
-                    {applicantData.contact_no? <p>Contact #: {applicantData.contact_no}</p> : <></>}
+                    {applicantData.student?.contact_no? <p>Contact #: {applicantData.student?.contact_no}</p> : <></>}
                 </div>
                <div>
                 <p>The Scholarship Committee</p>
                 <br />
                 <p>Sir/Madam:</p>
                 <br />
-                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;May I/we apply fot the scholarhsip priveleges in the&nbsp;  
-                    <strong>{non_abbv_dept}</strong>&nbsp;this <strong>{applicantData.semester}</strong> semester, S.Y. <strong>{applicantData.school_year}</strong>.
+                <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;May I/we apply for the scholarhsip priveleges in the&nbsp;  
+                    <strong>{applicantData.student?.department.dept_name}</strong>&nbsp;this <strong>{applicantData.semester}</strong> semester, S.Y. <strong>{applicantData.school_year}</strong>.
                 </p>
                 <br />
                 <p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I/we promise to abide by the scholarhisp rules and regulations of Wesleyan University-Philippines and shall do my best to perform duties assigned by the Administration reserving to itself the right to suspend any or all of its scholarship priveleges granted to me.
@@ -146,20 +127,19 @@ function AdminApprovedApplications() {
                     <div className='student-signature'>
                         <p>Respectfully yours,</p>
                         <img src={applicantData.student_sign} alt="" width={150}/>
-                        <h3>{fullNameOfApplicant}</h3>
-                        <h5>STUDENT'S PRINTED NAME & SIGNATURE</h5>
+                        <h5>{fullNameOfApplicant}</h5>
+                        <p><strong>STUDENT'S PRINTED NAME & SIGNATURE</strong></p>
                     </div>
                     <div className='higher-ups-signs'>
                         <div>
-
-                            <h5>RECOMMENDED BY: </h5>
+                            <p>RECOMMENDED BY: </p>
                             <br />
                             <img src={applicantData.admin_sign} alt="Admin Signature" width={150}/>
-                            <h5>OFFICE OF STUDENT AFFAIRS</h5>
+                            <p><strong>OFFICE OF STUDENT AFFAIRS</strong></p>
                         </div>
                         <div>
                             <img src={applicantData.dean_sign} alt="Dean Signature" width={150}/>
-                            <h5>DEAN/PRINCIPAL</h5>
+                            <p><strong>DEAN/PRINCIPAL</strong></p>
                         </div>
                        
                     </div>
@@ -168,14 +148,14 @@ function AdminApprovedApplications() {
             </div>
 
             <div className="applicant-data">
-                <h3>Student ID: {applicantData.student_id}</h3>
-                <h3>Name: {applicantData.last_name}, {applicantData.first_name}, {applicantData.middle_name}</h3>
-                <h3>Year Level: {applicantData.year}</h3>
-                <h3>Department: {applicantData.department}</h3>
-                <h3>Course: {applicantData.course}</h3>
-                <h3>Email: {applicantData.email}</h3>
-                <h3>Contact No.: {applicantData.contact_no}</h3>
-                <h3>Scholarship Type: {applicantData.scholarship_type}</h3>
+                <p>Student ID: {applicantData.student?.student_id}</p>
+                <p>Name: {applicantData.student?.last_name}, {applicantData.student?.first_name}, {applicantData.student?.middle_name}</p>
+                <p>Year Level: {applicantData.student?.year}</p>
+                <p>Department: {applicantData.student?.department.dept_name + " (" + applicantData.student?.department.dept_code + ")"}</p>
+                <p>Course: {applicantData.student?.course.course_name + " (" + applicantData.student?.course.course_code + ")"}</p>
+                <p>Email: {applicantData.student?.email}</p>
+                <p>Contact No.: {applicantData.student?.contact_no}</p>
+                <p>Scholarship Type: {applicantData.scholarship?.scholarship_name}</p>
             </div>
             <div className="subj-codes-units-table">
                 <table>
@@ -189,66 +169,46 @@ function AdminApprovedApplications() {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>{applicantData.subj_1}</td>
-                            <td>{applicantData.units_1 == 0 ? '' : applicantData.units_1}</td>
-                            <td>{applicantData.subj_7}</td>
-                            <td>{applicantData.units_7 == 0 ? '' : applicantData.units_7}</td>
+                            <td>{applicantData.subject_unit?.subject_1}</td>
+                            <td>{applicantData.subject_unit?.unit_1 == 0 ? '' : applicantData.subject_unit?.unit_1}</td>
+                            <td>{applicantData.subject_unit?.subject_7}</td>
+                            <td>{applicantData.subject_unit?.unit_7 == 0 ? '' : applicantData.subject_unit?.unit_7}</td>
                         </tr>
                         <tr>
-                            <td>{applicantData.subj_2}</td>
-                            <td>{applicantData.units_2 == 0 ? '' : applicantData.units_1}</td>
-                            <td>{applicantData.subj_8}</td>
-                            <td>{applicantData.units_8 == 0 ? '' : applicantData.units_1}</td>
+                            <td>{applicantData.subject_unit?.subject_2}</td>
+                            <td>{applicantData.subject_unit?.unit_2 == 0 ? '' : applicantData.subject_unit?.unit_2}</td>
+                            <td>{applicantData.subject_unit?.subject_8}</td>
+                            <td>{applicantData.subject_unit?.unit_8 == 0 ? '' : applicantData.subject_unit?.unit_8}</td>
                         </tr>
                         <tr>
-                            <td>{applicantData.subj_3}</td>
-                            <td>{applicantData.units_3 == 0 ? '' : applicantData.units_1}</td>
-                            <td>{applicantData.subj_9}</td>
-                            <td>{applicantData.units_9 == 0 ? '' : applicantData.units_1}</td>
+                            <td>{applicantData.subject_unit?.subject_3}</td>
+                            <td>{applicantData.subject_unit?.unit_3 == 0 ? '' : applicantData.subject_unit?.unit_3}</td>
+                            <td>{applicantData.subject_unit?.subject_9}</td>
+                            <td>{applicantData.subject_unit?.unit_9 == 0 ? '' : applicantData.subject_unit?.unit_9}</td>
                         </tr>
                         <tr>
-                            <td>{applicantData.subj_4}</td>
-                            <td>{applicantData.units_4 == 0 ? '' : applicantData.units_1}</td>
-                            <td>{applicantData.subj_10}</td>
-                            <td>{applicantData.units_10 == 0 ? '' : applicantData.units_10}</td>
+                            <td>{applicantData.subject_unit?.subject_4}</td>
+                            <td>{applicantData.subject_unit?.unit_4 == 0 ? '' : applicantData.subject_unit?.unit_4}</td>
+                            <td>{applicantData.subject_unit?.subject_10}</td>
+                            <td>{applicantData.subject_unit?.unit_10 == 0 ? '' : applicantData.subject_unit?.unit_10}</td>
                         </tr>
                         <tr>
-                            <td>{applicantData.subj_5}</td>
-                            <td>{applicantData.units_5 == 0 ? '' : applicantData.units_1}</td>
-                            <td>{applicantData.subj_11}</td>
-                            <td>{applicantData.units_11 == 0 ? '' : applicantData.units_11}</td>
+                            <td>{applicantData.subject_unit?.subject_5}</td>
+                            <td>{applicantData.subject_unit?.unit_5 == 0 ? '' : applicantData.subject_unit?.unit_5}</td>
+                            <td>{applicantData.subject_unit?.subject_11}</td>
+                            <td>{applicantData.subject_unit?.unit_11 == 0 ? '' : applicantData.subject_unit?.unit_11}</td>
                         </tr>
                         <tr>
-                            <td>{applicantData.subj_6}</td>
-                            <td>{applicantData.units_6 == 0 ? '' : applicantData.units_1}</td>
-                            <td>{applicantData.subj_12}</td>
-                            <td>{applicantData.units_12 == 0 ? '' : applicantData.units_12}</td>
+                            <td>{applicantData.subject_unit?.subject_6}</td>
+                            <td>{applicantData.subject_unit?.unit_6 == 0 ? '' : applicantData.subject_unit?.unit_6}</td>
+                            <td>{applicantData.subject_unit?.subject_12}</td>
+                            <td>{applicantData.subject_unit?.unit_12 == 0 ? '' : applicantData.subject_unit?.unit_12}</td>
                         </tr>
                     </tbody>
                 </table>
                 <br />
-                <h4>TOTAL UNITS: {applicantData.units_1 + applicantData.units_2 + applicantData.units_3 + applicantData.units_4 + applicantData.units_5 + applicantData.units_6 + applicantData.units_7 + applicantData.units_8 + applicantData.units_9 + applicantData.units_10 + applicantData.units_11 + applicantData.units_12}</h4>
+                <strong>TOTAL UNITS: {applicantData.subject_unit?.unit_1 + applicantData.subject_unit?.unit_2 + applicantData.subject_unit?.unit_3 + applicantData.subject_unit?.unit_4 + applicantData.subject_unit?.unit_5 + applicantData.subject_unit?.unit_6 + applicantData.subject_unit?.unit_7 + applicantData.subject_unit?.unit_8 + applicantData.subject_unit?.unit_9 + applicantData.subject_unit?.unit_10 + applicantData.subject_unit?.unit_11 + applicantData.subject_unit?.unit_12}</strong>
             </div>
-
-            {/* <div className="signatures">
-                <div className="student-sign">
-                    <img src={applicantData.student_sign} alt="Student's Signature Here" width={150}/>
-                    <h3>{applicantData.first_name} {applicantData.last_name}</h3>
-                    <p>---------------------------------------------</p>
-                    <h4>STUDENT'S SIGNATURE</h4>
-                </div>
-                <div className="dean-sign">
-                    <img src={applicantData.dean_sign} alt="Dean's Signature Here" width={150}/>
-                    <p>---------------------------------------------</p>
-                    <h4>DEAN'S SIGNATURE</h4>
-                </div>
-                <div className="admin-sign">
-                    <img src={applicantData.admin_sign} alt="OSA's Signature Here" width={150}/>
-                    <p>---------------------------------------------</p>
-                    <h4>OSA SIGNATURE</h4>
-                </div>
-            </div> */}
-
 
             <div className="other-reqs">
                 <img src={applicantData.req_1  == '' || null ? '' : applicantData.req_1} />
@@ -264,8 +224,8 @@ function AdminApprovedApplications() {
             </div>
         </div>
         
-    </div>   
-        )
+    </div>
+  )
 }
 
 export default AdminApprovedApplications

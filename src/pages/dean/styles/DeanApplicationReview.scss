@@ -34,7 +34,7 @@ $tertiary-color: #B91646;
     .dean-review-body{
         text-align: left;
         margin: 3em auto;
-        width: 57%;
+        width: 90%;
         .scholarship-form-msg{
             width: 70%;
             .scholar-details{
@@ -43,7 +43,7 @@ $tertiary-color: #B91646;
         }
 
         .applicant-data{
-            margin: 3em;
+            margin: 50em 0em 0em 0em;
         }
         
 
@@ -82,19 +82,28 @@ $tertiary-color: #B91646;
             flex-direction: column;
             flex-wrap: wrap;
             gap: 3em;
+            margin: 1em 0em;
             .student-signature{
-                text-align: left;
-                margin-left: 60%;
+                margin-right: 20px;
             }
             .higher-ups-signs{
                 width: 100%;
+                height: 5em;
                 display: flex;
                 flex-wrap: wrap;
-                gap: 40%;
+                align-items: center;
+                justify-content: center;
+    
+                gap: 10%;
                 div:nth-child(2){
                     margin-top: 30px;
                 }
             }
+        }
+
+        .subj-codes-units-table{
+            margin: 6em 0em;
+            text-align: center;
         }
 
         .other-reqs{

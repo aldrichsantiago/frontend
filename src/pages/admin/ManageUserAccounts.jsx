@@ -37,7 +37,7 @@ function ManageUserAccounts() {
   return (
     <>
       <AdminLayout>
-      <div className="manage-user-header">
+      <div className="dean-view-applications-header flex">
         <h1>Manage User Accounts</h1>
         <a href="#" className='navlink-admin-applications' onClick={()=>setWhichTable('PendingStudents')}>Pending Student Registrations</a>
         <a href='#' className='navlink-admin-applications' onClick={()=>setWhichTable('Students')}>Student Accounts</a>

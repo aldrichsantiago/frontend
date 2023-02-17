@@ -1,164 +1,171 @@
 
 
-.manage-user-header{
-    display: flex;
-    flex-wrap: wrap;
-    a{
-        text-decoration: none;
-        color: #ffffff;
-        background-color: #105652;
-        padding: 0.5em;
-        border-radius: 5px;
-        border: 3px solid #ffffff;
-        cursor: pointer;
+// .manage-user-header{
+//     display: flex;
+//     flex-wrap: wrap;
+//     padding: 0px 70px;
+//     align-items: center;
+//     a{
+//         margin: 0.5em;
+//         text-decoration: none;
+//         color: #ffffff;
+//         background-color: #105652;
+//         padding: 0.5em;
+//         border-radius: 5px;
+//         border: 3px solid #ffffff;
+//         cursor: pointer;
 
-        &:hover{
-            background-color: #105652;
-            cursor: pointer;
-        }
-    }
+//         &:hover{
+//             background-color: #105652;
+//             cursor: pointer;
+//         }
+//     }
+// }
+
+
+
+// .users-table-header {
+//     display: flex;
+//     flex-direction: column;
+//     gap: 10px;
+//     padding: 1rem;
+//     margin-bottom: 3em;
+//     overflow-x: scroll;
+//     &::-webkit-scrollbar{
+//       display: none;
+//     }
+
+//   }
+  
+  // table {
+  //   border-collapse: collapse;
+  //   width: 100%;
+  //   font-family: Arial, Helvetica, sans-serif;
+  // }
+  
+  // th,
+  // td {
+  //   border: 1px solid #ffffff;
+  //   text-align: left;
+  //   padding: 8px;
+  //   font-size: 32px;
+
+    
+  // }
+  
+  // th {
+  //   font-family: Bebas Neue;
+  //   font-size: 18px;
+  //   background-color: #eeeeeee3;
+  // }
+  
+  // td {
+  //   max-width: 29ch;
+  //   white-space: nowrap;
+  //   font-size: 16px;
+  //   overflow: hidden;
+  //   background-color: #eeeeeee3;
+  //   text-overflow: ellipsis;
+    
+
+  //   button{
+  //     margin: 3px;
+  //     padding: 0.5em 1em;
+  //     cursor: pointer;
+  //     color: #ffffff;
+  //     border: none;
+  //     border-radius: 5px;
+
+  //     &:nth-child(1){
+  //       background-color: #105652;
+  //     }
+  //     &:nth-child(2){
+  //       background-color: rgb(58, 206, 95);
+  //     }
+  //     &:nth-child(2){
+  //       background-color: rgb(206, 58, 58);
+  //     }
+  //   }
+  // }
+  
+  // .students-user-table{
+  //   &::-webkit-scrollbar{
+  //     display: none;
+  // }
+  //   button{
+  //     margin: 3px;
+  //     padding: 0.5em 1em;
+  //     cursor: pointer;
+  //     color: #ffffff;
+  //     border: none;
+  //     border-radius: 5px;
+
+  //     &:nth-child(1){
+  //       background-color: #105652;
+  //     }
+
+  //     &:nth-child(2){
+  //       background-color: rgb(58, 206, 95);
+  //     }
+  //     &:nth-child(3){
+  //       background-color: rgb(206, 58, 58);
+  //     }
+  //   }
+  // }
+
+  // form {
+  //   display: flex;
+  //   gap: 5px;
+  // }
+  
+  // form td:last-child {
+  //   display: flex;
+  //   justify-content: space-evenly;
+  // }
+
+  // .add-user-container{
+  //   width: auto;
+  //   display: flex;
+  //   flex-direction: column;
+  //   gap: 1em 0em;
+  //   font-family: Arial;
+  //   form{
+  //     input{
+  //       width: 300px;
+  //       height: 30px;
+  //     }
+  //     select{
+  //       width: 309px;
+  //       height: 33px;
+  //     }
+  //     button{
+  //       padding: 1em 2em;
+  //     }
+  //   }
+  // }
+  
+  // .manage-user-table-con{
+
+  //   .search-input{
+  //     height: 2em;
+  //   }
+  //   .add_btn{
+  //     text-align: center;
+  //     width: 5em;
+  //     height: 3em;
+  //     font-size: 0.75rem;
+  //     font-weight: 600;
+  //     border-radius: 3px;
+  //     border: 1px solid black;
+  //     cursor: pointer;
+  //     &:hover{
+  //       background-color: #d8d8d8;
+  //     }
+  //   }
+  // }
+
+td{
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }
-
-
-
-.users-table-header {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 1rem;
-    margin-bottom: 3em;
-    overflow-x: scroll;
-    &::-webkit-scrollbar{
-      display: none;
-    }
-
-  }
-  
-  table {
-    border-collapse: collapse;
-    width: 100%;
-    font-family: Arial, Helvetica, sans-serif;
-    
-  }
-  
-  th,
-  td {
-    border: 1px solid #ffffff;
-    text-align: left;
-    padding: 8px;
-    font-size: 32px;
-
-    
-  }
-  
-  th {
-    font-family: Bebas Neue;
-    font-size: 18px;
-    background-color: rgb(159, 161, 161);
-  }
-  
-  td {
-    max-width: 29ch;
-    white-space: nowrap;
-    font-size: 16px;
-    background-color: rgb(216, 205, 205);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    
-
-    button{
-      margin: 3px;
-      padding: 0.5em 1em;
-      cursor: pointer;
-      color: #ffffff;
-      border: none;
-      border-radius: 5px;
-
-      &:nth-child(1){
-        background-color: #105652;
-      }
-      &:nth-child(2){
-        background-color: rgb(58, 206, 95);
-      }
-      &:nth-child(2){
-        background-color: rgb(206, 58, 58);
-      }
-    }
-  }
-  
-  .students-user-table{
-    &::-webkit-scrollbar{
-      display: none;
-  }
-    button{
-      margin: 3px;
-      padding: 0.5em 1em;
-      cursor: pointer;
-      color: #ffffff;
-      border: none;
-      border-radius: 5px;
-
-      &:nth-child(1){
-        background-color: #105652;
-      }
-
-      &:nth-child(2){
-        background-color: rgb(58, 206, 95);
-      }
-      &:nth-child(3){
-        background-color: rgb(206, 58, 58);
-      }
-    }
-  }
-
-  form {
-    display: flex;
-    gap: 5px;
-  }
-  
-  form td:last-child {
-    display: flex;
-    justify-content: space-evenly;
-  }
-
-  .add-user-container{
-    width: auto;
-    display: flex;
-    flex-direction: column;
-    gap: 1em 0em;
-    font-family: Arial;
-    form{
-      input{
-        width: 300px;
-        height: 30px;
-      }
-      select{
-        width: 309px;
-        height: 33px;
-      }
-      button{
-        padding: 1em 2em;
-      }
-    }
-  }
-  
-  .manage-user-table-con{
-
-    .search-input{
-      height: 2em;
-    }
-    .add_btn{
-      text-align: center;
-      width: 5em;
-      height: 3em;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border-radius: 3px;
-      border: 1px solid black;
-      cursor: pointer;
-      &:hover{
-        background-color: #d8d8d8;
-      }
-    }
-  }
- 

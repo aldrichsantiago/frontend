@@ -25,40 +25,11 @@
   background-color: #0d4946;
 }
 
-.dean-view-applications .search-input, .approved-applications .search-input, .rejected-applications .search-input {
-  width: 150px;
-  height: 25px;
-}
-.dean-view-applications .dept-select, .approved-applications .dept-select, .rejected-applications .dept-select {
-  width: 90px;
-  height: 30px;
-}
-.dean-view-applications .course-select, .approved-applications .course-select, .rejected-applications .course-select {
-  width: 200px;
-  height: 30px;
-}
-
 .navlink-admin-applications {
   border: 2px solid #fff;
 }
 .navlink-admin-applications:hover {
   -webkit-filter: brightness(90%);
-}
-
-.rejected-applications, .approved-applications {
-  margin-bottom: 5em;
-  overflow-x: scroll;
-}
-.rejected-applications::-webkit-scrollbar, .approved-applications::-webkit-scrollbar {
-  display: none;
-}
-.rejected-applications table a, .approved-applications table a {
-  color: #fff;
-  background-color: #105652;
-  padding: 0.35em 3em;
-  text-decoration: none;
-  margin-right: 1em;
-  border-radius: 5px;
 }
 
 #view-pending-app-link {
@@ -68,4 +39,17 @@
   text-decoration: none;
   margin-right: 1em;
   border-radius: 5px;
+}
+
+.print-all-approved {
+  padding: 0.4em 1em;
+  border-radius: 9px;
+  border: 2px solid white;
+  background-color: #0d4946;
+  color: #fff;
+  text-decoration: none;
+}
+.print-all-approved:hover {
+  color: white;
+  background-color: rgb(9, 51, 49) 4946;
 }/*# sourceMappingURL=ViewApplications.css.map */

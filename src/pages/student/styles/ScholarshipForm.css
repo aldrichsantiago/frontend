@@ -6,6 +6,9 @@
 .scholarship-form-container {
   padding: 0em 2em;
 }
+.scholarship-form-container label, .scholarship-form-container p {
+  font-size: large;
+}
 .scholarship-form-container .scholarship-form {
   display: block;
   margin-bottom: 3em;
@@ -14,16 +17,23 @@
   gap: 1em;
   flex-wrap: wrap;
 }
-.scholarship-form-container .scholarship-form .subject-codes, .scholarship-form-container .scholarship-form .units {
+.scholarship-form-container .scholarship-form .subject-codes {
   display: flex;
   flex-direction: column;
   gap: 3px;
 }
-.scholarship-form-container .scholarship-form .subject-codes input[type=text], .scholarship-form-container .scholarship-form .units input[type=text] {
-  width: 100px;
+.scholarship-form-container .scholarship-form .subject-codes select {
+  width: 300px;
 }
-.scholarship-form-container .scholarship-form .subject-codes input[type=number], .scholarship-form-container .scholarship-form .units input[type=number] {
-  width: 40px;
+.scholarship-form-container .scholarship-form .units {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+  justify-content: center;
+}
+.scholarship-form-container .scholarship-form .units select {
+  width: 100px;
 }
 .scholarship-form-container .scholarship-form .other-info {
   display: flex;
@@ -46,6 +56,13 @@
 }
 .scholarship-form-container .scholarship-form .scholarFormSubmit:hover {
   background-color: rgb(214, 214, 214);
+}
+
+.schoolyear-container {
+  display: flex;
+}
+.schoolyear-container p {
+  margin: 0px 3px;
 }
 
 .sigPad {

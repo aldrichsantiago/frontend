@@ -26,115 +26,75 @@ function AccountDetails() {
   const [email, setEmail] = useState('');
   const navigate = useNavigate();
   const [studentFormData, setStudentFormData] = useState({});
+  const [studentUpdateData, setStudentUpdateData] = useState({});
   const [changePassModal, setChangePassModal] = useState(false);
-
-  const [passwordForm, setPasswordForm] = useState({
-    student_id: student_id
-  });
-
-
-  const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
-  let courses = [""];
-
-  if (department == "CECT"){
-    courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
-  }else if (department == "CONAMS"){
-      courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
-  }else if (department == "CHTM"){
-      courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
-  }else if (department == "CBA"){
-      courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
-  }else if (department == "CAS"){
-      courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
-  }else if (department == "CoEd"){
-      courses = ["","Bachelor of Elementary Education", "Bachelor of Physical Education"];
-  }else if (department == "CCJE"){
-      courses = ["","Bachelor of Science in Criminology"];
-  }else if (department == "Medicine"){
-    courses = ["",""];
-  }else if (department == "JWSLG"){
-      courses = ["",""];
-  }else if (department == "High School"){
-      courses = ["","Junior High School", "Senior High School"];
-  }else if (department == "Elementary"){
-      courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
-  }else{
-      courses = [""];
-  }
-
-  let all_courses =["","Bachelor of Science in Information Technology", 
-  "Bachelor of Science in Electronics Engineering", 
-  "Bachelor of Science in Computer Engineering",
-  "Bachelor of Science in Nursing",
-   "Bachelor of Science in Radiologic Technology",
-   "Bachelor of Science in Medical Technology",
-   "Bachelor of Science in Physical Therapy",
-   "Bachelor of Science in Pharmacy",
-  "Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations",
-   "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration",
-   "Bachelor of Science in Tourism Management",
-  "Bachelor of Science in Accountancy",
-   "Bachelor of Science in Accounting Technology",
-   "Bachelor of Science in Business Administration",
-  "Bachelor of Arts in Communication ",
-   "Bachelor of Arts in Political Science",
-   "Bachelor of Arts in Psychology",
-   "Bachelor of Arts in Theology",
-   "Bachelor of Science in Psychology",
-   "Bachelor of Science in Biology",
-   "Bachelor of Science in Social Work",
-  "Bachelor of Elementary Education",
-   "Bachelor of Physical Education",
-  "Bachelor of Science in Criminology",
-   "Junior High School",
-   "Senior High School",
-  "GRADE 1 to 3 ( Primary Level )",
-   "GRADE 4 to 6 ( Intermediate Level )"
-
-  ]
+  const [passwordForm, setPasswordForm] = useState({student_id: student_id});
+  const [departments, setDepartments] = useState();
+  const [courses, setCourses] = useState();
 
   useEffect(() => {
     refreshToken();
-    getStudent();
-    
+    getDepartments();
+  },[]);
+  
+  useEffect(() => {
+    if(student_id){
+      getStudent();
+    }
   },[token]);
 
   useEffect(()=>{
-    if(msg == ''){
+    if(student.department){
+      getAllCourses();
+      getCourses(student.dept_id);
+
     }else{
-
+      student.department = student.dept_id
+      getAllCourses();
     }
-  },[msg]);
+  }, [student.department, departments, student.dept_id]);
 
-  const checkForm = () =>{
-    if (last_name != undefined){
-      studentFormData["last_name"] = last_name;
-      console.log(studentFormData);
-    }if (first_name != undefined){
-      studentFormData["first_name"] = first_name;
-      console.log(studentFormData);
-    }if (middle_name != undefined){
-      studentFormData["middle_name"] = middle_name;
-      console.log(studentFormData);
-    }if (department != undefined){
-      studentFormData["department"] = department;
-      console.log(studentFormData);
-    }if (course != undefined){
-      studentFormData["course"] = course;
-      console.log(studentFormData);
-    }if (year != undefined){
-      studentFormData["year"] = year;
-      console.log(studentFormData);
-    }if (contact_no != undefined){
-      studentFormData["contact_no"] = contact_no;
-      console.log(studentFormData);
-    }if (email != undefined){
-      studentFormData["email"] = email;
-      console.log(studentFormData);
-    }if (student_id != undefined){
-      studentFormData["student_id"] = student_id;
-      console.log(studentFormData);
+
+  const dept_options = departments?.map((dept) => {
+    if (student.department?.dept_code == dept.dept_code){
+      return <option key={dept.dept_code} value={dept.dept_id} selected>{dept.dept_code}</option>
+    }else {
+      return <option key={dept.dept_code} value={dept.dept_id}>{dept.dept_code}</option>
     }
+  });
+
+  const course_options = courses?.map((course) =>{
+    if (course?.course_id == student.course){
+      return <option key={course.course_id} value={course.course_id} selected>{course.course_code}</option>
+    }else {
+      return <option key={course.course_id} value={course.course_id}>{course.course_code} --- {course.course_name}</option>
+    }
+  });
+
+
+
+  const getDepartments = async () => {
+    try{
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/departments`);
+      setDepartments(response.data);
+
+      getCourses();
+
+    }catch(e){console.log(e)}
+  }
+
+  const getCourses = async (deptid) => {
+    try{
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/courses/${deptid}`);
+      setCourses(response.data);
+    }catch(e){console.log(e)}
+  }
+
+  const getAllCourses = async () => {
+    try{
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/all/courses`);
+      setCourses(response.data);
+    }catch(e){console.log(e)}
   }
 
   const checkPassword = () => {
@@ -156,27 +116,62 @@ function AccountDetails() {
         Authorization: `Bearer ${token}`
       }
     });
-
+    setStudentUpdateData(response.data);
     setStudent(response.data);
-    setLastName(student.last_name);
-    setFirstName(student.first_name);
-    setMiddleName(student.middle_name);
-    setDepartment(student.department);
-    setCourse(student.course);
-    setYear(student.year);
-    setContactNo(student.contact_no);
-    setEmail(student.email);
-    console.log(first_name == '');
+    // setLastName(student.last_name);
+    // setFirstName(student.first_name);
+    // setMiddleName(student.middle_name);
+    // setDepartment(student.department);
+    // setCourse(student.course);
+    // setYear(student.year);
+    // setContactNo(student.contact_no);
+    // setEmail(student.email);
+    student.department = student.dept_id;
+  }
+
+  const validateFormData = () => {
+    const {id, student_id, last_name, first_name, middle_name, dept_id, course_id, year, email, contact_no} = student;
+    studentFormData.id = id;
+    studentFormData.student_id = student_id;
+    studentFormData.last_name = last_name;
+    studentFormData.first_name = first_name;
+    studentFormData.middle_name = middle_name;
+    studentFormData.dept_id = dept_id;
+    studentFormData.email = email;
+    studentFormData.contact_no = contact_no;
+    studentFormData.course_id = course_id;
+    studentFormData.year = year;
+    if(!studentFormData.last_name || studentFormData.last_name.length > 30){
+      errNotify("Enter a valid last name");
+    }else if(!studentFormData.first_name || studentFormData.first_name.length > 30){
+      errNotify("Enter a valid first name");
+    }else if(studentFormData.middle_name.length > 30){
+      errNotify("Enter a valid first name");
+    }else if(!studentFormData.dept_id){
+      errNotify("Enter a valid department");
+    }else if(!studentFormData.course_id){
+      errNotify("Enter a valid course");
+    }else if(!studentFormData.year){
+      errNotify("Enter a valid year");
+    }else if(!studentFormData.email || !studentFormData.email.includes('@')){
+      errNotify("Enter a valid email");
+    }else if(!studentFormData.contact_no || studentFormData.contact_no.length < 6 || studentFormData.contact_no.length > 14){
+      errNotify("Enter a valid contact number");
+    }else{
+      editStudent();
+    }
+    console.log(studentFormData);
   }
 
   const editStudent = async () => {
-    checkForm();
     try{
       await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/update/student/details/${student.id}`,
-      studentFormData, {headers: {
-        Authorization: `Bearer ${token}`
-      }});
-      setMsg("Updated Successfully");
+      studentFormData, 
+      { 
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
       notify("Updated Successfully");
     }catch(e){
       setMsg(e.response.data.msg);
@@ -207,7 +202,6 @@ function AccountDetails() {
       const decoded = jwt_decode(response.data.accessToken);
       setName(decoded.first_name + ' ' + decoded.last_name);
       setStudentId(decoded.studentId);
-      console.log(student_id);
       setExpire(decoded.exp);
     }
     catch (error) {
@@ -237,18 +231,19 @@ function AccountDetails() {
       return Promise.reject(error);
   });
 
-  const dept_options = departments.map((dept) =>{
-    if (dept == student.department)
-      return <option key={dept} selected>{dept}</option>
-    return <option key={dept}>{dept}</option>
-  });
 
-  const course_options = all_courses.map((c) => {
-    if (c == student.course)
-      return <option key={c} selected>{c}</option>
-    return <option key={c}>{c}</option>
-  });
+  const handleUpdateFormChange = (event) => {
+    event.preventDefault();
 
+    const fieldName = event.target.getAttribute("name");
+    const fieldValue = event.target.value;
+
+    const newFormData = { ...student };
+    newFormData[fieldName] = fieldValue;
+
+    setStudent(newFormData);
+    console.log(student)
+  };
 
   const handleChangePassFormChange = (event) => {
     event.preventDefault();
@@ -307,56 +302,66 @@ function AccountDetails() {
     },
   };
 
+  console.log(student)
   return (
     <>
       <Layout>
         <div className="user-details-container">
           <h1>Personal Information</h1>
-          <form>
+          <form className='form-group'>
             <div>
               <label htmlFor="last_name">Last Name: </label>
-              <input defaultValue={student.last_name} name="last_name" type="text" placeholder="Enter your last name" required onChange={(e)=> setLastName(e.target.value)}/>
+              <input class="form-control" defaultValue={student.last_name} name="last_name" type="text" placeholder="Enter your last name" required onChange={handleUpdateFormChange}/>
             </div>
             <div>
               <label htmlFor="first_name">First Name:</label>
-              <input defaultValue={student.first_name} name="first_name" type="text" placeholder="Enter your first name" required onChange={(e)=> setFirstName(e.target.value)}/>
+              <input class="form-control" defaultValue={student.first_name} name="first_name" type="text" placeholder="Enter your first name" required onChange={handleUpdateFormChange}/>
             </div>
             <div>
               <label htmlFor="middle_name">Middle Name:</label>
-              <input defaultValue={student.middle_name} name="middle_name" type="text" placeholder="Enter your middle name" required onChange={(e)=> setMiddleName(e.target.value)}/>
+              <input class="form-control" defaultValue={student.middle_name} name="middle_name" type="text" placeholder="Enter your middle name" required onChange={handleUpdateFormChange}/>
             </div>
             <div>
-              <label htmlFor="department">Department: </label>
-              <select defaultValue={student.department} name="department" type="text" placeholder="Enter your department" required onChange={(e)=> setDepartment(e.target.value)}>
+              <label htmlFor="dept_id">Department: </label>
+              <select class="form-select custom-select" aria-label="Default select example" defaultValue={student.dept_id} name="dept_id" type="text" placeholder="Enter your department" required onChange={handleUpdateFormChange}>
+                <option value=""> </option>
                 {dept_options}
               </select>
             </div>
             <div>
-              <label htmlFor="course">Course: </label>
-              <select defaultValue={student.course} name="course" type="text" placeholder="Enter your cousre" required onChange={(e)=> setCourse(e.target.value)}>
+              <label htmlFor="course_id">Course: </label>
+              <select class="form-select custom-select" aria-label="Default select example" value={student.course_id} name="course_id" type="text" placeholder="Enter your cousre" required onChange={handleUpdateFormChange}>
+                <option value=""> </option>
                 {course_options}
               </select>
             </div>
             <div>
               <label htmlFor="year">Year: </label>
-              <input defaultValue={student.year} name="year" type="number" placeholder="Enter your year" required onChange={(e)=> setYear(e.target.value)}/>
+              <select class="form-select custom-select" aria-label="Default select example" value={student.year} name="year" type="text" placeholder="Enter your year" required onChange={handleUpdateFormChange}>
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
             </div>
             <div>
               <label htmlFor="contact_no">Contact no.: </label>
-              <input defaultValue={student.contact_no} name="contact_no" type="text" placeholder="Enter your contact no" required onChange={(e)=> setContactNo(e.target.value)}/>
+              <input class="form-control" defaultValue={student.contact_no} name="contact_no" type="text" placeholder="Enter your contact no" required onChange={handleUpdateFormChange}/>
             </div>
             <div>
               <label htmlFor="email">Email: </label>
-              <input defaultValue={student.email} name="email" type="email" placeholder="Enter your email" required onChange={(e)=> setEmail(e.target.value)}/>
+              <input class="form-control" defaultValue={student.email} name="email" type="email" placeholder="Enter your email" required onChange={handleUpdateFormChange}/>
             </div>
             <div>
               <label htmlFor="student_id">Student ID: </label>
               <p name="student_id">{student_id}</p>
             </div>
             <div>
-              <button style={{padding: '1em'}}type="button" onClick={handleChangePassword}>Change Password</button>
+              <button className='btn p-3 border border-dark' type="button" onClick={handleChangePassword}>Change Password</button>
             </div>
-            <button type='button' onClick={editStudent}>UPDATE ACCOUNT DETAILS</button>
+            <button className='btn border border-dark' type='button' onClick={validateFormData}>UPDATE ACCOUNT DETAILS</button>
           </form>
         </div>
       </Layout>
@@ -365,11 +370,11 @@ function AccountDetails() {
         style={customStyles}
         ariaHideApp={false}>
           <form onSubmit={handleChangePasswordSubmit} style={{display:'flex', flexDirection:'column', gap:'1em'}}>
-            <input type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange} required/>
-            <input type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange} required/>
+            <input className='form-control py-3' type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange} required/>
+            <input className='form-control py-3' type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange} required/>
             <div style={{display:'flex', gap:'1em'}}>
-              <button type="button" className='btnCancel' onClick={()=>setChangePassModal(false)}>Cancel</button>
-              <button type="submit" className='btnChangePass'>Change Password</button>
+              <button type="button" className='btn btnCancel border border-dark' onClick={()=>setChangePassModal(false)}>Cancel</button>
+              <button type="submit" className='btn btnChangePass'>Change Password</button>
             </div>
           </form>
       </Modal>

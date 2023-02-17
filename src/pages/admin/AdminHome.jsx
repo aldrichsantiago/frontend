@@ -19,6 +19,13 @@ function AdminHome() {
     setLoading(false)
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate('/admin/applications')
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {

@@ -39,14 +39,21 @@ function ViewScholarship() {
         <div className="view-scholarships">
           <div>
             <h1>View Scholarships: </h1>
-            <span>
-              <label>Scholarship Name: &nbsp; </label>
-              <input type="text" name='searchField' placeholder='e.g. Academic Scholarship' onChange={(e)=>{setSearch(e.target.value)}}/>
+            <div className="d-flex flex-row w-100 flex align-items-center my-5">
+            <span className='col-7'>
+              <div className='text-left flex'>
+                <div class="input-group w-100 my-1">
+                  <div class="input-group-prepend">
+                    <span class="input-group-text" >Scholarship Name</span>
+                  </div>
+                  <input type="text" name="searchField" className='searchField form-control h-100' onChange={(e)=>{setSearch(e.target.value)}}/>
+                </div>
+              </div>
             </span>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            <span>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            <span className='col-4'>
               <label>Scholarship Type: &nbsp; </label>
-              <select className='scholarship-select' id='dean-select-course' onChange={(e)=>setSearch(e.target.value)} value={search}>
+              <select className='scholarship-select custom-select col-8' id='dean-select-course' onChange={(e)=>setSearch(e.target.value)} value={search}>
                 <option value=""> </option>
                 <option value="Academic">Academic</option>
                 <option value="Athlete">Athlete</option>
@@ -57,10 +64,12 @@ function ViewScholarship() {
                 <option value="government">Government</option>
               </select>
             </span>
+
+            </div>
           </div>
           <div className="accordion">
-            {scholarships.map(({id, scholarship_name, description, requirements }) => (
-              <Accordion key={id} scholarship_name={scholarship_name} description={description} requirements={requirements}/>
+            {scholarships.map(({scholarship_id, scholarship_name, description, requirements }) => (
+              <Accordion key={scholarship_id} scholarship_name={scholarship_name} description={description} requirements={requirements}/>
             ))}
           </div>
 

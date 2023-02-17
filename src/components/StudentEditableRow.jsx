@@ -74,7 +74,7 @@ const StudentEditableRow = ({
           required="required"
           placeholder="Enter an department..."
           name="department"
-          value={editFormData.department}
+          value={editFormData.department.dept_code}
           onChange={handleEditFormChange}
         ></input>
       </td>
@@ -84,7 +84,7 @@ const StudentEditableRow = ({
           required="required"
           placeholder="Enter a course..."
           name="course"
-          value={editFormData.course}
+          value={editFormData.course.course_code}
           onChange={handleEditFormChange}
         ></input>
       </td>

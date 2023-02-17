@@ -7,14 +7,18 @@ import StudentReadOnlyRow from './../../../components/StudentReadOnlyRow'
 import StudentEditableRow from './../../../components/StudentEditableRow'
 
 function ManageStudentAccounts() {
-    const [students, setStudents] = useState();
+    const [students, setStudents] = useState([]);
     const [modalIsOpen, setModalIsOpen] = useState(false);
     const [msg, setMsg] = useState('');
     const [token, setToken] = useState('');
     const [expire, setExpire] = useState('');
     const [selectDept, setSelectDept] = useState('');
+    const [departments, setDepartments] = useState();
+    const [courses, setCourses] = useState([]);
+    const [allCourses, setAllCourses] = useState([]);
     const [search, setSearch] = useState('');
     const [selectCourse, setSelectCourse] = useState('');
+    const [editModal, setEditModal] = useState(false);
     const [addStudentFormData, setAddStudentFormData] = useState({
         student_id: "",
         last_name: "",
@@ -22,8 +26,8 @@ function ManageStudentAccounts() {
         middle_name: "",
         contact_no: "",
         email: "",
-        department: '',
-        course: '',
+        department: "",
+        course: "",
         year: "",
         password: "",
         confPassword: "",
@@ -36,58 +40,50 @@ function ManageStudentAccounts() {
         contact_no: "",
         email: "",
         course: "",
+        department:"",
         year: "",
-        student_id: ""
+        student_id: "",
+        dept_id: 0,
+        course_id: 0
     });
 
     const [editStudenttId, setEditStudenttId] = useState(null);
     const [changePassModal, setChangePassModal] = useState(false);
-    const [passwordForm, setPasswordForm] = useState({
+    const [passwordForm, setPasswordForm] = useState({});
 
-    });
+    const dept_options = departments?.map((dept) =>
+        <option key={dept.dept_code} value={dept.dept_id}>{dept.dept_code}</option>
+    );
 
+    const selected_dept_options = departments?.map((dept) =>{
+      if(editStudentFormData.dept_id == dept.dept_id){
+        return <option key={dept.dept_id} value={dept.dept_id} selected>{dept.dept_code}</option>
+      } else {
+          return <option key={dept.dept_id} value={dept.dept_id}>{dept.dept_code}</option>
+      }
+      });
 
-    const departments = ["Choose a Department","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
-    let courses = ["Choose a Course"];
+    const course_options = courses?.map((course) =>
+        <option key={course.course_id} value={course.course_id}>{course.course_code} - {course.course_name}</option>
+    );
 
-    if (selectDept == "CECT"){
-        courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
-    }else if (selectDept == "CONAMS"){
-        courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
-    }else if (selectDept == "CHTM"){
-        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
-    }else if (selectDept == "CBA"){
-        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
-    }else if (selectDept == "CAS"){
-        courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
-    }else if (selectDept == "CoEd"){
-        courses = ["","Bachelor of Elementary Education", "Bachelor of Physical Education"];
-    }else if (selectDept == "CCJE"){
-        courses = ["","Bachelor of Science in Criminology"];
-    }else if (selectDept == "Medicine"){
-        courses = ["",""];
-    }else if (selectDept == "JWSLG"){
-        courses = ["",""];
-    }else if (selectDept == "High School"){
-        courses = ["","Junior High School", "Senior High School"];
-    }else if (selectDept == "Elementary"){
-        courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
-    }else{
-        courses = [""];
-    }
+    const selected_course_options = courses?.map((course) =>{
+      if(editStudentFormData.course_id == course.course_id){
+        return <option key={course.course_id} value={course.course_id} selected>{course.course_code}</option>
+      } else {
+          return <option key={course.course_id} value={course.course_id}>{course.course_code} - {course.course_name}</option>
+      }
+      });
 
-  const dept_options = departments.map((dept) =>
-    <option key={dept} value={dept}>{dept}</option>
-  );
-
-  const course_options = courses.map((course) =>
-    <option key={course} value={course}>{course}</option>
-  );
+      console.log(courses)
 
 
     useEffect(() => {
         refreshToken();
         getStudents();
+        getDepartments();
+        getAllCourses();
+
     }, []);
 
     useEffect(() => {
@@ -98,7 +94,30 @@ function ManageStudentAccounts() {
       }
     }, [search]);
 
+    useEffect(()=>{
+      getCourses(selectDept);
+    }, [addStudentFormData.department, editStudentFormData.dept_id, selectDept]);
 
+  const getDepartments = async () => {
+      try{
+         const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/departments`);
+         setDepartments(response.data);
+      }catch(e){console.log(e)}
+  }
+
+  const getCourses = async (selectDept) => {
+      try{
+         const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/courses/${selectDept}`);
+         setCourses(response.data);
+      }catch(e){console.log(e)}
+  }
+
+  const getAllCourses = async () => {
+      try{
+         const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/all/courses`);
+         setCourses(response.data);
+      }catch(e){console.log(e)}
+  }
 
     const getStudents = async () => {
         const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/students/get`, {
@@ -125,8 +144,8 @@ function ManageStudentAccounts() {
         middle_name: editStudentFormData.middle_name,
         contact_no: editStudentFormData.contact_no,
         email: editStudentFormData.email,
-        department: editStudentFormData.department,
-        course: editStudentFormData.course,
+        dept_id: editStudentFormData.dept_id,
+        course_id: editStudentFormData.course_id,
         year: editStudentFormData.year,
         student_id: editStudentFormData.student_id,
       },{
@@ -134,6 +153,7 @@ function ManageStudentAccounts() {
           Authorization: `Bearer ${token}`
         }
       });
+      notify('✏️ Student has been updated');
       getStudents();
       
     }
@@ -150,11 +170,12 @@ function ManageStudentAccounts() {
     }
 
     const deleteStudent = async (id) => {
-      await axiosJWT.delete(`${import.meta.env.VITE_API_URL}/delete/student/${id}`,{
+      await axiosJWT.patch(`${import.meta.env.VITE_API_URL}/delete/student/${id}`,{
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
+      errNotify('🗑️ Student has been deleted ');
       getStudents();
     }
 
@@ -162,7 +183,6 @@ function ManageStudentAccounts() {
       e.preventDefault();
       try {
           await axiosJWT.post(`${import.meta.env.VITE_API_URL}/register/student`, {
-            id: students.length,
             last_name: addStudentFormData.last_name,
             first_name: addStudentFormData.first_name,
             middle_name: addStudentFormData.middle_name,
@@ -179,10 +199,13 @@ function ManageStudentAccounts() {
           }});
           setModalIsOpen(false);
           getStudents();
+          notify("Student has been to pending registrations")
 
       } catch (error) {
           if (error.response) {
               setMsg(error.response.data.msg);
+              console.log(error.response.data.msg);
+              errNotify(error.response.data.msg);
           }
       }
     }
@@ -210,35 +233,11 @@ function ManageStudentAccounts() {
         newFormData[fieldName] = fieldValue;
 
         setEditStudentFormData(newFormData);
+        console.log(editStudentFormData)
     };
 
-
-    const handleAddFormSubmit = (event) => {
-        event.preventDefault();
-
-        const newStudent = {
-        id: students.length,
-        last_name: addStudentFormData.last_name,
-        first_name: addStudentFormData.first_name,
-        middle_name: addStudentFormData.middle_name,
-        contact_no: addStudentFormData.contact_no,
-        email: addStudentFormData.email,
-        department: addStudentFormData.department,
-        course: addStudentFormData.course,
-        year: addStudentFormData.year,
-        student_id: addStudentFormData.student_id,
-        password: addStudentFormData.password,
-        confPassword: addStudentFormData.confPassword
-        };
-
-        const newStudents = [...students, newStudent];
-        setStudents(newStudents);
-        setModalIsOpen(false);
-        console.log(newStudent.id)
-        addStudent();
-    };
-
-    const handleEditFormSubmit = () => {
+    const handleEditFormSubmit = (e) => {
+        e.preventDefault();
         const editedStudent = {
         id: editStudenttId,
         last_name: editStudentFormData.last_name,
@@ -246,8 +245,8 @@ function ManageStudentAccounts() {
         middle_name: editStudentFormData.middle_name,
         contact_no: editStudentFormData.contact_no,
         email: editStudentFormData.email,
-        department: editStudentFormData.department,
-        course: editStudentFormData.course,
+        department: editStudentFormData.dept_id,
+        course: editStudentFormData.course_id,
         year: editStudentFormData.year,
         student_id: editStudentFormData.student_id,
         };
@@ -258,31 +257,36 @@ function ManageStudentAccounts() {
 
         newStudents[index] = editedStudent;
 
-        updateStudent(editedStudent.id);
+        updateStudent(editStudenttId);
         {console.log(editedStudent)}
 
         setStudents(newStudents);
         setEditStudenttId(null);
-        console.log(editedStudent)
+        console.log(editedStudent);
+        setEditModal(false);
     };
 
     const handleEditClick = (event, student) => {
         event.preventDefault();
+        getCourses(student.dept_id);
         setEditStudenttId(student.id);
+        setEditModal(true);
 
         const formValues = {
-        last_name: student.last_name,
-        first_name: student.first_name,
-        middle_name: student.middle_name,
-        contact_no: student.contact_no,
-        email: student.email,
-        department: student.department,
-        course: student.course,
-        year: student.year,
-        student_id: student.student_id,
+          last_name: student.last_name,
+          first_name: student.first_name,
+          middle_name: student.middle_name,
+          contact_no: student.contact_no,
+          email: student.email,
+          department: student.department,
+          dept_id: student.dept_id,
+          course_id: student.course_id,
+          course: student.course,
+          year: student.year,
+          student_id: student.student_id,
         };
-
         setEditStudentFormData(formValues);
+        console.log(student);
     };
 
     const handleCancelClick = () => {
@@ -315,15 +319,28 @@ function ManageStudentAccounts() {
       setPasswordForm(newFormData);
   };
 
-    const handleChangePassword = (id) => {
-      passwordForm.student_id = id;
+    const handleChangePassword = (id, student) => {
+      passwordForm.id = id;
+      passwordForm.name = (student.last_name + ", " + student.first_name + ", " + student.middle_name);
+      passwordForm.student_id = student.student_id;
       setChangePassModal(true);
-
     }
     const handleChangePasswordSubmit = () => {
       console.log(passwordForm);
-      changePassword();
-      setChangePassModal(false);
+      const {password, confPassword} = passwordForm;
+
+      if(!password || !confPassword){
+        errNotify("Please input a password");
+      }else if(password.length < 8) {
+        errNotify("Password should be at least 8 characters");
+      }else if(password != confPassword) {
+        errNotify("Password does not match");
+      } else{
+        changePassword();
+        notify("Password has been changed")
+        setChangePassModal(false);
+      }
+      
 
     }
 
@@ -370,14 +387,7 @@ function ManageStudentAccounts() {
       return Promise.reject(error);
   });
 
-  useEffect(()=>{
-    if(msg == ''){
-    }else{
-        notify();
-    }
-  },[msg]);
-
-  const notify = () => toast.error(msg, {
+  const errNotify = (msg) => toast.error(msg, {
     position: "bottom-right",
     autoClose: 5000,
     hideProgressBar: false,
@@ -386,47 +396,55 @@ function ManageStudentAccounts() {
     draggable: true,
     progress: undefined,
     theme: "light",
-    });
+  });
+
+  const notify = (msg) => toast.success(msg, {
+      position: "bottom-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "light",
+  });
+
+  const blank_option = <option value=""></option>;
+
 
   return (
     <>
-      <div className="users-table-header">
+      <div className="dean-view-applications">
         <div style={{display:'flex', gap:'1em', textAlign:'left', width: '100%', alignItems:'center', flexWrap:'wrap'}}>
             <h1>Student Accounts</h1>
-            <div style={{ width: '50%',  textAlign:'right'}}>
-              <label htmlFor="searchField">Search Student ID or Name:  </label>
-              <input type="text" name="searchField" className='search-input' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/>
+            <div class="input-group h-25 col-4">
+              <div class="input-group-prepend">
+                <span class="input-group-text" >Name or Student ID</span>
+              </div>
+              <input type="text" name="searchField" className='searchField form-control'class="form-control" onChange={(e)=>{setSearch(e.target.value)}}/>
             </div>
-            <button className="add_btn" onClick={()=>setModalIsOpen(!modalIsOpen)}>ADD</button>
+            <button className="btn btn-primary col-1 mr-3" onClick={()=>setModalIsOpen(!modalIsOpen)}>ADD</button>
         </div>
-        
-
-        <form onSubmit={handleEditFormSubmit}>
-          <table className='students-user-table'>
+        <form>
+          <table className='table table-responsive'>
             <thead>
               <tr>
-                <th>Student ID</th>
-                <th>Last Name</th>
-                <th>First Name</th>
-                <th>Middle Name</th>
-                <th>Contact No.</th>
-                <th>Email</th>
-                <th>Department</th>
+                <th scope='col' className='fit'>Student ID</th>
+                <th scope='col' className='fit'>Last Name</th>
+                <th scope='col' className='fit'>First Name</th>
+                <th scope='col' className='fit'>Middle Name</th>
+                <th scope='col' className='fit'>Contact No.</th>
+                <th scope='col' className='fit'>Email</th>
+                {/* <th>Department</th>
                 <th>Course</th>
-                <th>Year</th>
-                <th>Actions</th>
+                <th>Year</th> */}
+                <th scope='col' className='fit'>Actions</th>
               </tr>
             </thead>
             <tbody>
               {students?.map((student) => (
                 <>
-                  {editStudenttId === student.id ? (
-                    <StudentEditableRow
-                      editFormData={editStudentFormData}
-                      handleEditFormChange={handleEditFormChange}
-                      handleCancelClick={handleCancelClick}
-                    />
-                  ) : (
+                  {(
                     <StudentReadOnlyRow
                       key={student.id}
                       student={student}
@@ -444,10 +462,11 @@ function ManageStudentAccounts() {
         isOpen={modalIsOpen}
         style={customStyles}
         ariaHideApp={false}>
-        <div className="add-user-container">
-            <h2>ADD A STUDENT</h2>
+        <div className="add-user-container container-fluid text-center">
+            <h2 className='m-3'>ADD A STUDENT</h2>
             <form onSubmit={addStudent} style={{display:'flex', flexDirection:'column'}}>
             <input
+            className='form-control m-1'
                 type="text"
                 required="required"
                 placeholder="Enter a Student ID..."
@@ -455,6 +474,7 @@ function ManageStudentAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+            className='form-control m-1'
                 type="text"
                 required="required"
                 placeholder="Enter a last name..."
@@ -462,6 +482,7 @@ function ManageStudentAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+            className='form-control m-1'
                 type="text"
                 required="required"
                 placeholder="Enter a first name..."
@@ -469,6 +490,7 @@ function ManageStudentAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+            className='form-control m-1'
             type="text"
             required="required"
             placeholder="Enter a middle name..."
@@ -476,6 +498,7 @@ function ManageStudentAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+            className='form-control m-1'
                 type="text"
                 required="required"
                 placeholder="Enter a contact no..."
@@ -483,6 +506,7 @@ function ManageStudentAccounts() {
                 onChange={handleAddFormChange}
             />
             <input
+            className='form-control m-1'
                 type="email"
                 required="required"
                 placeholder="Enter a email..."
@@ -491,68 +515,193 @@ function ManageStudentAccounts() {
             />
 
             <select
+            className='custom-select m-1'
               required="required"
               name="department"
               value={addStudentFormData.department}
               onChange={(e)=> {
                 setSelectDept(e.target.value);
                 addStudentFormData.department = e.target.value;
-              }}
-              >
+              }}>
+                <option value="">Select a department...</option>
                 {dept_options}
             </select>
 
             <select
+            className='custom-select m-1'
               required="required"
               name="course"
               value={addStudentFormData.course}
               onChange={(e)=> {
                 setSelectCourse(e.target.value);
                 addStudentFormData.course = e.target.value;
-              }}
-              >
+              }}>
+                <option value="">Select a course...</option>
               {course_options}
             </select>
-
-            <input
+            <select
+            className='custom-select m-1'
                 type="number"
                 required="required"
                 placeholder="Enter a year..."
                 name="year"
-                onChange={handleAddFormChange}
+                onChange={handleAddFormChange}>
+                <option value="">Select a Year</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <input
+              className='form-control m-1'
+              type="password"
+              required="required"
+              placeholder="Enter a password"
+              name="password"
+              onChange={handleAddFormChange}
             />
             <input
-                type="password"
-                required="required"
-                placeholder="Enter a password"
-                name="password"
-                onChange={handleAddFormChange}
-            />
-            <input
-                type="password"
-                required="required"
-                placeholder="Confirm password"
-                name="confPassword"
-                onChange={handleAddFormChange}
+              className='form-control m-1'
+              type="password"
+              required="required"
+              placeholder="Confirm password"
+              name="confPassword"
+              onChange={handleAddFormChange}
             />
             <div className="flex">
-              <button type="button" onClick={()=>setModalIsOpen(false)}>CANCEL</button>
-              <button type="submit">ADD</button>
+              <button className='btn btn-dark' type="button" onClick={()=>setModalIsOpen(false)}>CANCEL</button>
+              <button className='btn btn-success' type="submit">ADD</button>
 
             </div>
             </form>
         </div>
         </Modal>
+
+        {/* edit modal */}
+        <Modal
+        isOpen={editModal}
+        style={customStyles}
+        ariaHideApp={false}>
+        <div className="add-user-container form-group container-fluid py-3 px-5">
+            <h2 className='text-center p-3'>EDIT STUDENT</h2>
+            <form style={{display:'flex', flexDirection:'column'}}>
+            <input
+                className="form-control m-1"
+                type="text"
+                required="required"
+                placeholder="Enter a Student ID..."
+                name="student_id"
+                value={editStudentFormData.student_id}
+                onChange={handleEditFormChange}
+            />
+            <input
+                className="form-control m-1"
+                type="text"
+                required="required"
+                placeholder="Enter a last name..."
+                name="last_name"
+                value={editStudentFormData.last_name}
+                onChange={handleEditFormChange}
+            />
+            <input
+                className="form-control m-1"
+                type="text"
+                required="required"
+                placeholder="Enter a first name..."
+                name="first_name"
+                value={editStudentFormData.first_name}
+
+                onChange={handleEditFormChange}
+            />
+            <input
+                className="form-control m-1"
+            type="text"
+            required="required"
+            placeholder="Enter a middle name..."
+            name="middle_name"
+            value={editStudentFormData.middle_name}
+            onChange={handleEditFormChange}
+            />
+            <input
+                className="form-control m-1"
+                type="text"
+                required="required"
+                placeholder="Enter a contact no..."
+                name="contact_no"
+                value={editStudentFormData.contact_no}
+                onChange={handleEditFormChange}
+            />
+            <input
+                className="form-control m-1"
+                type="email"
+                required="required"
+                placeholder="Enter a email..."
+                name="email"
+                value={editStudentFormData.email}
+                onChange={handleEditFormChange}
+            />
+            <select
+              className='custom-select m-1'
+              required="required"
+              name="department"
+              value={editStudentFormData.dept_id}
+              onChange={(e)=> {
+                setSelectDept(e.target.value);
+                editStudentFormData.dept_id = e.target.value;
+              }}>
+                {selected_dept_options}
+            </select>
+
+            <select
+              className='custom-select m-1'
+              required="required"
+              name="course"
+              value={editStudentFormData.course_id}
+              onChange={(e)=> {
+                setSelectCourse(e.target.value);
+                editStudentFormData.course_id = e.target.value;
+              }}>
+                {blank_option}
+              {selected_course_options}
+            </select>
+
+            <select
+              className='custom-select m-1'
+              type="number"
+              required="required"
+              placeholder="Enter a year..."
+              name="year"
+              value={editStudentFormData.year}
+              onChange={handleEditFormChange}>
+                <option value=""></option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+            <div className="flex">
+              <button className='btn btn-dark' type="button" onClick={()=>setEditModal(false)}>CANCEL</button>
+              <button className='btn btn-success' type="submit" onClick={handleEditFormSubmit}>UPDATE</button>
+
+            </div>
+            </form>
+        </div>
+        </Modal>
+
         <Modal
         isOpen={changePassModal}
         style={customStyles}
         ariaHideApp={false}>
           <form style={{display:'flex', flexDirection:'column', gap:'1em'}}>
-            <input type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange}/>
-            <input type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange}/>
+            <input className='form-control' type="text" disabled name='student_id' value={passwordForm.student_id}/>
+            <input className='form-control' type="text" disabled name='student_name' value={passwordForm.name}/>
+            <input className='form-control' type="password" name='password' placeholder='Enter a Password' onChange={handleChangePassFormChange}/>
+            <input className='form-control' type="password" name='confPassword' placeholder='Confirm Password' onChange={handleChangePassFormChange}/>
             <div style={{display:'flex', gap:'1em'}}>
-              <button type="button" className='btnCancel' onClick={()=>setChangePassModal(false)}>Cancel</button>
-              <button type="button" className='btnChangePass' onClick={handleChangePasswordSubmit}>Change Password</button>
+              <button type="button" className='btn btnCancel' onClick={()=>setChangePassModal(false)}>Cancel</button>
+              <button type="button" className='btn btnChangePass' onClick={handleChangePasswordSubmit}>Change Password</button>
             </div>
           </form>
         </Modal>

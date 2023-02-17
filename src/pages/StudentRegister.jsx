@@ -11,103 +11,55 @@ import './styles/StudentRegister.css'
 
 function StudentRegister() {
     const [msg, setMsg] = useState('');
-    const [lastName, setLastName] = useState('');
-    const [firstName, setFirstName] = useState('');
-    const [middleName, setMiddleName] = useState('');
-    const [contactNo, setContactNo] = useState('');
-    const [email, setEmail] = useState('');
-    const [department, setDepartment] = useState('');
-    const [course, setCourse] = useState('');
-    const [year, setYear] = useState('');
-    const [studId, setStudId] = useState('');
-    const [password, setPassword] = useState('');
-    const [confirmPassword, setConfirmPassword] = useState('');
+    const [departments, setDepartments] = useState();
+    const [courses, setCourses] = useState();
+    const [registerForm, setRegisterForm] = useState({});
     const navigate = useNavigate();
 
-    const departments = ["","CECT", "CONAMS", "CBA", "CHTM", "CAS", "CoEd", "CCJE", "Medicine", "JWSLG", "High School", "Elementary"];
-    let courses = [""];
 
-    if (department == "CECT"){
-        courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
-    }else if (department == "CONAMS"){
-        courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
-    }else if (department == "CHTM"){
-        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
-    }else if (department == "CBA"){
-        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
-    }else if (department == "CAS"){
-        courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
-    }else if (department == "CoEd"){
-        courses = ["","Bachelor of Elementary Education", "Bachelor of Physical Education"];
-    }else if (department == "CCJE"){
-        courses = ["","Bachelor of Science in Criminology"];
-    }else if (department == "Medicine"){
-        courses = ["",""];
-    }else if (department == "JWSLG"){
-        courses = ["",""];
-    }else if (department == "High School"){
-        courses = ["","Junior High School", "Senior High School"];
-    }else if (department == "Elementary"){
-        courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
-    }else{
-        courses = [""];
-    }
-
-    const dept_options = departments.map((dept) =>
-        <option key={dept}>{dept}</option>
+    const dept_options = departments?.map((dept) =>
+        <option key={dept.dept_code} value={dept.dept_id}>{dept.dept_code}</option>
     );
 
-    const course_options = courses.map((course) =>
-        <option key={course}>{course}</option>
+    const course_options = courses?.map((course) =>
+        <option key={course.course_name} value={course.course_id}>{course.course_name}</option>
     );
 
-    const jsonObject = {
-        lastName,
-        firstName, 
-        middleName,
-        contactNo, 
-        email,
-        department,
-        course,
-        year,
-        studId, 
-        password,
-        confirmPassword
+    useEffect(()=>{
+        getDepartments();
+    }, []);
+    useEffect(()=>{
+        getCourses();
+    }, [registerForm.department, departments]);
+
+    const getDepartments = async () => {
+        try{
+           const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/departments`);
+           setDepartments(response.data);
+        }catch(e){console.log(e)}
     }
 
-    const Register = async (e) => {
-        e.preventDefault();
+    const getCourses = async () => {
+        try{
+           const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/courses/${registerForm.department}`);
+           setCourses(response.data);
+        }catch(e){console.log(e)}
+    }
+
+    const Register = async () => {
+        console.log(registerForm)
         try {
-            await axios.post(`${import.meta.env.VITE_API_URL}/register/student`, {
-                last_name: lastName,
-                first_name: firstName, 
-                middle_name: middleName,
-                contact_no: contactNo, 
-                email: email,
-                department: department,
-                course: course,
-                year: year,
-                student_id: studId, 
-                password: password,
-                confPassword: confirmPassword
-            });
+            await axios.post(`${import.meta.env.VITE_API_URL}/register/student`, registerForm);
             navigate("/");
+            errNotify("Account Registered; Pending for Approval");
         } catch (error) {
             if (error.response) {
-                setMsg(error.response.data.msg);
+                errNotify(error.response.data.msg);
             }
         }
     }
 
-    useEffect(()=>{
-        if(msg == ''){
-        }else{
-            notify();
-        }
-    },[msg]);
-
-
-    const notify = () => toast.error(msg, {
+    const errNotify = (msg) => toast.error(msg, {
         position: "bottom-right",
         autoClose: 5000,
         hideProgressBar: false,
@@ -118,6 +70,54 @@ function StudentRegister() {
         theme: "light",
     });
     console.log(msg);
+    console.log(registerForm);
+    console.log(courses);
+
+    const handleRegisterFormChange = (event) => {
+        event.preventDefault();
+
+        const fieldName = event.target.getAttribute("name");
+        const fieldValue = event.target.value;
+
+        const newFormData = { ...registerForm };
+        newFormData[fieldName] = fieldValue;
+
+        setRegisterForm(newFormData);
+        console.log(registerForm);
+    };
+
+    const validateForm = async(e) => {
+        e.preventDefault();
+        const {last_name, first_name, middle_name, contact_no, email, department, course, year, student_id, password, confPassword} = registerForm;
+
+        if(student_id.length < 5 || student_id.length >= 12){
+            errNotify('Please enter a valid Student ID');
+        } else if(!password || password.length < 8){
+            errNotify('Password should be at least 8 characters');
+        } else if(!confPassword || password != confPassword){
+            errNotify('Password does not match');
+        } else if(!last_name || last_name.length < 2){
+            errNotify('Enter a valid Last Name');
+        } else if(!first_name || first_name.length < 2){
+            errNotify('Enter a valid First Name');
+        } else if(!middle_name || middle_name.length < 2){
+            errNotify('Enter a valid Middle Name');
+        } else if(!contact_no || contact_no.length < 6 || contact_no.length > 11){
+            errNotify('Enter a valid contact number');
+        } else if(!email || email.length < 6 || !email.includes('@')){
+            errNotify('Enter a valid email');
+        } else if(!year || year.length < 1 ){
+            errNotify('Enter a valid year');
+        } else if(!department || department.length < 1){
+            errNotify('Enter a valid departement');
+        } else if(!course || course.length < 1){
+            errNotify('Enter a valid course');
+        } else {
+            Register();
+        }
+    }
+
+
 
     return (
     <>
@@ -125,45 +125,54 @@ function StudentRegister() {
         <div className='register-container'>
             <h1>REGISTER</h1>
             <div className="register-form-con">
-                <form onSubmit={Register}>
+                <form>
                     <img src={Logo} alt="Logo goes here" width={120}/>
                     <div className="personal-info">
                         <h2>Personal Info</h2>
                         <div>
                             <label htmlFor="last_name">Last Name: </label><br />
-                            <input type="text" name='last_name' placeholder='Last name' value={lastName} onChange={(e)=> setLastName(e.target.value)}/>
+                            <input className="form-control" type="text" name='last_name' placeholder='Last name' onChange={handleRegisterFormChange}/>
                         </div>
                         <div>
                             <label htmlFor="first_name">First Name:</label><br />
-                            <input type="text" name='first_name' placeholder='First name' value={firstName} onChange={(e)=> setFirstName(e.target.value)}/>
+                            <input className="form-control" type="text" name='first_name' placeholder='First name' onChange={handleRegisterFormChange}/>
                         </div>
                         <div>
                             <label htmlFor="middle_name">Middle Name:</label><br />
-                            <input type="text" name='middle_name' placeholder='Middle name' value={middleName} onChange={(e)=> setMiddleName(e.target.value)}/>
+                            <input className="form-control" type="text" name='middle_name' placeholder='Middle name' onChange={handleRegisterFormChange}/>
                         </div>
                         <div>
                             <label htmlFor="contact_no">Contact No:</label><br />
-                            <input type="text" name='contact_no' placeholder='Contact no.' value={contactNo} onChange={(e)=> setContactNo(e.target.value)}/>
+                            <input className="form-control" type="text" name='contact_no' placeholder='Contact no.' onChange={handleRegisterFormChange}/>
                         </div>
                         <div>
                             <label htmlFor="email">Email:</label><br />
-                            <input type="text" name='email' placeholder='Email' value={email} onChange={(e)=> setEmail(e.target.value)}/>
+                            <input className="form-control" type="text" name="email" placeholder="Email" onChange={handleRegisterFormChange}/>
                         </div>
                         <div>
-                            <label htmlFor="depts">Department:</label><br />
-                            <select name="depts" id="dept" value={department} onChange={(e)=> setDepartment(e.target.value)}>
+                            <label htmlFor="department">Department:</label><br />
+                            <select name="department" id="department" onChange={handleRegisterFormChange}>
+                                <option value=""></option>
                                 {dept_options}
                             </select>
                         </div>
                         <div>
                             <label htmlFor="course">Course:</label><br />
-                            <select name="course" id="course" value={course} onChange={(e)=> setCourse(e.target.value)}>
+                            <select name="course" id="course" onChange={handleRegisterFormChange}>
+                                <option value=""></option>
                                 {course_options}
                             </select>
                         </div>
                         <div>
                             <label htmlFor="year">Year: </label><br />
-                            <input type="number" name="year" placeholder='Year' value={year} onChange={(e)=> setYear(e.target.value)}/>
+                            <select type="number" name="year" placeholder='Year'onChange={handleRegisterFormChange}>
+                                <option value=""></option>    
+                                <option value="1">1</option>    
+                                <option value="2">2</option>    
+                                <option value="3">3</option>    
+                                <option value="4">4</option>    
+                                <option value="5">5</option>    
+                            </select>
                         </div>
                         
                         
@@ -171,21 +180,21 @@ function StudentRegister() {
                     <div className="login-info">
                         <h2>Login Info</h2>
                         <div>
-                            <label htmlFor="id_no">Student ID No:</label><br />
-                            <input type="text" name='id_no' placeholder='12-3456-789' value={studId} onChange={(e)=> setStudId(e.target.value)}/>
+                            <label htmlFor="student_id">Student ID No:</label><br />
+                            <input className="form-control" type="text" name='student_id' placeholder='12-3456-789' onChange={handleRegisterFormChange}/>
                         </div>
                         <div>
-                            <label htmlFor="passwd">Password:</label><br />
-                            <input type="password" name='passwd' placeholder='Password' value={password} onChange={(e)=> setPassword(e.target.value)}/>
+                            <label htmlFor="password">Password:</label><br />
+                            <input className="form-control" type="password" name='password' placeholder='Password' onChange={handleRegisterFormChange}/>
                         </div>
                         <div>
-                            <label htmlFor="confirm_passwd">Confirm Password: </label><br />
-                            <input type="password" name='confirm_passwd' placeholder='Re-enter password' value={confirmPassword} onChange={(e)=> setConfirmPassword(e.target.value)}/>
+                            <label htmlFor="confPassword">Confirm Password: </label><br />
+                            <input className="form-control" type="password" name='confPassword' placeholder='Re-enter password' onChange={handleRegisterFormChange}/>
                         </div>
                         
                     </div>
                     <br />
-                    <button type="submit" value="REGISTER">REGISTER</button>
+                    <button type="submit" onClick={validateForm}>REGISTER</button>
                 </form>
             </div>
         </div>

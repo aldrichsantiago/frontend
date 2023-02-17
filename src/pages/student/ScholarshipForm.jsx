@@ -16,8 +16,9 @@ const AttachementInputs = ({requirement, index, handleFileInputChange}) =>{
     let nameOfInput = `req_${req_no}`
     return(
         <div key={index}>
-            <label >{requirement}: </label>
-            <input type="file"
+            <label >{requirement}: &nbsp;</label>
+            <input 
+            type="file"
             accept='.jpeg, .jpg, .png'
             onChange={handleFileInputChange}
             name={nameOfInput}
@@ -34,47 +35,45 @@ function ScholarshipForm() {
     let dataToPass = {};
     const [scholarship, setScholarship] = useState({});
     const [student, setStudent] = useState({});
+    const [schoolyear1, setSchoolyear1] = useState();
+    const [schoolyear2, setSchoolyear2] = useState();
     const [requirements, setRequirements] = useState();
     const [signModal, setSignModal] = useState(false);
     const [attachments, setAttachments]= useState({});
+    const [subjects, setSubjects]= useState([]);
+    const [maxSubjNo, setmaxSubjNo]= useState([1,2,3,4,5,6,7,8,9,10,11,12]);
+    const [units, setUnits]= useState([1,2,3,4,5,6]);
     const [subjCodesUnits, setSubjCodesUnits] = useState({
-        subj_1: '',subj_2: '',
-        subj_3: '',subj_4: '',
-        subj_5: '',subj_6: '',
-        subj_7: '',subj_8: '', 
-        subj_9: '',subj_10: '',
-        subj_11: '',subj_12: '',
-        units_1: 0, units_2: 0,
-        units_3: 0, units_4: 0,
-        units_5: 0, units_6: 0,
-        units_7: 0, units_8: 0, 
-        units_9: 0, units_10: 0,
-        units_11: 0, units_12: 0,
-        semester:'', school_year:''
-    });
-    const [userInfo, setUserInfo] = useState({
-        student_id: student.student_id,
-        first_name: student.first_name,
-        last_name: student.last_name,
-        middle_name: student.middle_name,
-        department: student.department,
-        course: student.course,
-        year: student.year,
-        email: student.email,
-        contact_no: student.contact_no,
+        subject_code_1: '',subject_code_2: '',
+        subject_code_3: '',subject_code_4: '',
+        subject_code_5: '',subject_code_6: '',
+        subject_code_7: '',subject_code_8: '', 
+        subject_code_9: '',subject_code_10: '',
+        subject_code_11: '',subject_code_12: '',
+        unit_1: 0, unit_2: 0,
+        unit_3: 0, unit_4: 0,
+        unit_5: 0, unit_6: 0,
+        unit_7: 0, unit_8: 0, 
+        unit_9: 0, unit_10: 0,
+        unit_11: 0, unit_12: 0,
+        semester:'', school_year: schoolyear1 +" - "+ schoolyear2
     });
     const [sigData, setSigData] = useState('');
     const [token, setToken] = useState('');
     const [studentId, setStudentId] = useState('');
     const [expire, setExpire] = useState('');
-    const [msg, setMsg] = useState('');
     const [totalUnits, setTotalUnits] = useState(0);
-    const [isSubmitted, setIsSubmitted] = useState();
+    const [isSubmitted, setIsSubmitted] = useState([]);
     const navigate = useNavigate();
     let student_sig = '';
+    let maxUnits = 12;
 
     useEffect(()=>{
-        refreshToken();
+        if(!studentId){
+            refreshToken();
+        }else{
+            getStudent();
+        }
     },[]);
 
     useEffect(()=>{
@@ -82,9 +81,29 @@ function ScholarshipForm() {
     },[id]);
 
     useEffect(()=>{
+        alreadySubmitted();
+        getCourseSubjects(student.course_id);
+    },[student]);
+
+
+    useEffect(()=>{
         setRequirements(scholarship.requirements?.split(","));
-        console.log(scholarship);
     },[scholarship]);
+
+
+    const subject_options = subjects?.map((subject)=>{
+        return (
+            <option key={subject.subject_code} value={subject.subject_code}>{subject.subject_code} --- {subject.subject_name}</option>
+        )
+
+    })
+
+    const unit_options = units?.map((unit)=>{
+        return (
+            <option key={unit} value={unit}>{unit}</option>
+        )
+    })
+
 
 
     const refreshToken = async () => {
@@ -102,6 +121,7 @@ function ScholarshipForm() {
           }
         }
       }
+
       const axiosJWT = axios.create();
       axiosJWT.interceptors.request.use(async (config) => {
         const currentDate = new Date();
@@ -127,23 +147,14 @@ function ScholarshipForm() {
 
     const getStudent = async() => {
         try{
-            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/details/${studentId}`, {
+            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/student/min/details/${studentId}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                   }
         });
             setStudent(response.data);
-            setUserInfo({
-                student_id: student.student_id,
-                first_name: student.first_name,
-                last_name: student.last_name,
-                middle_name: student.middle_name,
-                department: student.department,
-                course: student.course,
-                year: student.year,
-                email: student.email,
-                contact_no: student.contact_no,
-            });
+            getCourseSubjects(response.data.course_id);
+            console.log(response.data.course_id);
             
         }catch(e){
             console.log(e);
@@ -151,9 +162,23 @@ function ScholarshipForm() {
        
     }
 
+    const getCourseSubjects = async(course_id) => {
+        try{
+            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/subjects/get/${course_id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                  }
+        });
+            setSubjects(response.data);
+        }catch(e){
+            console.log(e);
+        }
+
+    }
+
     const alreadySubmitted = async() => {
         try{
-            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/already/submitted/${studentId}`, {
+            const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/has/submitted/${student.id}`, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
@@ -186,19 +211,22 @@ function ScholarshipForm() {
 
     const handleFormChange = (event) => {
         event.preventDefault();
-        getStudent();
         alreadySubmitted();
+        getStudent();
         const fieldName = event.target.getAttribute("name");
         const fieldValue = event.target.value;
         const newFormData = { ...subjCodesUnits };
         newFormData[fieldName] = fieldValue;
         setSubjCodesUnits(newFormData);
-        console.log(subjCodesUnits)
-        const {units_1, units_2, units_3, units_4, units_5, units_6, units_7, units_8, units_9, units_10, units_11, units_12} = subjCodesUnits;
-        setTotalUnits(Number(units_1)+ Number(units_2)+ Number(units_3)+ Number(units_4)+ Number(units_5)+ Number(units_6)+ Number(units_7)+ Number(units_8)+ Number(units_9)+ Number(units_10)+ Number(units_11)+ Number(units_12));
+        console.log(subjCodesUnits);
+        console.log(attachments);
+        const {unit_1, unit_2, unit_3, unit_4, unit_5, unit_6, unit_7, unit_8, unit_9, unit_10, unit_11, unit_12} = subjCodesUnits;
+        setTotalUnits(Number(unit_1)+ Number(unit_2)+ Number(unit_3)+ Number(unit_4)+ Number(unit_5)+ Number(unit_6)+ Number(unit_7)+ Number(unit_8)+ Number(unit_9)+ Number(unit_10)+ Number(unit_11)+ Number(unit_12));
     };
 
     const handleFileInputChange = e => {
+        alreadySubmitted();
+
         if(e.target.files[0].size > 1048576){
             alert("File is too big! Please keep it below 1MB");
             e.target.value = "";
@@ -206,9 +234,6 @@ function ScholarshipForm() {
             console.log(e.target.files[0]);
             const fieldName = e.target.getAttribute("name");
             const fieldValue = e.target.files[0];
-
-            
-
             let file = e.target.files[0];
             let baseURL = "";
             // Make new FileReader
@@ -237,10 +262,10 @@ function ScholarshipForm() {
       };
 
     const submitForm = async () => {
-        dataToPass = {...subjCodesUnits, ...attachments, ...userInfo, scholarship_type: scholarship.scholarship_name};
+        dataToPass = {...subjCodesUnits, ...attachments, student_id: student.id, scholarship_id: scholarship.scholarship_id};
         console.log(dataToPass);
         try{
-            await axios.post(`${import.meta.env.VITE_API_URL}/submit/student/application`, dataToPass, 
+            await axiosJWT.post(`${import.meta.env.VITE_API_URL}/submit/student/application`, dataToPass, 
             {
                 headers: {
                     Authorization: `Bearer ${token}`
@@ -254,12 +279,17 @@ function ScholarshipForm() {
 
 
     const validateAndSubmit = async() => {
-        const {units_1, units_2, units_3, units_4, units_5, units_6, units_7, units_8, units_9, units_10, units_11, units_12, semester, school_year} = subjCodesUnits;
-        setTotalUnits(Number(units_1)+ Number(units_2)+ Number(units_3)+ Number(units_4)+ Number(units_5)+ Number(units_6)+ Number(units_7)+ Number(units_8)+ Number(units_9)+ Number(units_10)+ Number(units_11)+ Number(units_12));
+        subjCodesUnits.school_year = schoolyear1+"-"+schoolyear2;
+        alreadySubmitted();
+        const {unit_1, unit_2, unit_3, unit_4, unit_5, unit_6, unit_7, unit_8, unit_9, unit_10, unit_11, unit_12, semester, school_year} = subjCodesUnits;
+        setTotalUnits(Number(unit_1)+ Number(unit_2)+ Number(unit_3)+ Number(unit_4)+ Number(unit_5)+ Number(unit_6)+ Number(unit_7)+ Number(unit_8)+ Number(unit_9)+ Number(unit_10)+ Number(unit_11)+ Number(unit_12));
+        console.log(subjCodesUnits);
         
         if (isSubmitted.length != 0 ){
             errNotify('You have already submitted an application');
+            console.log(subjCodesUnits.school_year)
         } else if (totalUnits < 18){
+            console.log(subjCodesUnits);
             errNotify("Total Units should be at least 18");
             console.log(totalUnits);
         } else if (totalUnits > 29){
@@ -302,7 +332,29 @@ function ScholarshipForm() {
         theme: "light",
       });
 
+    const subject_select = maxSubjNo?.map((no)=>{
+        let select_name = "subject_code_" + no;
+        return (
+            <select className='custom-select' key={no} name={select_name} type="text" onChange={handleFormChange} onClick={getStudent}>
+                <option value=""></option>
+                {subject_options}
+            </select>
+        )
+    })
+
+    const unit_select = maxSubjNo?.map((no)=>{
+        let select_name = "unit_" + no;
+        return (
+            <select className='custom-select' key={no} name={select_name} type="text" onChange={handleFormChange}>
+                <option value=""></option>
+                {unit_options}
+            </select>
+        )
+    })
+
+
     if (scholarship){
+
     return (
     <Layout>
         <div className="scholarship-form-container">
@@ -311,41 +363,52 @@ function ScholarshipForm() {
                 <div className="flex">
                     <div className="subject-codes">
                         <label htmlFor="subject">Subject Codes</label>
-                        <input type="text" name="subj_1" onChange={handleFormChange} required/>
-                        <input type="text" name="subj_2" onChange={handleFormChange}/>
-                        <input type="text" name="subj_3" onChange={handleFormChange}/>
-                        <input type="text" name="subj_4" onChange={handleFormChange}/>
-                        <input type="text" name="subj_5" onChange={handleFormChange}/>
-                        <input type="text" name="subj_6" onChange={handleFormChange}/>
-                        <input type="text" name="subj_7" onChange={handleFormChange}/>
-                        <input type="text" name="subj_8" onChange={handleFormChange}/>
-                        <input type="text" name="subj_9" onChange={handleFormChange}/>
-                        <input type="text" name="subj_10" onChange={handleFormChange}/>
-                        <input type="text" name="subj_11" onChange={handleFormChange}/>
-                        <input type="text" name="subj_12" onChange={handleFormChange}/>
+                        {subject_select}
                     </div>
                     <div className="units">
                         <label>Units</label>
-                        <input type="number" name="units_1" onChange={handleFormChange} required/>
-                        <input type="number" name="units_2" onChange={handleFormChange}/>
-                        <input type="number" name="units_3" onChange={handleFormChange}/>
-                        <input type="number" name="units_4" onChange={handleFormChange}/>
-                        <input type="number" name="units_5" onChange={handleFormChange}/>
-                        <input type="number" name="units_6" onChange={handleFormChange}/>
-                        <input type="number" name="units_7" onChange={handleFormChange}/>
-                        <input type="number" name="units_8" onChange={handleFormChange}/>
-                        <input type="number" name="units_9" onChange={handleFormChange}/>
-                        <input type="number" name="units_10" onChange={handleFormChange}/>
-                        <input type="number" name="units_11" onChange={handleFormChange}/>
-                        <input type="number" name="units_12" onChange={handleFormChange}/>
+                        {unit_select}
                         <p>TOTAL UNITS: {totalUnits}</p>
                         <p>Note: 18 Units is the minimum for an application</p>
                     </div>
                     <div className="other-info">
                         <label htmlFor="semester">Semester: </label>
-                        <input type="text" name="semester" placeholder='e.g. 1st' onChange={handleFormChange} required/>
-                        <label htmlFor="school_year">School Year: </label>
-                        <input type="text" name="school_year" placeholder='e.g. 2021-2022' onChange={handleFormChange} required/>
+                        <select className='custom-select' name="semester" onChange={handleFormChange} required>
+                            <option value=""></option>
+                            <option value="1st">1st</option>
+                            <option value="2nd">2nd</option>
+                            <option value="3rd">3rd</option>
+                            <option value="Summer">Summer</option>
+                        </select>
+                        <label htmlFor="schoolyear-container">School Year: </label>
+                        <div className="schoolyear-container">
+                        <select className='custom-select' name="school_year_1" onChange={(e)=>{setSchoolyear1(e.target.value); setSchoolyear2(Number(e.target.value)+1)}} required value={schoolyear1}>
+                            <option value=""></option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                        <p> - </p>
+                        <select className='custom-select' name="school_year_2" onChange={(e)=>{setSchoolyear2(e.target.value); setSchoolyear1(Number(e.target.value)-1);}} required value={schoolyear2}>
+                            <option value=""></option>
+                            <option value="2022">2022</option>
+                            <option value="2023">2023</option>
+                            <option value="2024">2024</option>
+                            <option value="2025">2025</option>
+                            <option value="2026">2026</option>
+                            <option value="2027">2027</option>
+                            <option value="2028">2028</option>
+                            <option value="2029">2029</option>
+                            <option value="2030">2030</option>
+                        </select>
+                        </div>
+                        
                     </div>
                     <div className="scholar-attachments">
                         {requirements?.map((requirement, index)=>(
@@ -356,11 +419,11 @@ function ScholarshipForm() {
                             />
                         ))}
                         <br />
-                        <button type="button" onClick={sign}>SIGN</button>
+                        <button className='btn btn-dark px-4' type="button" onClick={sign}>SIGN</button>
                         <p>Note: When you use the digital signature be sure to press save after you sign</p>
                     </div>
                 </div>
-                <button className='scholarFormSubmit' onClick={validateAndSubmit} type='button'>SUBMIT APPLICATION</button>
+                <button className='scholarFormSubmit btn border border-dark' onClick={validateAndSubmit} type='button'>SUBMIT APPLICATION</button>
                 
             </form>
         </div>
@@ -373,9 +436,9 @@ function ScholarshipForm() {
             ref={sigPad}
             />
             <div className='flex sign-buttons' style={{ "fontFamily": "Arial"}}>
-                <button type="button" onClick={sigClear}>CLEAR</button>
-                <button type="button" onClick={()=>setSignModal(false)}>CLOSE</button>
-                <button type="button" onClick={sigSave}>SAVE</button>
+                <button className='btn btn-danger' type="button" onClick={()=>setSignModal(false)}>CLOSE</button>
+                <button className='btn btn-dark' type="button" onClick={sigClear}>CLEAR</button>
+                <button className='btn btn-success' type="button" onClick={sigSave}>SAVE</button>
             </div>
             <hr />
             <p style={{"textAlign":"center", "fontFamily": "Arial"}}>or upload a signature</p>

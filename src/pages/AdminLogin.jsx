@@ -54,7 +54,7 @@ function AdminLogin() {
         <div className='login-container'>
             <h1>LOG IN</h1>
             <div className="login-form-con">
-                <form onSubmit={Auth}>
+                <form>
                 <img src={Logo} alt="LOGO" width="100px"/>
                     <input type="text" placeholder='Admin ID' value={id} onChange={(e) => setId(e.target.value)}/>
                     <input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)}/>

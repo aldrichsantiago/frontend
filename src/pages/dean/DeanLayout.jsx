@@ -104,7 +104,7 @@ function Layout({children}) {
           </div>
           <main>{children}</main>
         </div>
-        <div className="footer">
+        <div className="footer-info">
           <div className="foo-contact-info">
             <p>Mabini Extension, Cabanutan City,</p>
             <p>Nueva Ecija, 3100, Philippines</p>

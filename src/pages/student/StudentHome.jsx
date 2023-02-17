@@ -26,6 +26,13 @@ function StudentHome() {
   
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate('/student/status')
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {

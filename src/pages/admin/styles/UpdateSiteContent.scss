@@ -113,6 +113,13 @@ $tertiary-color: #B91646;
     }
 }
 
+.table tbody td {
+    max-width: 37ch;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap
+  }
+
 
 $breakpoint-tablet: 768px;
 @media (min-width: $breakpoint-tablet) {

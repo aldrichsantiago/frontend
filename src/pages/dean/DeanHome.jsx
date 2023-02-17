@@ -20,6 +20,13 @@ function DeanHome() {
     setLoading(false)
   }, []);
 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      navigate('/dean/applications')
+    }, 2000);
+    return () => clearTimeout(timer);
+  }, []);
+
   const refreshToken = async () => {
     axios.defaults.withCredentials = true;
     try {

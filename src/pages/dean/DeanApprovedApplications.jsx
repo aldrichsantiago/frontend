@@ -5,173 +5,126 @@ import jwt_decode from 'jwt-decode';
 
 
 const EachApplication = ({application}) => {
-    return(
-      <tr key={application.id}>
-        <td>{application.student_id}</td>
-        <td>{application.first_name} {application.last_name}</td>
-        <td>{application.scholarship_type}</td>
-        <td className='dean-view-apps-container'>
-          <a href={`/dean/view/approved/application/${application.id}`} target="_blank">View Application</a>
-        </td>
-      </tr>
-    )
-  } 
+  return(
+    <tr key={application.application_id}>
+      <th scope='row' className='fit'>{application.student.student_id}</th>
+      <td className='fit col-7'>{application.student.first_name} {application.student.last_name}</td>
+      <td className='fit'>{application.scholarship.scholarship_name}</td>
+      <td className='fit' id='td-btn'>
+        <a className='btn btn-info mr-3' href={`/dean/applications/review/${application.application_id}`} target="_blank">View Application</a>
+      </td>
+    </tr>
+  )
+} 
 
 
 function DeanApprovedApplications() {
-    const [deanId, setDeanId] = useState('');
-    const [department, setDepartment] = useState('');
-    const [selectChange, setSelectChange] = useState('');
-    const [applications, setApplications] = useState([]);
-    const [token, setToken] = useState('');
-    const [expire, setExpire] = useState('');
-    const [search, setSearch] = useState('');
-    const navigate = useNavigate();
+  const [deanId, setDeanId] = useState('');
+  const [dean, setDean] = useState({});
+  const [department, setDepartment] = useState('');
+  const [courses, setCourses] = useState([]);
+  const [selectChange, setSelectChange] = useState('');
+  const [applications, setApplications] = useState([]);
+  const [token, setToken] = useState('');
+  const [expire, setExpire] = useState('');
+  const [search, setSearch] = useState('');
+  const navigate = useNavigate();
 
 
-    let courses = [""];
+    
+  const course_options = courses?.map(({course_id, course_code, course_name}) =>
+    <option key={course_id} value={course_id}>{course_code}</option>
+  );
 
-    if (department == "CECT"){
-        courses = ["","Bachelor of Science in Information Technology", "Bachelor of Science in Electronics Engineering", "Bachelor of Science in Computer Engineering"];
-    }else if (department == "CONAMS"){
-        courses = ["","Bachelor of Science in Nursing", "Bachelor of Science in Radiologic Technology", "Bachelor of Science in Medical Technology", "Bachelor of Science in Physical Therapy", "Bachelor of Science in Pharmacy"];
-    }else if (department == "CHTM"){
-        courses = ["","Bachelor of Science in Hospitality Management major in Culinary and Kitchen Operations", "Bachelor of Science in Hospitality Management major in Hotel and Restaurant Administration", "Bachelor of Science in Tourism Management"];
-    }else if (department == "CBA"){
-        courses = ["","Bachelor of Science in Accountancy", "Bachelor of Science in Accounting Technology", "Bachelor of Science in Business Administration"];
-    }else if (department == "CAS"){
-        courses = ["","Bachelor of Arts in Communication ", "Bachelor of Arts in Political Science", "Bachelor of Arts in Psychology", "Bachelor of Arts in Theology", "Bachelor of Science in Psychology", "Bachelor of Science in Biology", "Bachelor of Science in Social Work"];
-    }else if (department == "CoEd"){
-        courses = ["","BSHRM", "BSECE", "BSCpE"];
-    }else if (department == "CCJE"){
-        courses = ["","Bachelor of Science in Criminology"];
-    }else if (department == "Medicine"){
-        courses = ["",""];
-    }else if (department == "JWSLG"){
-        courses = ["",""];
-    }else if (department == "High School"){
-        courses = ["","Junior High School", "Senior High School)"];
-    }else if (department == "Elementary"){
-        courses = ["","GRADE 1 to 3 ( Primary Level )", "GRADE 4 to 6 ( Intermediate Level )"];
+  useEffect(()=>{
+    if(!token){
+      refreshToken();
     }else{
-        courses = [""];
+      getDean();
     }
-    
-    const course_options = courses.map((course) =>
-      <option key={course}>{course}</option>
-    );
+  },[deanId]);
 
-    useEffect(()=>{
-        refreshToken();
-    },[]);
+  useEffect(()=>{
+    getApplications();
+    setTimeout(()=>{
+      getApplications();
+      getCourses();
+    },1000)
+  },[dean, department]);
 
-    useEffect(()=>{
-        getDean();
-    },[deanId]);
+  useEffect(()=>{
+    if (selectChange == '' && search == ''){
+      getApplications();
+    }else if (search != '' && selectChange == ''){
+      getSearchedApplications();
+    }else if (search == '' && selectChange != ''){
+      getFilteredApplications();
+    } else {
+      getNameCourseApplications();
+    }
+  },[search, selectChange]);
 
-    useEffect(()=>{
-        getApplications();
-    },[department]);
-
-    useEffect(()=>{
-      if (selectChange == '' && search == ''){
-        getApplications();
-      }else if (search != '' && selectChange == ''){
-        getSearchedApplications();
-      }else if (search == '' && selectChange != ''){
-        getFilteredApplications();
-      } else {
-        getNameCourseApplications();
-      }
-    },[search, selectChange]);
-
-    const refreshToken = async () => {
-        axios.defaults.withCredentials = true;
-        try {
-          const response = await axios.get(`${import.meta.env.VITE_API_URL}/dean/token`);
-          setToken(response.data.accessToken);
-          const decoded = jwt_decode(response.data.accessToken);
-          setDeanId(decoded.deanId);
-          setExpire(decoded.exp);
-        }
-        catch (error) {
-          if (error.response) {
-            navigate("/");
-          }
-        }
-      }
-    
-    const axiosJWT = axios.create();
-
-    axiosJWT.interceptors.request.use(async (config) => {
-    const currentDate = new Date();
-    if (expire * 1000 < currentDate.getTime()) {
+  const refreshToken = async () => {
+      axios.defaults.withCredentials = true;
+      try {
         const response = await axios.get(`${import.meta.env.VITE_API_URL}/dean/token`);
-        config.headers.Authorization = `Bearer ${response.data.accessToken}`;
         setToken(response.data.accessToken);
         const decoded = jwt_decode(response.data.accessToken);
         setDeanId(decoded.deanId);
+        setDepartment(decoded.dept_id);
         setExpire(decoded.exp);
-    }
-    return config;
-    }, (error) => {
-        return Promise.reject(error);
-    });
-
-    const getDean = async () => {
-        try{
-          const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/details/${deanId}`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-        });
-          setDepartment(response.data.department);
-          console.log(department)
-        }catch(e){
-          console.log(e)
-        }
-    }
-
-    const getApplications = async() => {
-        try{
-          const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/approved/applications/dept/${department}`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-        });
-          setApplications(response.data);
-        }catch(e){
-          console.log(e)
-        }
       }
-
-    const getFilteredApplications = async() => {
-      try{
-          const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/approved/applications/course/${selectChange}`, {
-            headers: {
-              Authorization: `Bearer ${token}`
-            }
-          });
-          setApplications(response.data);
-      }catch(e){console.log(e)}
-    }
-
-    const getSearchedApplications = async() => {
-      try{
-        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/applications/approved/name/${search}`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-      });
-        setApplications(response.data);
-      }catch(e){
-        console.log(e)
+      catch (error) {
+        if (error.response) {
+          navigate("/");
+        }
       }
     }
   
-    const getNameCourseApplications = async() => {
+  const axiosJWT = axios.create();
+
+  axiosJWT.interceptors.request.use(async (config) => {
+  const currentDate = new Date();
+  if (expire * 1000 < currentDate.getTime()) {
+      const response = await axios.get(`${import.meta.env.VITE_API_URL}/dean/token`);
+      config.headers.Authorization = `Bearer ${response.data.accessToken}`;
+      setToken(response.data.accessToken);
+      const decoded = jwt_decode(response.data.accessToken);
+      setDeanId(decoded.deanId);
+      setDepartment(decoded.dept_id);
+      setExpire(decoded.exp);
+  }
+  return config;
+  }, (error) => {
+      return Promise.reject(error);
+  });
+
+  const getDean = async () => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/details/${deanId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+    });
+      setDean(response.data);
+      console.log(dean);
+      console.log(department);
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  const getCourses = async () => {
+    try{
+        const response = await axios.get(`${import.meta.env.VITE_API_URL}/get/courses/${department}`);
+        setCourses(response.data);
+        console.log(courses)
+    }catch(e){console.log(e)}
+  }
+
+  const getApplications = async() => {
       try{
-        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/applications/approved/filter/${search}/${selectChange}`, {
+        const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/approved/applications/dept/${department}`, {
           headers: {
             Authorization: `Bearer ${token}`
           }
@@ -181,31 +134,74 @@ function DeanApprovedApplications() {
         console.log(e)
       }
     }
+
+  const getFilteredApplications = async() => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/approved/applications/course/${selectChange}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      setApplications(response.data);
+    }catch(e){console.log(e)}
+  }
+
+  const getSearchedApplications = async() => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/applications/approved/dept/${department}/name/${search}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+    });
+      setApplications(response.data);
+    }catch(e){
+      console.log(e)
+    }
+  }
+
+  const getNameCourseApplications = async() => {
+    try{
+      const response = await axiosJWT.get(`${import.meta.env.VITE_API_URL}/dean/view/applications/approved/filter/${search}/${selectChange}`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+    });
+      setApplications(response.data);
+    }catch(e){
+      console.log(e)
+    }
+  }
 
   return (
     <>
         <div className="dean-view-applications">
-        <div className="dean-view-header">
-          <h2>Approved Applications</h2>
-          <div>
-            <label htmlFor="searchField">Search Student ID or Name:  </label>
-            <input type="text" name="searchField" className='search-input' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/>
+        <div className="dean-view-header flex align-items-center">
+          <h2 className='h2 ml-3'>APPROVED</h2>
+          <div className='col-5 text-left display flex'>
+          <div class="input-group">
+              <div class="input-group-prepend">
+                <span class="input-group-text" >Name or Student ID</span>
+              </div>
+              <input type="text" name="searchField" className='searchField form-control'class="form-control" onChange={(e)=>{setSearch(e.target.value)}}/>
+            </div>
+            {/* <label htmlFor="searchField">Search Student ID or Name:  </label>
+            <input type="text" name="searchField" className='searchField form-control' placeholder='e.g. Juan Dela Cruz' onChange={(e)=>{setSearch(e.target.value)}}/> */}
           </div>
           <div>
-            <label htmlFor="applications-course">COURSE: </label>
-            <select name="applications-course" className='course-select' id='dean-select-course' onChange={(e)=>setSelectChange(e.target.value)} value={selectChange}>
+            <select name="applications-course" className='course-select-dean custom-select mr-sm-2' id='dean-select-course' onChange={(e)=>setSelectChange(e.target.value)} value={selectChange}>
+              <option value="">Select a course</option>
               {course_options} 
             </select>
           </div>
         </div>
         <div className="dean-view-body">
-          <table>
+          <table className='table table-striped'>
             <thead>
               <tr>
-                <td>Student ID</td>
-                <td>Student Name</td>
-                <td>Scholarhsip Type</td>
-                <td>Actions</td>
+                <th scope='col' className='fit'>Student ID</th>
+                <th scope='col' className='fit'>Student Name</th>
+                <th scope='col' className='fit'>Scholarship Type</th>
+                <th scope='col' className='fit'>Actions</th>
               </tr>
             </thead>
             <tbody>
